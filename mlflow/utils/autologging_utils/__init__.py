@@ -178,7 +178,11 @@ class InputExampleInfo:
 
 
 def resolve_input_example_and_signature(
-    get_input_example, infer_model_signature, log_input_example, log_model_signature, logger
+    get_input_example,
+    infer_model_signature,
+    log_input_example,
+    log_model_signature,
+    logger,
 ):
     """Handles the logic of calling functions to gather the input example and infer the model
     signature.
@@ -221,7 +225,8 @@ def resolve_input_example_and_signature(
         try:
             if input_example is None:
                 raise Exception(
-                    "could not sample data to infer model signature: " + input_example_failure_msg
+                    "could not sample data to infer model signature: "
+                    + input_example_failure_msg
                 )
             model_signature = infer_model_signature(input_example)
         except Exception as e:
@@ -274,7 +279,9 @@ class BatchMetricsLogger:
 
     def _timed_log_batch(self):
         # Retrieving run_id from active mlflow run when run_id is empty.
-        current_run_id = mlflow.active_run().info.run_id if self.run_id is None else self.run_id
+        current_run_id = (
+            mlflow.active_run().info.run_id if self.run_id is None else self.run_id
+        )
 
         start = time.time()
         metrics_slices = [
@@ -356,7 +363,9 @@ def gen_autologging_package_version_requirements_doc(integration_name):
         A document note string saying the compatibility for the specified autologging
         integration's associated package versions.
     """
-    min_ver, max_ver, pip_release = get_min_max_version_and_pip_release(integration_name)
+    min_ver, max_ver, pip_release = get_min_max_version_and_pip_release(
+        integration_name
+    )
     required_pkg_versions = f"``{min_ver}`` <= ``{pip_release}`` <= ``{max_ver}``"
 
     return (
@@ -378,10 +387,14 @@ def _check_and_log_warning_for_unsupported_package_versions(integration_name):
         integration_name in FLAVOR_TO_MODULE_NAME
         and integration_name not in _AUTOLOGGING_SUPPORTED_VERSION_WARNING_SUPPRESS_LIST
         and not get_autologging_config(integration_name, "disable", True)
-        and not get_autologging_config(integration_name, "disable_for_unsupported_versions", False)
+        and not get_autologging_config(
+            integration_name, "disable_for_unsupported_versions", False
+        )
         and not is_flavor_supported_for_associated_package_versions(integration_name)
     ):
-        min_var, max_var, pip_release = get_min_max_version_and_pip_release(integration_name)
+        min_var, max_var, pip_release = get_min_max_version_and_pip_release(
+            integration_name
+        )
         module = importlib.import_module(FLAVOR_TO_MODULE_NAME[integration_name])
         _logger.warning(
             f"MLflow {integration_name} autologging is known to be compatible with "
@@ -433,7 +446,9 @@ def autologging_integration(name):
                 # event loggers to more easily identify important configuration parameters
                 # (e.g., `disable`) without examining positional arguments. Passing positional
                 # arguments to `log_autolog_called` is deprecated in MLflow > 1.13.1
-                AutologgingEventLogger.get_logger().log_autolog_called(name, (), config_to_store)
+                AutologgingEventLogger.get_logger().log_autolog_called(
+                    name, (), config_to_store
+                )
             except Exception:
                 pass
 
@@ -449,25 +464,22 @@ def autologging_integration(name):
             # Reroute non-MLflow warnings encountered during autologging enablement to an
             # MLflow event logger, and enforce silent mode if applicable (i.e. if the corresponding
             # autologging integration was called with `silent=True`)
-            with (
-                MlflowEventsAndWarningsBehaviorGlobally(
-                    # MLflow warnings emitted during autologging setup / enablement are likely
-                    # actionable and relevant to the user, so they should be emitted as normal
-                    # when `silent=False`. For reference, see recommended warning and event logging
-                    # behaviors from https://docs.python.org/3/howto/logging.html#when-to-use-logging
-                    reroute_warnings=False,
-                    disable_event_logs=is_silent_mode,
-                    disable_warnings=is_silent_mode,
-                ),
-                NonMlflowWarningsBehaviorForCurrentThread(
-                    # non-MLflow warnings emitted during autologging setup / enablement are not
-                    # actionable for the user, as they are a byproduct of the autologging
-                    # implementation. Accordingly, they should be rerouted to `logger.warning()`.
-                    # For reference, see recommended warning and event logging
-                    # behaviors from https://docs.python.org/3/howto/logging.html#when-to-use-logging
-                    reroute_warnings=True,
-                    disable_warnings=is_silent_mode,
-                ),
+            with MlflowEventsAndWarningsBehaviorGlobally(
+                # MLflow warnings emitted during autologging setup / enablement are likely
+                # actionable and relevant to the user, so they should be emitted as normal
+                # when `silent=False`. For reference, see recommended warning and event logging
+                # behaviors from https://docs.python.org/3/howto/logging.html#when-to-use-logging
+                reroute_warnings=False,
+                disable_event_logs=is_silent_mode,
+                disable_warnings=is_silent_mode,
+            ), NonMlflowWarningsBehaviorForCurrentThread(
+                # non-MLflow warnings emitted during autologging setup / enablement are not
+                # actionable for the user, as they are a byproduct of the autologging
+                # implementation. Accordingly, they should be rerouted to `logger.warning()`.
+                # For reference, see recommended warning and event logging
+                # behaviors from https://docs.python.org/3/howto/logging.html#when-to-use-logging
+                reroute_warnings=True,
+                disable_warnings=is_silent_mode,
             ):
                 _check_and_log_warning_for_unsupported_package_versions(name)
 
@@ -480,9 +492,9 @@ def autologging_integration(name):
         wrapped_autolog.integration_name = name
 
         if name in FLAVOR_TO_MODULE_NAME:
-            wrapped_autolog.__doc__ = gen_autologging_package_version_requirements_doc(name) + (
-                wrapped_autolog.__doc__ or ""
-            )
+            wrapped_autolog.__doc__ = gen_autologging_package_version_requirements_doc(
+                name
+            ) + (wrapped_autolog.__doc__ or "")
         return wrapped_autolog
 
     return wrapper
@@ -520,7 +532,9 @@ def autologging_is_disabled(integration_name):
 
     if (
         integration_name in FLAVOR_TO_MODULE_NAME
-        and get_autologging_config(integration_name, "disable_for_unsupported_versions", False)
+        and get_autologging_config(
+            integration_name, "disable_for_unsupported_versions", False
+        )
         and not is_flavor_supported_for_associated_package_versions(integration_name)
     ):
         return True
@@ -653,7 +667,8 @@ def _get_new_training_session_class():
             if len(_TrainingSession._session_stack) > 0:
                 self._parent = _TrainingSession._session_stack[-1]
                 self.allow_children = (
-                    _TrainingSession._session_stack[-1].allow_children and self.allow_children
+                    _TrainingSession._session_stack[-1].allow_children
+                    and self.allow_children
                 )
             _TrainingSession._session_stack.append(self)
             return self
@@ -715,7 +730,9 @@ def get_instance_method_first_arg_value(method, call_pos_args, call_kwargs):
         return call_kwargs.get(first_arg_name)
 
 
-def get_method_call_arg_value(arg_index, arg_name, default_value, call_pos_args, call_kwargs):
+def get_method_call_arg_value(
+    arg_index, arg_name, default_value, call_pos_args, call_kwargs
+):
     """Get argument value for a method call.
 
     Args:

@@ -53,7 +53,9 @@ def exception_safe_function_for_class(function):
             if is_testing():
                 raise
             else:
-                _logger.warning("Encountered unexpected error during autologging: %s", e)
+                _logger.warning(
+                    "Encountered unexpected error during autologging: %s", e
+                )
 
     return update_wrapper_extended(safe_function, function)
 
@@ -76,7 +78,9 @@ def picklable_exception_safe_function(function):
     if is_testing():
         setattr(function, _ATTRIBUTE_EXCEPTION_SAFE, True)
 
-    return update_wrapper_extended(functools.partial(_safe_function, function), function)
+    return update_wrapper_extended(
+        functools.partial(_safe_function, function), function
+    )
 
 
 def _exception_safe_class_factory(base_class):
@@ -259,7 +263,10 @@ def safe_patch(
             `patch_function`.
         extra_tags: A dictionary of extra tags to set on each managed run created by autologging.
     """
-    from mlflow.utils.autologging_utils import autologging_is_disabled, get_autologging_config
+    from mlflow.utils.autologging_utils import (
+        autologging_is_disabled,
+        get_autologging_config,
+    )
 
     # NB: Checking the signature of the patch function rather than original, so that we don't
     # accidentally change the behavior of existing patches that may use sync patch function
@@ -268,7 +275,9 @@ def safe_patch(
 
     if manage_run:
         if is_async_function:
-            raise MlflowException("manage_run parameter is not supported for async functions.")
+            raise MlflowException(
+                "manage_run parameter is not supported for async functions."
+            )
 
         tags = _resolve_extra_tags(autologging_integration, extra_tags)
         patch_function = with_managed_run(
@@ -343,36 +352,37 @@ def safe_patch(
         # `safe_patch_function` because the context-manager-as-decorator pattern uses
         # `contextlib.ContextDecorator`, which creates generator expressions that cannot be pickled
         # during model serialization by ML frameworks such as scikit-learn
-        is_silent_mode = get_autologging_config(autologging_integration, "silent", False)
-        with (
-            MlflowEventsAndWarningsBehaviorGlobally(
-                # MLflow warnings emitted during autologging training sessions are likely not
-                # actionable and result from the autologging implementation invoking another MLflow
-                # API. Accordingly, we reroute these warnings to the MLflow event logger with level
-                # WARNING For reference, see recommended warning and event logging behaviors from
-                # https://docs.python.org/3/howto/logging.html#when-to-use-logging
-                reroute_warnings=True,
-                disable_event_logs=is_silent_mode,
-                disable_warnings=is_silent_mode,
-            ),
-            NonMlflowWarningsBehaviorForCurrentThread(
-                # non-MLflow Warnings emitted during the autologging preamble (before the original /
-                # underlying ML function is called) and postamble (after the original / underlying
-                # ML function is called) are likely not actionable and result from the autologging
-                # implementation invoking an API from a dependent library. Accordingly, we reroute
-                # these warnings to the MLflow event logger with level WARNING. For reference, see
-                # recommended warning and event logging behaviors from
-                # https://docs.python.org/3/howto/logging.html#when-to-use-logging
-                reroute_warnings=True,
-                disable_warnings=is_silent_mode,
-            ),
+        is_silent_mode = get_autologging_config(
+            autologging_integration, "silent", False
+        )
+        with MlflowEventsAndWarningsBehaviorGlobally(
+            # MLflow warnings emitted during autologging training sessions are likely not
+            # actionable and result from the autologging implementation invoking another MLflow
+            # API. Accordingly, we reroute these warnings to the MLflow event logger with level
+            # WARNING For reference, see recommended warning and event logging behaviors from
+            # https://docs.python.org/3/howto/logging.html#when-to-use-logging
+            reroute_warnings=True,
+            disable_event_logs=is_silent_mode,
+            disable_warnings=is_silent_mode,
+        ), NonMlflowWarningsBehaviorForCurrentThread(
+            # non-MLflow Warnings emitted during the autologging preamble (before the original /
+            # underlying ML function is called) and postamble (after the original / underlying
+            # ML function is called) are likely not actionable and result from the autologging
+            # implementation invoking an API from a dependent library. Accordingly, we reroute
+            # these warnings to the MLflow event logger with level WARNING. For reference, see
+            # recommended warning and event logging behaviors from
+            # https://docs.python.org/3/howto/logging.html#when-to-use-logging
+            reroute_warnings=True,
+            disable_warnings=is_silent_mode,
         ):
             if is_testing():
                 preexisting_run_for_testing = mlflow.active_run()
 
             # Whether or not to exclude autologged content from user-created fluent runs
             # (i.e. runs created manually via `mlflow.start_run()`)
-            exclusive = get_autologging_config(autologging_integration, "exclusive", False)
+            exclusive = get_autologging_config(
+                autologging_integration, "exclusive", False
+            )
             user_created_fluent_run_is_active = (
                 mlflow.active_run() and not _AutologgingSessionManager.active_session()
             )
@@ -415,10 +425,16 @@ def safe_patch(
             # The exception raised during executing patching function
             patch_error = None
 
-            with _AutologgingSessionManager.start_session(autologging_integration) as session:
-                event_logger = AutologgingEventLoggerWrapper(session, destination, function_name)
+            with _AutologgingSessionManager.start_session(
+                autologging_integration
+            ) as session:
+                event_logger = AutologgingEventLoggerWrapper(
+                    session, destination, function_name
+                )
 
-                def call_original_fn_with_event_logging(original_fn, og_args, og_kwargs):
+                def call_original_fn_with_event_logging(
+                    original_fn, og_args, og_kwargs
+                ):
                     try:
                         event_logger.log_original_function_start(og_args, og_kwargs)
 
@@ -471,7 +487,9 @@ def safe_patch(
                                 original_result = original(*_og_args, **_og_kwargs)
                                 return original_result
 
-                        return call_original_fn_with_event_logging(_original_fn, og_args, og_kwargs)
+                        return call_original_fn_with_event_logging(
+                            _original_fn, og_args, og_kwargs
+                        )
 
                     # Apply the name, docstring, and signature of `original` to `call_original`.
                     # This is important because several autologging patch implementations inspect
@@ -502,13 +520,16 @@ def safe_patch(
                     )
                     if patch_function_run_for_testing:
                         _validate_autologging_run(
-                            autologging_integration, patch_function_run_for_testing.info.run_id
+                            autologging_integration,
+                            patch_function_run_for_testing.info.run_id,
                         )
                 try:
                     if original_has_been_called:
                         return original_result
                     else:
-                        return call_original_fn_with_event_logging(original, args, kwargs)
+                        return call_original_fn_with_event_logging(
+                            original, args, kwargs
+                        )
                 finally:
                     # If original function succeeds, but `patch_function_exception` exists,
                     # it represent patching code unexpected failure, so we call
@@ -518,7 +539,9 @@ def safe_patch(
                     # means there's some error in user code (e.g. user provide wrong arguments)
                     if patch_error is not None and not failed_during_original:
                         event_logger.log_patch_function_error(args, kwargs, patch_error)
-                        _logger.warning(_ERROR_MSG.format(autologging_integration, patch_error))
+                        _logger.warning(
+                            _ERROR_MSG.format(autologging_integration, patch_error)
+                        )
 
     async def async_safe_patch_function(*args, **kwargs):
         """
@@ -534,24 +557,25 @@ def safe_patch(
         you want to understand the context of the code better, please refer to the
         synchronous version as well.
         """
-        is_silent_mode = get_autologging_config(autologging_integration, "silent", False)
-        async with (
-            MlflowEventsAndWarningsBehaviorGlobally(
-                reroute_warnings=True,
-                disable_event_logs=is_silent_mode,
-                disable_warnings=is_silent_mode,
-            ),
-            NonMlflowWarningsBehaviorForCurrentThread(
-                disable_warnings=is_silent_mode,
-                reroute_warnings=True,
-            ),
+        is_silent_mode = get_autologging_config(
+            autologging_integration, "silent", False
+        )
+        async with MlflowEventsAndWarningsBehaviorGlobally(
+            reroute_warnings=True,
+            disable_event_logs=is_silent_mode,
+            disable_warnings=is_silent_mode,
+        ), NonMlflowWarningsBehaviorForCurrentThread(
+            disable_warnings=is_silent_mode,
+            reroute_warnings=True,
         ):
             if is_testing():
                 preexisting_run_for_testing = mlflow.active_run()
 
             # Whether or not to exclude autologged content from user-created fluent runs
             # (i.e. runs created manually via `mlflow.start_run()`)
-            exclusive = get_autologging_config(autologging_integration, "exclusive", False)
+            exclusive = get_autologging_config(
+                autologging_integration, "exclusive", False
+            )
             user_created_fluent_run_is_active = (
                 mlflow.active_run() and not _AutologgingSessionManager.active_session()
             )
@@ -581,9 +605,13 @@ def safe_patch(
             async with _AutologgingSessionManager.astart_session(
                 autologging_integration
             ) as session:
-                event_logger = AutologgingEventLoggerWrapper(session, destination, function_name)
+                event_logger = AutologgingEventLoggerWrapper(
+                    session, destination, function_name
+                )
 
-                async def call_original_fn_with_event_logging(original_fn, og_args, og_kwargs):
+                async def call_original_fn_with_event_logging(
+                    original_fn, og_args, og_kwargs
+                ):
                     try:
                         event_logger.log_original_function_start(og_args, og_kwargs)
                         original_fn_result = await original_fn(*og_args, **og_kwargs)
@@ -615,8 +643,12 @@ def safe_patch(
                             original_has_been_called = True
 
                             nonlocal original_result
-                            async with NonMlflowWarningsBehaviorForCurrentThread(False, False):
-                                original_result = await original(*_og_args, **_og_kwargs)
+                            async with NonMlflowWarningsBehaviorForCurrentThread(
+                                False, False
+                            ):
+                                original_result = await original(
+                                    *_og_args, **_og_kwargs
+                                )
                                 return original_result
 
                         return await call_original_fn_with_event_logging(
@@ -652,17 +684,22 @@ def safe_patch(
                     )
                     if patch_function_run_for_testing:
                         _validate_autologging_run(
-                            autologging_integration, patch_function_run_for_testing.info.run_id
+                            autologging_integration,
+                            patch_function_run_for_testing.info.run_id,
                         )
                 try:
                     if original_has_been_called:
                         return original_result
                     else:
-                        return await call_original_fn_with_event_logging(original, args, kwargs)
+                        return await call_original_fn_with_event_logging(
+                            original, args, kwargs
+                        )
                 finally:
                     if patch_error is not None and not failed_during_original:
                         event_logger.log_patch_function_error(args, kwargs, patch_error)
-                        _logger.warning(_ERROR_MSG.format(autologging_integration, patch_error))
+                        _logger.warning(
+                            _ERROR_MSG.format(autologging_integration, patch_error)
+                        )
 
     if is_property_method:
         # Create a patched function (also property decorated)
@@ -694,7 +731,9 @@ def safe_patch(
             return update_wrapper_extended(bound_safe_patch_fn, original_fn.fget)
 
         # Make unbound method `class.target_method` keep the same doc and signature
-        get_bound_safe_patch_fn = update_wrapper_extended(get_bound_safe_patch_fn, original_fn.fget)
+        get_bound_safe_patch_fn = update_wrapper_extended(
+            get_bound_safe_patch_fn, original_fn.fget
+        )
         safe_patch_obj = property(get_bound_safe_patch_fn)
     elif is_async_function:
         safe_patch_obj = update_wrapper_extended(async_safe_patch_function, original)
@@ -788,7 +827,9 @@ def update_wrapper_extended(wrapper, wrapped):
     try:
         updated_wrapper.__signature__ = inspect.signature(wrapped)
     except Exception:
-        _logger.debug("Failed to restore original signature for wrapper around %s", wrapped)
+        _logger.debug(
+            "Failed to restore original signature for wrapper around %s", wrapped
+        )
     return updated_wrapper
 
 
@@ -1012,8 +1053,12 @@ def _validate_args(
             f"{length_diff} expected inputs are missing from the call to the original function."
         )
 
-    def _assert_autologging_input_kwargs_are_superset(autologging_call_input, user_call_input):
-        assert set(user_call_input.keys()).issubset(set(autologging_call_input.keys())), (
+    def _assert_autologging_input_kwargs_are_superset(
+        autologging_call_input, user_call_input
+    ):
+        assert set(user_call_input.keys()).issubset(
+            set(autologging_call_input.keys())
+        ), (
             "Keyword or dictionary arguments to original function omit"
             " one or more expected keys: '{}'".format(
                 set(user_call_input.keys()) - set(autologging_call_input.keys())
@@ -1059,7 +1104,9 @@ def _validate_args(
             for a, u in itertools.zip_longest(autologging_call_input, user_call_input):
                 _validate(a, u)
         elif type(autologging_call_input) == dict:
-            _assert_autologging_input_kwargs_are_superset(autologging_call_input, user_call_input)
+            _assert_autologging_input_kwargs_are_superset(
+                autologging_call_input, user_call_input
+            )
             for key in autologging_call_input.keys():
                 _validate(autologging_call_input[key], user_call_input.get(key, None))
 
@@ -1074,7 +1121,9 @@ def _validate_args(
 
     # Similar validation logic found in _validate, unraveling the list of arguments to exclude
     # checks for any validation exempt positional arguments.
-    _assert_autologging_input_positional_args_are_superset(autologging_call_args, user_call_args)
+    _assert_autologging_input_positional_args_are_superset(
+        autologging_call_args, user_call_args
+    )
     for index, autologging_call_arg, user_call_arg in itertools.zip_longest(
         range(len(user_call_args)), autologging_call_args, user_call_args
     ):
@@ -1088,7 +1137,9 @@ def _validate_args(
 
     # Similar validation logic found in _validate, unraveling the dictionary of arguments to exclude
     # checks for any validation exempt keyword arguments.
-    _assert_autologging_input_kwargs_are_superset(autologging_call_kwargs, user_call_kwargs)
+    _assert_autologging_input_kwargs_are_superset(
+        autologging_call_kwargs, user_call_kwargs
+    )
     for key in autologging_call_kwargs.keys():
         if not _is_arg_exempt_from_validation(
             autologging_integration,

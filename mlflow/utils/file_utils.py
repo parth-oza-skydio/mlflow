@@ -222,7 +222,9 @@ def make_containing_dirs(path):
         os.makedirs(dir_name)
 
 
-def write_yaml(root, file_name, data, overwrite=False, sort_keys=True, ensure_yaml_extension=True):
+def write_yaml(
+    root, file_name, data, overwrite=False, sort_keys=True, ensure_yaml_extension=True
+):
     """Write dictionary data in yaml format.
 
     Args:
@@ -425,7 +427,9 @@ class TempDir:
         assert not self._remove or not os.path.exists(self._path)
 
     def path(self, *path):
-        return os.path.join("./", *path) if self._chdr else os.path.join(self._path, *path)
+        return (
+            os.path.join("./", *path) if self._chdr else os.path.join(self._path, *path)
+        )
 
 
 def read_file_lines(parent_path, file_name):
@@ -487,7 +491,9 @@ def get_relative_path(root_path, target_path):
         Path relative to root_path.
     """
     if len(root_path) > len(target_path):
-        raise Exception(f"Root path '{root_path}' longer than target path '{target_path}'")
+        raise Exception(
+            f"Root path '{root_path}' longer than target path '{target_path}'"
+        )
     common_prefix = os.path.commonprefix([root_path, target_path])
     return os.path.relpath(target_path, common_prefix)
 
@@ -518,12 +524,9 @@ def make_tarfile(output_filename, source_dir, archive_name, custom_filter=None):
             tar.add(source_dir, arcname=archive_name, filter=_filter_timestamps)
         # When gzipping the tar, don't include the tar's filename or modification time in the
         # zipped archive (see https://docs.python.org/3/library/gzip.html#gzip.GzipFile)
-        with (
-            gzip.GzipFile(
-                filename="", fileobj=open(output_filename, "wb"), mode="wb", mtime=0
-            ) as gzipped_tar,
-            open(unzipped_filename, "rb") as tar,
-        ):
+        with gzip.GzipFile(
+            filename="", fileobj=open(output_filename, "wb"), mode="wb", mtime=0
+        ) as gzipped_tar, open(unzipped_filename, "rb") as tar:
             gzipped_tar.write(tar.read())
     finally:
         os.close(unzipped_file_handle)
@@ -560,10 +563,13 @@ def _copy_project(src_path, dst_path=""):
 
     mlflow_dir = "mlflow-project"
     # check if we have project root
-    assert os.path.isfile(os.path.join(src_path, "pyproject.toml")), "file not found " + str(
-        os.path.abspath(os.path.join(src_path, "pyproject.toml"))
+    assert os.path.isfile(os.path.join(src_path, "pyproject.toml")), (
+        "file not found "
+        + str(os.path.abspath(os.path.join(src_path, "pyproject.toml")))
     )
-    shutil.copytree(src_path, os.path.join(dst_path, mlflow_dir), ignore=_docker_ignore(src_path))
+    shutil.copytree(
+        src_path, os.path.join(dst_path, mlflow_dir), ignore=_docker_ignore(src_path)
+    )
     return mlflow_dir
 
 
@@ -582,7 +588,9 @@ def _copy_file_or_tree(src, dst, dst_dir=None):
             os.makedirs(dst_dirpath)
         shutil.copy(src=src, dst=dst_path)
     else:
-        shutil.copytree(src=src, dst=dst_path, ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(
+            src=src, dst=dst_path, ignore=shutil.ignore_patterns("__pycache__")
+        )
     return dst_subpath
 
 
@@ -660,7 +668,11 @@ def get_local_path_or_none(path_or_uri):
     None otherwise.
     """
     parsed_uri = urllib.parse.urlparse(path_or_uri)
-    if len(parsed_uri.scheme) == 0 or parsed_uri.scheme == "file" and len(parsed_uri.netloc) == 0:
+    if (
+        len(parsed_uri.scheme) == 0
+        or parsed_uri.scheme == "file"
+        and len(parsed_uri.netloc) == 0
+    ):
         return local_file_uri_to_path(path_or_uri)
     else:
         return None
@@ -679,7 +691,9 @@ def yield_file_in_chunks(file, chunk_size=100000000):
                 break
 
 
-def download_file_using_http_uri(http_uri, download_path, chunk_size=100000000, headers=None):
+def download_file_using_http_uri(
+    http_uri, download_path, chunk_size=100000000, headers=None
+):
     """
     Downloads a file specified using the `http_uri` to a local `download_path`. This function
     uses a `chunk_size` to ensure an OOM error is not raised a large file is downloaded.
@@ -689,7 +703,9 @@ def download_file_using_http_uri(http_uri, download_path, chunk_size=100000000, 
     """
     if headers is None:
         headers = {}
-    with cloud_storage_http_request("get", http_uri, stream=True, headers=headers) as response:
+    with cloud_storage_http_request(
+        "get", http_uri, stream=True, headers=headers
+    ) as response:
         augmented_raise_for_status(response)
         with open(download_path, "wb") as output_file:
             for chunk in response.iter_content(chunk_size=chunk_size):
@@ -794,9 +810,13 @@ def parallelized_download_file_using_http_uri(
         if downloaded_size > chunk_size:
             return {}
 
-    futures = {thread_pool_executor.submit(run_download, chunk): chunk for chunk in chunks}
+    futures = {
+        thread_pool_executor.submit(run_download, chunk): chunk for chunk in chunks
+    }
     failed_downloads = {}
-    with ArtifactProgressBar.chunks(file_size, f"Downloading {download_path}", chunk_size) as pbar:
+    with ArtifactProgressBar.chunks(
+        file_size, f"Downloading {download_path}", chunk_size
+    ) as pbar:
         for future in as_completed(futures):
             chunk = futures[future]
             try:
@@ -827,7 +847,9 @@ def download_chunk_retries(*, chunks, http_uri, headers, download_path):
                     download_path=download_path,
                     http_uri=http_uri,
                 )
-                _logger.info(f"Successfully downloaded chunk {chunk.index} for {chunk.path}")
+                _logger.info(
+                    f"Successfully downloaded chunk {chunk.index} for {chunk.path}"
+                )
                 break
             except Exception:
                 if retry == num_retries - 1:
@@ -930,7 +952,9 @@ def get_or_create_nfs_tmp_dir():
         try:
             repl_nfs_tmp_dir = get_databricks_nfs_temp_dir()
         except Exception:
-            repl_nfs_tmp_dir = os.path.join(nfs_root_dir, "repl_tmp_data", get_repl_id())
+            repl_nfs_tmp_dir = os.path.join(
+                nfs_root_dir, "repl_tmp_data", get_repl_id()
+            )
 
         tmp_nfs_dir = os.path.join(repl_nfs_tmp_dir, "mlflow")
         os.makedirs(tmp_nfs_dir, exist_ok=True)
@@ -987,7 +1011,9 @@ def contains_path_separator(path):
     """
     Returns True if a path contains a path separator, False otherwise.
     """
-    return any((sep in path) for sep in (os.path.sep, os.path.altsep) if sep is not None)
+    return any(
+        (sep in path) for sep in (os.path.sep, os.path.altsep) if sep is not None
+    )
 
 
 def contains_percent(path):
@@ -1038,7 +1064,9 @@ def remove_on_error(path: os.PathLike, onerror=None):
             elif os.path.isdir(path):
                 shutil.rmtree(path)
         _logger.warning(
-            f"Failed to remove {path}" if os.path.exists(path) else f"Successfully removed {path}"
+            f"Failed to remove {path}"
+            if os.path.exists(path)
+            else f"Successfully removed {path}"
         )
         raise
 
@@ -1073,11 +1101,13 @@ def get_total_file_size(path: Union[str, pathlib.Path]) -> Optional[int]:
             path = str(path)
         if not os.path.exists(path):
             raise MlflowException(
-                message=f"The given {path} does not exist.", error_code=INVALID_PARAMETER_VALUE
+                message=f"The given {path} does not exist.",
+                error_code=INVALID_PARAMETER_VALUE,
             )
         if not os.path.isdir(path):
             raise MlflowException(
-                message=f"The given {path} is not a directory.", error_code=INVALID_PARAMETER_VALUE
+                message=f"The given {path} is not a directory.",
+                error_code=INVALID_PARAMETER_VALUE,
             )
 
         total_size = 0
