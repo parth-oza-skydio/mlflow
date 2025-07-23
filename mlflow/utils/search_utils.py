@@ -1,3 +1,5 @@
+import typing
+
 import ast
 import base64
 import json
@@ -1625,7 +1627,7 @@ class SearchTraceUtils(SearchUtils):
         return [cls._replace_key_to_tag_or_metadata(p) for p in parsed]
 
     @classmethod
-    def _replace_key_to_tag_or_metadata(cls, parsed: dict[str, Any]):
+    def _replace_key_to_tag_or_metadata(cls, parsed: typing.Dict[str, Any]):
         """
         Replace search key to tag or metadata key if it is in the mapping.
         """

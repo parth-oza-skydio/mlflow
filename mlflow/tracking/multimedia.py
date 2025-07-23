@@ -1,3 +1,5 @@
+import typing
+
 """
 Internal module implementing multi-media objects and utilities in MLflow. Multi-media objects are
 exposed to users at the top-level :py:mod:`mlflow` module.
@@ -192,7 +194,7 @@ class Image:
         """
         self.image.save(path)
 
-    def resize(self, size: tuple[int, int]):
+    def resize(self, size: typing.Tuple[int, int]):
         """
         Resize the image to the specified size.
 

@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.h2o`` module provides an API for logging and loading H2O models. This module exports
 H2O models with the following flavors:
@@ -283,7 +285,7 @@ class _H2OModelWrapper:
         """
         return self.h2o_model
 
-    def predict(self, dataframe, params: Optional[dict[str, Any]] = None):
+    def predict(self, dataframe, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             dataframe: Model input data.

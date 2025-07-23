@@ -1,3 +1,5 @@
+import typing
+
 import base64
 import hashlib
 import json
@@ -16,7 +18,7 @@ from tests.resources.data.dataset_source import SampleDatasetSource
 class SampleDataset(Dataset):
     def __init__(
         self,
-        data_list: list[int],
+        data_list: typing.List[int],
         source: SampleDatasetSource,
         name: Optional[str] = None,
         digest: Optional[str] = None,
@@ -34,7 +36,7 @@ class SampleDataset(Dataset):
             hash_md5.update(hash_part)
         return base64.b64encode(hash_md5.digest()).decode("ascii")
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> typing.Dict[str, str]:
         """
         Returns:
             A string dictionary containing the following fields: name,
@@ -51,7 +53,7 @@ class SampleDataset(Dataset):
         return config
 
     @property
-    def data_list(self) -> list[int]:
+    def data_list(self) -> typing.List[int]:
         return self._data_list
 
     @property

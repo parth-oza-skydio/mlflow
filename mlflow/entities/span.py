@@ -1,3 +1,5 @@
+import typing
+
 import base64
 import json
 import logging
@@ -161,7 +163,7 @@ class Span:
         return encode_trace_id(self._span.context.trace_id)
 
     @property
-    def attributes(self) -> dict[str, Any]:
+    def attributes(self) -> typing.Dict[str, Any]:
         """
         Get all attributes of the span.
 
@@ -171,7 +173,7 @@ class Span:
         return self._attributes.get_all()
 
     @property
-    def events(self) -> list[SpanEvent]:
+    def events(self) -> typing.List[SpanEvent]:
         """
         Get all events of the span.
 
@@ -227,7 +229,7 @@ class Span:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "Span":
+    def from_dict(cls, data: typing.Dict[str, Any]) -> "Span":
         """
         Create a Span object from the given dictionary.
         """
@@ -316,7 +318,7 @@ def _encode_trace_id_to_byte(trace_id: int) -> bytes:
     return trace_id.to_bytes(length=16, byteorder="big", signed=False)
 
 
-def _get_trace_id_if_v3_format(data: dict[str, Any]) -> Optional[str]:
+def _get_trace_id_if_v3_format(data: typing.Dict[str, Any]) -> Optional[str]:
     """Return Trace ID if the span dictionary is in the V3 span format. Otherwise None."""
     if "context" not in data and "trace_id" in data:
         # Try to decode the trace ID as the V3 format (base64 encoded 16 bytes)
@@ -377,7 +379,7 @@ class LiveSpan(Span):
         """Set the output values to the span."""
         self.set_attribute(SpanAttributeKey.OUTPUTS, outputs)
 
-    def set_attributes(self, attributes: dict[str, Any]):
+    def set_attributes(self, attributes: typing.Dict[str, Any]):
         """
         Set the attributes to the span. The attributes must be a dictionary of key-value pairs.
         This method is additive, i.e. it will add new attributes to the existing ones. If an
@@ -449,7 +451,7 @@ class LiveSpan(Span):
 
         self._span.end(end_time=end_time)
 
-    def from_dict(cls, data: dict[str, Any]) -> "Span":
+    def from_dict(cls, data: typing.Dict[str, Any]) -> "Span":
         raise NotImplementedError("The `from_dict` method is not supported for the LiveSpan class.")
 
     def to_immutable_span(self) -> "Span":
@@ -598,13 +600,13 @@ class NoOpSpan(Span):
     def _trace_id(self):
         return None
 
-    def set_inputs(self, inputs: dict[str, Any]):
+    def set_inputs(self, inputs: typing.Dict[str, Any]):
         pass
 
-    def set_outputs(self, outputs: dict[str, Any]):
+    def set_outputs(self, outputs: typing.Dict[str, Any]):
         pass
 
-    def set_attributes(self, attributes: dict[str, Any]):
+    def set_attributes(self, attributes: typing.Dict[str, Any]):
         pass
 
     def set_attribute(self, key: str, value: Any):
@@ -634,7 +636,7 @@ class _SpanAttributesRegistry:
     def __init__(self, otel_span: OTelSpan):
         self._span = otel_span
 
-    def get_all(self) -> dict[str, Any]:
+    def get_all(self) -> typing.Dict[str, Any]:
         return {key: self.get(key) for key in self._span.attributes.keys()}
 
     def get(self, key: str):

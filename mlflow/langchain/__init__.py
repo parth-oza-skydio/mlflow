@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.langchain`` module provides an API for logging and loading LangChain models.
 This module exports multivariate LangChain models in the langchain flavor and univariate
@@ -443,8 +445,8 @@ def log_model(
     run_id=None,
     model_config=None,
     streamable=None,
-    resources: Optional[Union[list[Resource], str]] = None,
-    prompts: Optional[list[Union[str, Prompt]]] = None,
+    resources: Optional[Union[typing.List[Resource], str]] = None,
+    prompts: Optional[typing.List[Union[str, Prompt]]] = None,
 ):
     """
     Log a LangChain model as an MLflow artifact for the current run.
@@ -658,9 +660,9 @@ class _LangChainModelWrapper:
 
     def predict(
         self,
-        data: Union[pd.DataFrame, list[Union[str, dict[str, Any]]], Any],
-        params: Optional[dict[str, Any]] = None,
-    ) -> list[Union[str, dict[str, Any]]]:
+        data: Union[pd.DataFrame, typing.List[Union[str, typing.Dict[str, Any]]], Any],
+        params: Optional[typing.Dict[str, Any]] = None,
+    ) -> typing.List[Union[str, typing.Dict[str, Any]]]:
         """
         Args:
             data: Model input data.
@@ -711,11 +713,11 @@ class _LangChainModelWrapper:
     @experimental
     def _predict_with_callbacks(
         self,
-        data: Union[pd.DataFrame, list[Union[str, dict[str, Any]]], Any],
-        params: Optional[dict[str, Any]] = None,
+        data: Union[pd.DataFrame, typing.List[Union[str, typing.Dict[str, Any]]], Any],
+        params: Optional[typing.Dict[str, Any]] = None,
         callback_handlers=None,
         convert_chat_responses=False,
-    ) -> list[Union[str, dict[str, Any]]]:
+    ) -> typing.List[Union[str, typing.Dict[str, Any]]]:
         """
         Args:
             data: Model input data.
@@ -781,8 +783,8 @@ class _LangChainModelWrapper:
     def predict_stream(
         self,
         data: Any,
-        params: Optional[dict[str, Any]] = None,
-    ) -> Iterator[Union[str, dict[str, Any]]]:
+        params: Optional[typing.Dict[str, Any]] = None,
+    ) -> Iterator[Union[str, typing.Dict[str, Any]]]:
         """
         Args:
             data: Model input data, only single input is allowed.
@@ -805,10 +807,10 @@ class _LangChainModelWrapper:
     def _predict_stream_with_callbacks(
         self,
         data: Any,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
         callback_handlers=None,
         convert_chat_responses=False,
-    ) -> Iterator[Union[str, dict[str, Any]]]:
+    ) -> Iterator[Union[str, typing.Dict[str, Any]]]:
         """
         Args:
             data: Model input data, only single input is allowed.
@@ -835,7 +837,7 @@ class _LangChainModelWrapper:
         )
 
 
-def _load_pyfunc(path: str, model_config: Optional[dict[str, Any]] = None):  # noqa: D417
+def _load_pyfunc(path: str, model_config: Optional[typing.Dict[str, Any]] = None):  # noqa: D417
     """Load PyFunc implementation for LangChain. Called by ``pyfunc.load_model``.
 
     Args:

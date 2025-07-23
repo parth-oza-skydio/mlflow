@@ -1,3 +1,5 @@
+import typing
+
 from dataclasses import asdict, dataclass
 from typing import Optional
 
@@ -46,7 +48,7 @@ def test_hydrate_dataclass_complex():
 
     @dataclass
     class MyListDataclass:
-        c: list[MyDataclass]
+        c: typing.List[MyDataclass]
 
     # Create some dummy data as a pandas df
     df = pd.DataFrame({"c": [[{"a": 1, "b": 2}, {"a": 3, "b": 4}]]})

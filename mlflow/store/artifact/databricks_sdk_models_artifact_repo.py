@@ -1,3 +1,5 @@
+import typing
+
 import posixpath
 from typing import Optional
 
@@ -28,7 +30,7 @@ class DatabricksSDKModelsArtifactRepository(CloudArtifactRepository):
         self.client = _get_databricks_workspace_client()
         super().__init__(self.model_base_path)
 
-    def list_artifacts(self, path: Optional[str] = None) -> list[FileInfo]:
+    def list_artifacts(self, path: Optional[str] = None) -> typing.List[FileInfo]:
         dest_path = self.model_base_path
         if path:
             dest_path = posixpath.join(dest_path, path)

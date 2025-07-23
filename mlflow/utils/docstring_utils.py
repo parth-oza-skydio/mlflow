@@ -1,3 +1,5 @@
+import typing
+
 import textwrap
 import warnings
 
@@ -33,7 +35,7 @@ def _indent(text: str, indent: str) -> str:
         return first_line + "\n" + indented_subsequent_lines
 
 
-def _replace_all(text: str, replacements: dict[str, str]) -> str:
+def _replace_all(text: str, replacements: typing.Dict[str, str]) -> str:
     """
     Replace all instances of replacements.keys() with their corresponding
     values in text. The replacements will be inserted on the same line

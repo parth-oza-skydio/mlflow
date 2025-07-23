@@ -1,3 +1,5 @@
+import typing
+
 """
 Scoring server for python model format.
 The passed int model is expected to have function:
@@ -583,7 +585,7 @@ def get_cmd(
     host: Optional[int] = None,
     timeout: Optional[int] = None,
     nworkers: Optional[int] = None,
-) -> tuple[str, dict[str, str]]:
+) -> typing.Tuple[str, typing.Dict[str, str]]:
     local_uri = path_to_local_file_uri(model_uri)
     timeout = timeout or MLFLOW_SCORING_SERVER_REQUEST_TIMEOUT.get()
 

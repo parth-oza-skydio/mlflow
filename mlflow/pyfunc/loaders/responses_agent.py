@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Generator, Optional
 
 import pydantic
@@ -19,7 +21,7 @@ if not IS_PYDANTIC_V2_OR_NEWER:
 from mlflow.types.responses import ResponsesRequest, ResponsesResponse, ResponsesStreamEvent
 
 
-def _load_pyfunc(model_path: str, model_config: Optional[dict[str, Any]] = None):
+def _load_pyfunc(model_path: str, model_config: Optional[typing.Dict[str, Any]] = None):
     _, responses_agent, _ = _load_context_model_and_signature(model_path, model_config)
     return _ResponsesAgentPyfuncWrapper(responses_agent)
 
@@ -56,7 +58,7 @@ class _ResponsesAgentPyfuncWrapper:
             )
         return ResponsesRequest(**model_input)
 
-    def _response_to_dict(self, response, pydantic_class) -> dict[str, Any]:
+    def _response_to_dict(self, response, pydantic_class) -> typing.Dict[str, Any]:
         if isinstance(response, pydantic_class):
             return response.model_dump_compat(exclude_none=True)
         try:
@@ -71,7 +73,7 @@ class _ResponsesAgentPyfuncWrapper:
             ) from e
         return response
 
-    def predict(self, model_input: dict[str, Any], params=None) -> dict[str, Any]:
+    def predict(self, model_input: typing.Dict[str, Any], params=None) -> typing.Dict[str, Any]:
         """
         Args:
             model_input: A dict with the
@@ -89,8 +91,8 @@ class _ResponsesAgentPyfuncWrapper:
         return self._response_to_dict(response, ResponsesResponse)
 
     def predict_stream(
-        self, model_input: dict[str, Any], params=None
-    ) -> Generator[dict[str, Any], None, None]:
+        self, model_input: typing.Dict[str, Any], params=None
+    ) -> Generator[typing.Dict[str, Any], None, None]:
         """
         Args:
             model_input: A dict with the

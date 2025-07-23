@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import warnings
 from typing import Optional
@@ -64,7 +66,7 @@ _run_context_provider_registry.register(SystemEnvironmentContext)
 _run_context_provider_registry.register_entrypoints()
 
 
-def resolve_tags(tags=None, ignore: Optional[list[RunContextProvider]] = None):
+def resolve_tags(tags=None, ignore: Optional[typing.List[RunContextProvider]] = None):
     """Generate a set of tags for the current run context. Tags are resolved in the order,
     contexts are registered. Argument tags are applied last.
 

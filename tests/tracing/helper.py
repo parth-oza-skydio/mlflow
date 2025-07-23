@@ -1,3 +1,5 @@
+import typing
+
 import os
 import time
 import uuid
@@ -123,7 +125,7 @@ def create_test_trace_info(
     )
 
 
-def get_traces(experiment_id=DEFAULT_EXPERIMENT_ID) -> list[Trace]:
+def get_traces(experiment_id=DEFAULT_EXPERIMENT_ID) -> typing.List[Trace]:
     # Get all traces from the backend
     return mlflow.MlflowClient().search_traces(experiment_ids=[experiment_id])
 

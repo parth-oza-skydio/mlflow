@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import ast
 import fnmatch
@@ -20,7 +21,7 @@ DISABLE_COMMENT_REGEX = re.compile(r"clint:\s*disable=([a-z0-9-]+)")
 MARKDOWN_LINK_RE = re.compile(r"\[.+\]\(.+\)")
 
 
-def ignore_map(code: str) -> dict[str, set[int]]:
+def ignore_map(code: str) -> typing.Dict[str, typing.Set[int]]:
     """
     Creates a mapping of rule name to line numbers to ignore.
 
@@ -29,7 +30,7 @@ def ignore_map(code: str) -> dict[str, set[int]]:
         ...
     }
     """
-    mapping: dict[str, set[int]] = {}
+    mapping: typing.Dict[str, typing.Set[int]] = {}
     readline = iter(code.splitlines(True)).__next__
     for tok in tokenize.generate_tokens(readline):
         if tok.type != tokenize.COMMENT:
@@ -68,7 +69,7 @@ class Violation:
             f"{self.rule.id}: {self.rule.message}"
         )
 
-    def json(self) -> dict[str, str | int | None]:
+    def json(self) -> typing.Dict[str, str | int | None]:
         return {
             "type": "error",
             "module": None,
@@ -110,7 +111,7 @@ _CODE_BLOCK_OPTION_REGEX = re.compile(r"^:\w+:")
 
 def _iter_code_blocks(docstring: str) -> Iterator[CodeBlock]:
     code_block_loc: Location | None = None
-    code_lines: list[str] = []
+    code_lines: typing.List[str] = []
 
     for idx, line in enumerate(docstring.split("\n")):
         if code_block_loc:
@@ -143,8 +144,8 @@ def _iter_code_blocks(docstring: str) -> Iterator[CodeBlock]:
         yield CodeBlock(code=code, loc=code_block_loc)
 
 
-def _parse_docstring_args(docstring: str) -> list[str]:
-    args: list[str] = []
+def _parse_docstring_args(docstring: str) -> typing.List[str]:
+    args: typing.List[str] = []
     args_header_indent: int | None = None
     first_arg_indent: int | None = None
     arg_name_regex = re.compile(r"(\w+)")
@@ -170,7 +171,7 @@ def _parse_docstring_args(docstring: str) -> list[str]:
 
 class Linter(ast.NodeVisitor):
     def __init__(
-        self, *, path: Path, config: Config, ignore: dict[str, set[int]], cell: int | None = None
+        self, *, path: Path, config: Config, ignore: typing.Dict[str, typing.Set[int]], cell: int | None = None
     ):
         """
         Lints a Python file.
@@ -181,17 +182,17 @@ class Linter(ast.NodeVisitor):
             ignore: Mapping of rule name to line numbers to ignore.
             cell: Index of the cell being linted in a Jupyter notebook.
         """
-        self.stack: list[ast.AST] = []
+        self.stack: typing.List[ast.AST] = []
         self.path = path
         self.config = config
         self.ignore = ignore
         self.cell = cell
-        self.violations: list[Violation] = []
+        self.violations: typing.List[Violation] = []
         self.in_type_annotation = False
         self.in_TYPE_CHECKING = False
         self.is_mlflow_init_py = path == Path("mlflow", "__init__.py")
-        self.imported_modules: set[str] = set()
-        self.lazy_modules: dict[str, Location] = {}
+        self.imported_modules: typing.Set[str] = set()
+        self.lazy_modules: typing.Dict[str, Location] = {}
 
     def _check(self, loc: Location, rule: rules.Rule) -> None:
         if (lines := self.ignore.get(rule.name)) and loc.lineno in lines:
@@ -230,8 +231,8 @@ class Linter(ast.NodeVisitor):
     def _is_at_top_level(self) -> bool:
         return not self.stack
 
-    def _parse_func_args(self, func: ast.FunctionDef | ast.AsyncFunctionDef) -> list[str]:
-        args: list[str] = []
+    def _parse_func_args(self, func: ast.FunctionDef | ast.AsyncFunctionDef) -> typing.List[str]:
+        args: typing.List[str] = []
         for arg in func.args.posonlyargs:
             args.append(arg.arg)
 
@@ -509,7 +510,7 @@ class Linter(ast.NodeVisitor):
                     self._check(loc, rules.LazyModule())
 
 
-def _lint_cell(path: Path, config: Config, cell: dict[str, Any], index: int) -> list[Violation]:
+def _lint_cell(path: Path, config: Config, cell: typing.Dict[str, Any], index: int) -> typing.List[Violation]:
     type_ = cell.get("cell_type")
     if type_ != "code":
         return []
@@ -530,7 +531,7 @@ def _lint_cell(path: Path, config: Config, cell: dict[str, Any], index: int) -> 
     return linter.violations
 
 
-def lint_file(path: Path, config: Config) -> list[Violation]:
+def lint_file(path: Path, config: Config) -> typing.List[Violation]:
     code = path.read_text()
     if path.suffix == ".ipynb":
         if cells := json.loads(code).get("cells"):

@@ -1,3 +1,5 @@
+import typing
+
 from dataclasses import dataclass
 from typing import Optional, Union
 
@@ -28,9 +30,9 @@ class MetricValue:
         aggregate_results: A dictionary mapping the name of the aggregation to its value
     """
 
-    scores: Optional[Union[list[str], list[float]]] = None
-    justifications: Optional[list[str]] = None
-    aggregate_results: Optional[dict[str, float]] = None
+    scores: Optional[Union[typing.List[str], typing.List[float]]] = None
+    justifications: Optional[typing.List[str]] = None
+    aggregate_results: Optional[typing.Dict[str, float]] = None
 
     def __post_init__(self):
         if (

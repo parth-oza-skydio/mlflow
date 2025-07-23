@@ -1,3 +1,5 @@
+import typing
+
 import functools
 import re
 from textwrap import dedent
@@ -30,7 +32,7 @@ def add_prompt_filter_string(
     return filter_string
 
 
-def has_prompt_tag(tags: Optional[Union[list[RegisteredModelTag], dict[str, str]]]) -> bool:
+def has_prompt_tag(tags: Optional[Union[typing.List[RegisteredModelTag], typing.Dict[str, str]]]) -> bool:
     """Check if the given tags contain the prompt tag."""
     if isinstance(tags, dict):
         return IS_PROMPT_TAG_KEY in tags if tags else False

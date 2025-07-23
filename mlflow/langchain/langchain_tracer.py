@@ -1,3 +1,5 @@
+import typing
+
 import ast
 import logging
 from contextvars import ContextVar
@@ -133,7 +135,7 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
         super().__init__()
         self._mlflow_client = MlflowClient()
         # run_id: (LiveSpan, OTel token)
-        self._run_span_mapping: dict[str, SpanWithToken] = {}
+        self._run_span_mapping: typing.Dict[str, SpanWithToken] = {}
         self._prediction_context = prediction_context
 
     def _get_span_by_run_id(self, run_id: UUID) -> Optional[LiveSpan]:
@@ -142,8 +144,8 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
         raise MlflowException(f"Span for run_id {run_id!s} not found.")
 
     def _serialize_invocation_params(
-        self, attributes: Optional[dict[str, Any]]
-    ) -> Optional[dict[str, Any]]:
+        self, attributes: Optional[typing.Dict[str, Any]]
+    ) -> Optional[typing.Dict[str, Any]]:
         """
         Serialize the 'invocation_params' in the attributes dictionary.
         If 'invocation_params' contains a key 'response_format' whose value is a subclass
@@ -176,8 +178,8 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
         parent_run_id: Optional[UUID],
         span_type: str,
         run_id: UUID,
-        inputs: Optional[Union[str, dict[str, Any]]] = None,
-        attributes: Optional[dict[str, Any]] = None,
+        inputs: Optional[Union[str, typing.Dict[str, Any]]] = None,
+        attributes: Optional[typing.Dict[str, Any]] = None,
     ) -> LiveSpan:
         """Start MLflow Span (or Trace if it is root component)"""
         serialized_attributes = self._serialize_invocation_params(attributes)
@@ -266,18 +268,18 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
 
         self._run_span_mapping = {}
 
-    def _assign_span_name(self, serialized: dict[str, Any], default_name="unknown") -> str:
+    def _assign_span_name(self, serialized: typing.Dict[str, Any], default_name="unknown") -> str:
         return serialized.get("name", serialized.get("id", [default_name])[-1])
 
     def on_chat_model_start(
         self,
-        serialized: dict[str, Any],
-        messages: list[list[BaseMessage]],
+        serialized: typing.Dict[str, Any],
+        messages: typing.List[typing.List[BaseMessage]],
         *,
         run_id: UUID,
-        tags: Optional[list[str]] = None,
+        tags: Optional[typing.List[str]] = None,
         parent_run_id: Optional[UUID] = None,
-        metadata: Optional[dict[str, Any]] = None,
+        metadata: Optional[typing.Dict[str, Any]] = None,
         name: Optional[str] = None,
         **kwargs: Any,
     ):
@@ -307,13 +309,13 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
 
     def on_llm_start(
         self,
-        serialized: dict[str, Any],
-        prompts: list[str],
+        serialized: typing.Dict[str, Any],
+        prompts: typing.List[str],
         *,
         run_id: UUID,
-        tags: Optional[list[str]] = None,
+        tags: Optional[typing.List[str]] = None,
         parent_run_id: Optional[UUID] = None,
-        metadata: Optional[dict[str, Any]] = None,
+        metadata: Optional[typing.Dict[str, Any]] = None,
         name: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
@@ -336,7 +338,7 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
         if tools := self._extract_tool_definitions(kwargs):
             set_span_chat_tools(span, tools)
 
-    def _extract_tool_definitions(self, kwargs: dict[str, Any]) -> list[ChatTool]:
+    def _extract_tool_definitions(self, kwargs: typing.Dict[str, Any]) -> typing.List[ChatTool]:
         raw_tools = kwargs.get("invocation_params", {}).get("tools", [])
         tools = []
         for raw_tool in raw_tools:
@@ -389,7 +391,7 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
     ):
         """Run on a retry event."""
         span = self._get_span_by_run_id(run_id)
-        retry_d: dict[str, Any] = {
+        retry_d: typing.Dict[str, Any] = {
             "slept": retry_state.idle_for,
             "attempt": retry_state.attempt_number,
         }
@@ -438,13 +440,13 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
 
     def on_chain_start(
         self,
-        serialized: dict[str, Any],
-        inputs: Union[dict[str, Any], Any],
+        serialized: typing.Dict[str, Any],
+        inputs: Union[typing.Dict[str, Any], Any],
         *,
         run_id: UUID,
-        tags: Optional[list[str]] = None,
+        tags: Optional[typing.List[str]] = None,
         parent_run_id: Optional[UUID] = None,
-        metadata: Optional[dict[str, Any]] = None,
+        metadata: Optional[typing.Dict[str, Any]] = None,
         run_type: Optional[str] = None,
         name: Optional[str] = None,
         **kwargs: Any,
@@ -464,10 +466,10 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
 
     def on_chain_end(
         self,
-        outputs: dict[str, Any],
+        outputs: typing.Dict[str, Any],
         *,
         run_id: UUID,
-        inputs: Optional[Union[dict[str, Any], Any]] = None,
+        inputs: Optional[Union[typing.Dict[str, Any], Any]] = None,
         **kwargs: Any,
     ):
         """Run when chain ends running."""
@@ -480,7 +482,7 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
         self,
         error: BaseException,
         *,
-        inputs: Optional[Union[dict[str, Any], Any]] = None,
+        inputs: Optional[Union[typing.Dict[str, Any], Any]] = None,
         run_id: UUID,
         **kwargs: Any,
     ):
@@ -493,19 +495,19 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
 
     def on_tool_start(
         self,
-        serialized: dict[str, Any],
+        serialized: typing.Dict[str, Any],
         input_str: str,
         *,
         run_id: UUID,
-        tags: Optional[list[str]] = None,
+        tags: Optional[typing.List[str]] = None,
         parent_run_id: Optional[UUID] = None,
-        metadata: Optional[dict[str, Any]] = None,
+        metadata: Optional[typing.Dict[str, Any]] = None,
         name: Optional[str] = None,
         # We don't use inputs here because LangChain override the original inputs
         # with None for some cases. In order to avoid losing the original inputs,
         # we try to parse the input_str instead.
         # https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/tools/base.py#L636-L640
-        inputs: Optional[dict[str, Any]] = None,
+        inputs: Optional[typing.Dict[str, Any]] = None,
         **kwargs: Any,
     ):
         """Start span for a tool run."""
@@ -548,13 +550,13 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
 
     def on_retriever_start(
         self,
-        serialized: dict[str, Any],
+        serialized: typing.Dict[str, Any],
         query: str,
         *,
         run_id: UUID,
         parent_run_id: Optional[UUID] = None,
-        tags: Optional[list[str]] = None,
-        metadata: Optional[dict[str, Any]] = None,
+        tags: Optional[typing.List[str]] = None,
+        metadata: Optional[typing.Dict[str, Any]] = None,
         name: Optional[str] = None,
         **kwargs: Any,
     ):
@@ -570,7 +572,7 @@ class MlflowLangchainTracer(BaseCallbackHandler, metaclass=ExceptionSafeAbstract
             attributes=kwargs,
         )
 
-    def on_retriever_end(self, documents: Sequence[Document], *, run_id: UUID, **kwargs: Any):
+    def on_retriever_end(self, documents: typing.Sequence[Document], *, run_id: UUID, **kwargs: Any):
         """Run when Retriever ends running."""
         retriever_span = self._get_span_by_run_id(run_id)
         try:

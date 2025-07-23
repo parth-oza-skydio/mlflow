@@ -1,3 +1,5 @@
+import typing
+
 # Define all the service endpoint handlers here.
 import bisect
 import io
@@ -1197,8 +1199,8 @@ def get_metric_history_bulk_handler():
 
 
 def _get_sampled_steps_from_steps(
-    start_step: int, end_step: int, max_results: int, all_steps: list[int]
-) -> set[int]:
+    start_step: int, end_step: int, max_results: int, all_steps: typing.List[int]
+) -> typing.Set[int]:
     # NOTE: all_steps should be sorted before
     # being passed to this function
     start_idx = bisect.bisect_left(all_steps, start_step)

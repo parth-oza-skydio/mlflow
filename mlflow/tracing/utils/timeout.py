@@ -1,3 +1,5 @@
+import typing
+
 import atexit
 import logging
 import threading
@@ -225,7 +227,7 @@ class MlflowTraceTimeoutCache(_TimedCache):
                 if request_id in self:
                     del self[request_id]
 
-    def _get_expired_traces(self) -> list[str]:
+    def _get_expired_traces(self) -> typing.List[str]:
         """
         Find all expired traces and return their request IDs.
 

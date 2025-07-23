@@ -1,3 +1,5 @@
+import typing
+
 """
 This module provides a set of functions to manage the global tracer provider for MLflow tracing.
 
@@ -69,7 +71,7 @@ def start_detached_span(
     parent: Optional[trace.Span] = None,
     experiment_id: Optional[str] = None,
     start_time_ns: Optional[int] = None,
-) -> Optional[tuple[str, trace.Span]]:
+) -> Optional[typing.Tuple[str, trace.Span]]:
     """
     Start a new OpenTelemetry span that is not part of the current trace context, but with the
     explicit parent span ID if provided.

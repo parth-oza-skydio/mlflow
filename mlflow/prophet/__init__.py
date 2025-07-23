@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.prophet`` module provides an API for logging and loading Prophet models.
 This module exports univariate Prophet models in the following flavors:
@@ -348,7 +350,7 @@ class _ProphetModelWrapper:
         """
         return self.pr_model
 
-    def predict(self, dataframe, params: Optional[dict[str, Any]] = None):
+    def predict(self, dataframe, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             dataframe: Model input data.

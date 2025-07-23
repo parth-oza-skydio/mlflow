@@ -1,3 +1,5 @@
+import typing
+
 import base64
 import datetime as dt
 import decimal
@@ -90,7 +92,7 @@ ModelInputExample = Union[
 ]
 
 PyFuncLLMSingleInput = Union[
-    dict[str, Any],
+    typing.Dict[str, Any],
     bool,
     bytes,
     float,
@@ -99,7 +101,7 @@ PyFuncLLMSingleInput = Union[
 ]
 
 PyFuncLLMOutputChunk = Union[
-    dict[str, Any],
+    typing.Dict[str, Any],
     str,
 ]
 
@@ -1397,7 +1399,7 @@ def _enforce_property(data: Any, property: Property):
     return _enforce_type(data, property.dtype, required=property.required)
 
 
-def _enforce_object(data: dict[str, Any], obj: Object, required: bool = True):
+def _enforce_object(data: typing.Dict[str, Any], obj: Object, required: bool = True):
     if HAS_PYSPARK and isinstance(data, Row):
         data = None if len(data) == 0 else data.asDict(True)
     if not required and (data is None or data == {}):
@@ -1599,7 +1601,7 @@ def get_model_version_from_model_uri(model_uri):
     return client.get_model_version(name, version)
 
 
-def _enforce_params_schema(params: Optional[dict[str, Any]], schema: Optional[ParamSchema]):
+def _enforce_params_schema(params: Optional[typing.Dict[str, Any]], schema: Optional[ParamSchema]):
     if schema is None:
         if params in [None, {}]:
             return params
@@ -1875,7 +1877,7 @@ def _validate_and_get_model_code_path(model_code_path: str, temp_dir: str) -> st
 
 
 @contextmanager
-def _config_context(config: Optional[Union[str, dict[str, Any]]] = None):
+def _config_context(config: Optional[Union[str, typing.Dict[str, Any]]] = None):
     # Check if config_path is None and set it to "" so when loading the model
     # the config_path is set to "" so the ModelConfig can correctly check if the
     # config is set or not
@@ -1936,7 +1938,7 @@ def _mock_dbutils(globals_dict):
 # This function addresses this by dynamically importing the `code path` module under a unique,
 # dynamically generated module name. This bypasses the caching mechanism, as each import is
 # considered a separate module by the Python interpreter.
-def _load_model_code_path(code_path: str, model_config: Optional[Union[str, dict[str, Any]]]):
+def _load_model_code_path(code_path: str, model_config: Optional[Union[str, typing.Dict[str, Any]]]):
     with _config_context(model_config):
         try:
             new_module_name = f"code_model_{uuid.uuid4().hex}"
@@ -1966,9 +1968,9 @@ def _load_model_code_path(code_path: str, model_config: Optional[Union[str, dict
 
 
 def _flatten_nested_params(
-    d: dict[str, Any], parent_key: str = "", sep: str = "/"
-) -> dict[str, str]:
-    items: dict[str, Any] = {}
+    d: typing.Dict[str, Any], parent_key: str = "", sep: str = "/"
+) -> typing.Dict[str, str]:
+    items: typing.Dict[str, Any] = {}
     for k, v in d.items():
         new_key = f"{parent_key}{sep}{k}" if parent_key else k
         if isinstance(v, dict):
@@ -1981,7 +1983,7 @@ def _flatten_nested_params(
 # NB: this function should always be kept in sync with the serving
 # process in scoring_server invocations.
 @experimental
-def validate_serving_input(model_uri: str, serving_input: Union[str, dict[str, Any]]):
+def validate_serving_input(model_uri: str, serving_input: Union[str, typing.Dict[str, Any]]):
     """
     Helper function to validate the model can be served and provided input is valid
     prior to serving the model.

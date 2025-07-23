@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.statsmodels`` module provides an API for logging and loading statsmodels models.
 This module exports statsmodels models with the following flavors:
@@ -339,7 +341,7 @@ class _StatsmodelsModelWrapper:
     def predict(
         self,
         dataframe,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:

@@ -1,3 +1,5 @@
+import typing
+
 import inspect
 import logging
 from typing import Any, Generator, Optional
@@ -14,7 +16,7 @@ from mlflow.utils.annotations import experimental
 _logger = logging.getLogger(__name__)
 
 
-def _load_pyfunc(model_path: str, model_config: Optional[dict[str, Any]] = None):
+def _load_pyfunc(model_path: str, model_config: Optional[typing.Dict[str, Any]] = None):
     context, chat_model, signature = _load_context_model_and_signature(model_path, model_config)
     return _ChatModelPyfuncWrapper(chat_model=chat_model, context=context, signature=signature)
 
@@ -65,8 +67,8 @@ class _ChatModelPyfuncWrapper:
         return messages, params
 
     def predict(
-        self, model_input: dict[str, Any], params: Optional[dict[str, Any]] = None
-    ) -> dict[str, Any]:
+        self, model_input: typing.Dict[str, Any], params: Optional[typing.Dict[str, Any]] = None
+    ) -> typing.Dict[str, Any]:
         """
         Args:
             model_input: Model input data in the form of a chat request.
@@ -85,7 +87,7 @@ class _ChatModelPyfuncWrapper:
             response = self.chat_model.predict(messages, params)
         return self._response_to_dict(response)
 
-    def _response_to_dict(self, response: ChatCompletionResponse) -> dict[str, Any]:
+    def _response_to_dict(self, response: ChatCompletionResponse) -> typing.Dict[str, Any]:
         if not isinstance(response, ChatCompletionResponse):
             raise MlflowException(
                 "Model returned an invalid response. Expected a ChatCompletionResponse, but "
@@ -94,7 +96,7 @@ class _ChatModelPyfuncWrapper:
             )
         return response.to_dict()
 
-    def _streaming_response_to_dict(self, response: ChatCompletionChunk) -> dict[str, Any]:
+    def _streaming_response_to_dict(self, response: ChatCompletionChunk) -> typing.Dict[str, Any]:
         if not isinstance(response, ChatCompletionChunk):
             raise MlflowException(
                 "Model returned an invalid response. Expected a ChatCompletionChunk, but "
@@ -104,8 +106,8 @@ class _ChatModelPyfuncWrapper:
         return response.to_dict()
 
     def predict_stream(
-        self, model_input: dict[str, Any], params: Optional[dict[str, Any]] = None
-    ) -> Generator[dict[str, Any], None, None]:
+        self, model_input: typing.Dict[str, Any], params: Optional[typing.Dict[str, Any]] = None
+    ) -> Generator[typing.Dict[str, Any], None, None]:
         """
         Args:
             model_input: Model input data in the form of a chat request.

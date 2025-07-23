@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.sagemaker`` module provides an API for deploying MLflow models to Amazon SageMaker.
 """
@@ -1406,8 +1408,8 @@ def _get_sagemaker_config_tags(endpoint_name):
 
 
 def _prepare_sagemaker_tags(
-    config_tags: list[dict[str, str]],
-    sagemaker_tags: Optional[dict[str, str]] = None,
+    config_tags: typing.List[typing.Dict[str, str]],
+    sagemaker_tags: Optional[typing.Dict[str, str]] = None,
 ):
     if not sagemaker_tags:
         return config_tags
@@ -2799,7 +2801,7 @@ class SageMakerDeploymentClient(BaseDeploymentClient):
         deployment_name=None,
         inputs=None,
         endpoint=None,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Compute predictions from the specified deployment using the provided PyFunc input.

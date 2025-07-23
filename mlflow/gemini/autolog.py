@@ -1,3 +1,5 @@
+import typing
+
 import inspect
 import logging
 
@@ -103,7 +105,7 @@ def _get_keys(dic, keys):
     return None
 
 
-def _parse_outputs(outputs) -> list[ChatMessage]:
+def _parse_outputs(outputs) -> typing.List[ChatMessage]:
     """
     This method extract chat messages from genai.types.generation_types.GenerateContentResponse
     """

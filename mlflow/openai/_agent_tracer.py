@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import json
 import logging
@@ -78,7 +79,7 @@ class MlflowOpenAgentTracingProcessor(oai.TracingProcessor):
         **kwargs: Any,
     ) -> None:
         super().__init__(**kwargs)
-        self._span_id_to_mlflow_span: dict[str, LiveSpan] = {}
+        self._span_id_to_mlflow_span: typing.Dict[str, LiveSpan] = {}
         self._project_name = project_name
         self._mlflow_client = MlflowClient()
 
@@ -232,7 +233,7 @@ def _get_span_name(span_data: oai.SpanData) -> str:
         return "Unknown"
 
 
-def _parse_span_data(span_data: oai.SpanData) -> tuple[Any, Any, dict[str, Any]]:
+def _parse_span_data(span_data: oai.SpanData) -> typing.Tuple[Any, Any, typing.Dict[str, Any]]:
     inputs = None
     outputs = None
     attributes = {}
@@ -277,7 +278,7 @@ def _parse_span_data(span_data: oai.SpanData) -> tuple[Any, Any, dict[str, Any]]
     return inputs, outputs, attributes
 
 
-def _parse_response_span_data(span_data: oai.ResponseSpanData) -> tuple[Any, Any, dict[str, Any]]:
+def _parse_response_span_data(span_data: oai.ResponseSpanData) -> typing.Tuple[Any, Any, typing.Dict[str, Any]]:
     inputs = span_data.input
     response = span_data.response
     response_dict = response.model_dump() if response else {}

@@ -1,3 +1,5 @@
+import typing
+
 import copy
 import datetime
 import json
@@ -167,9 +169,9 @@ class MlflowStorage(BaseStorage):
     def _queue_batch_operation(
         self,
         run_id: str,
-        metrics: Optional[list[Metric]] = None,
-        params: Optional[list[Param]] = None,
-        tags: Optional[list[RunTag]] = None,
+        metrics: Optional[typing.List[Metric]] = None,
+        params: Optional[typing.List[Param]] = None,
+        tags: Optional[typing.List[RunTag]] = None,
     ):
         """Queue metrics, parameters, or tags for batched processing."""
         with self._batch_lock:
@@ -231,7 +233,7 @@ class MlflowStorage(BaseStorage):
         )
 
     def create_new_study(
-        self, directions: Sequence[StudyDirection], study_name: Optional[str] = None
+        self, directions: typing.Sequence[StudyDirection], study_name: Optional[str] = None
     ) -> int:
         """Create a new study as a mlflow run."""
         study_name = study_name or DEFAULT_STUDY_NAME_PREFIX + str(uuid.uuid4())
@@ -281,7 +283,7 @@ class MlflowStorage(BaseStorage):
         run = self._mlflow_client.get_run(study_id)
         return run.data.tags["mlflow.runName"]
 
-    def get_study_directions(self, study_id) -> list[StudyDirection]:
+    def get_study_directions(self, study_id) -> typing.List[StudyDirection]:
         # Flush the batch for this study to ensure we have the latest data
         self._flush_batch(study_id)
 
@@ -289,7 +291,7 @@ class MlflowStorage(BaseStorage):
         directions_str = run.data.tags["optuna.study_direction"]
         return [StudyDirection[name] for name in directions_str.split(",")]
 
-    def get_study_user_attrs(self, study_id) -> dict[str, Any]:
+    def get_study_user_attrs(self, study_id) -> typing.Dict[str, Any]:
         # Flush the batch for this study to ensure we have the latest data
         self._flush_batch(study_id)
 
@@ -300,7 +302,7 @@ class MlflowStorage(BaseStorage):
                 user_attrs[key[5:]] = json.loads(value)
         return user_attrs
 
-    def get_study_system_attrs(self, study_id) -> dict[str, Any]:
+    def get_study_system_attrs(self, study_id) -> typing.Dict[str, Any]:
         # Flush the batch for this study to ensure we have the latest data
         self._flush_batch(study_id)
 
@@ -311,7 +313,7 @@ class MlflowStorage(BaseStorage):
                 system_attrs[key[4:]] = json.loads(value)
         return system_attrs
 
-    def get_all_studies(self) -> list[FrozenStudy]:
+    def get_all_studies(self) -> typing.List[FrozenStudy]:
         # Flush all batches to ensure we have the latest data
         self.flush_all_batches()
 
@@ -490,7 +492,7 @@ class MlflowStorage(BaseStorage):
         return float(json.loads(param_value))
 
     def set_trial_state_values(
-        self, trial_id, state: TrialState, values: Optional[Sequence[float]] = None
+        self, trial_id, state: TrialState, values: Optional[typing.Sequence[float]] = None
     ) -> bool:
         # Update trial state
         if state.is_finished():
@@ -582,7 +584,7 @@ class MlflowStorage(BaseStorage):
             },
         )
 
-    def get_trial_user_attrs(self, trial_id) -> dict[str, Any]:
+    def get_trial_user_attrs(self, trial_id) -> typing.Dict[str, Any]:
         # Flush the batch for this trial to ensure we have the latest data
         self._flush_batch(trial_id)
 
@@ -593,7 +595,7 @@ class MlflowStorage(BaseStorage):
                 user_attrs[key[5:]] = json.loads(value)
         return user_attrs
 
-    def get_trial_system_attrs(self, trial_id) -> dict[str, Any]:
+    def get_trial_system_attrs(self, trial_id) -> typing.Dict[str, Any]:
         # Flush the batch for this trial to ensure we have the latest data
         self._flush_batch(trial_id)
 
@@ -609,7 +611,7 @@ class MlflowStorage(BaseStorage):
         study_id,
         deepcopy: bool = True,
         states: Optional[Container[TrialState]] = None,
-    ) -> list[FrozenTrial]:
+    ) -> typing.List[FrozenTrial]:
         # Flush all batches to ensure we have the latest data
         self.flush_all_batches()
 
@@ -621,7 +623,7 @@ class MlflowStorage(BaseStorage):
         for run in runs:
             trials.append(self.get_trial(run.info.run_id))
 
-        frozen_trials: list[FrozenTrial] = []
+        frozen_trials: typing.List[FrozenTrial] = []
         for trial in trials:
             if states is None or trial.state in states:
                 frozen_trials.append(trial)

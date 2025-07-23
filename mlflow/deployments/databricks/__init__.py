@@ -1,3 +1,5 @@
+import typing
+
 import json
 import posixpath
 import warnings
@@ -126,7 +128,7 @@ class DatabricksDeploymentClient(BaseDeploymentClient):
         method: str,
         prefix: str = "/api/2.0",
         route: Optional[str] = None,
-        json_body: Optional[dict[str, Any]] = None,
+        json_body: Optional[typing.Dict[str, Any]] = None,
         timeout: Optional[int] = None,
     ):
         call_kwargs = {}
@@ -154,7 +156,7 @@ class DatabricksDeploymentClient(BaseDeploymentClient):
         method: str,
         prefix: str = "/api/2.0",
         route: Optional[str] = None,
-        json_body: Optional[dict[str, Any]] = None,
+        json_body: Optional[typing.Dict[str, Any]] = None,
         timeout: Optional[int] = None,
     ) -> Iterator[str]:
         call_kwargs = {}
@@ -247,7 +249,7 @@ class DatabricksDeploymentClient(BaseDeploymentClient):
     @experimental
     def predict_stream(
         self, deployment_name=None, inputs=None, endpoint=None
-    ) -> Iterator[dict[str, Any]]:
+    ) -> Iterator[typing.Dict[str, Any]]:
         """
         Submit a query to a configured provider endpoint, and get streaming response
 

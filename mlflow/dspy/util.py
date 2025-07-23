@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import tempfile
 from collections import defaultdict
@@ -47,7 +49,7 @@ def log_dspy_module_params(program):
         _logger.warning(f"Failed to log dspy module params: {e}")
 
 
-def log_dspy_dataset(dataset: list["Example"], file_name: str):
+def log_dspy_dataset(dataset: typing.List["Example"], file_name: str):
     """
     Log the DSPy dataset as a table.
 

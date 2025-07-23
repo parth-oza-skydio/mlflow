@@ -1,3 +1,5 @@
+import typing
+
 import warnings
 from dataclasses import asdict, dataclass
 from typing import Any, Optional
@@ -28,11 +30,11 @@ class AssessmentSource(_MlflowObject):
         # Perform the standardization on source_type after initialization
         self.source_type = AssessmentSourceType._standardize(self.source_type)
 
-    def to_dictionary(self) -> dict[str, Any]:
+    def to_dictionary(self) -> typing.Dict[str, Any]:
         return asdict(self)
 
     @classmethod
-    def from_dictionary(cls, source_dict: dict[str, Any]) -> "AssessmentSource":
+    def from_dictionary(cls, source_dict: typing.Dict[str, Any]) -> "AssessmentSource":
         return cls(**source_dict)
 
     def to_proto(self):

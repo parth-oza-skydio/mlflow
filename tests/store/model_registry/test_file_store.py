@@ -1,3 +1,5 @@
+import typing
+
 import time
 import uuid
 from typing import NamedTuple
@@ -985,7 +987,7 @@ def test_search_model_versions_by_tag(store):
 
 
 class SearchRegisteredModelsResult(NamedTuple):
-    names: list[str]
+    names: typing.List[str]
     token: str
 
 

@@ -1,3 +1,5 @@
+import typing
+
 import functools
 import getpass
 import json
@@ -1149,7 +1151,7 @@ def get_databricks_env_vars(tracking_uri):
     return env_vars
 
 
-def _get_databricks_serverless_env_vars() -> dict[str, str]:
+def _get_databricks_serverless_env_vars() -> typing.Dict[str, str]:
     """
     Returns the environment variables required to to initialize WorkspaceClient in a subprocess
     with serverless compute.

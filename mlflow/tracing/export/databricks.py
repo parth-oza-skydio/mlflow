@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from typing import Sequence
 
@@ -40,7 +42,7 @@ class DatabricksSpanExporter(SpanExporter):
             _logger.info("MLflow is configured to log traces asynchronously.")
             self._async_queue = AsyncTraceExportQueue()
 
-    def export(self, spans: Sequence[ReadableSpan]):
+    def export(self, spans: typing.Sequence[ReadableSpan]):
         """
         Export the spans to the destination.
 

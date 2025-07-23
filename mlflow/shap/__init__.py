@@ -1,3 +1,5 @@
+import typing
+
 import os
 import tempfile
 import types
@@ -660,7 +662,7 @@ class _SHAPWrapper:
     def predict(
         self,
         dataframe,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:

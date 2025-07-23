@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.catboost`` module provides an API for logging and loading CatBoost models.
 This module exports CatBoost models with the following flavors:
@@ -341,7 +343,7 @@ class _CatboostModelWrapper:
         """
         return self.cb_model
 
-    def predict(self, dataframe, params: Optional[dict[str, Any]] = None):
+    def predict(self, dataframe, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             dataframe: Model input data.

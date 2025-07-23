@@ -1,3 +1,5 @@
+import typing
+
 import base64
 import datetime
 import decimal
@@ -305,7 +307,7 @@ def test_column_schema_enforcement():
     res = pyfunc_model.predict(d)
     assert res.dtypes.to_dict() == expected_types
 
-    # 15. dictionaries of str -> list[list] fail
+    # 15. dictionaries of str -> typing.List[list] fail
     d = {
         "a": [arr.astype("int32")],
         "b": [arr.astype("int64")],

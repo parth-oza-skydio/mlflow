@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.sklearn`` module provides an API for logging and loading scikit-learn models. This
 module exports scikit-learn models with the following flavors:
@@ -528,7 +530,7 @@ class _SklearnModelWrapper:
     def predict(
         self,
         data,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:

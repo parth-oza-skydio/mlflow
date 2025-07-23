@@ -1,3 +1,5 @@
+import typing
+
 from mlflow.utils.pydantic_utils import IS_PYDANTIC_V2_OR_NEWER, model_validator
 
 if not IS_PYDANTIC_V2_OR_NEWER:
@@ -101,19 +103,19 @@ from mlflow.utils.autologging_utils.logging_and_warnings import (
 
 
 class ResponsesRequest(BaseRequestPayload):
-    input: list[Union[Message, OutputItem]]
-    custom_inputs: Optional[dict[str, Any]] = None
+    input: typing.List[Union[Message, OutputItem]]
+    custom_inputs: Optional[typing.Dict[str, Any]] = None
     context: Optional[ChatContext] = None
 
 
 class ResponsesResponse(Response):
-    custom_outputs: Optional[dict[str, Any]] = None
+    custom_outputs: Optional[typing.Dict[str, Any]] = None
 
 
 class ResponsesStreamEvent(BaseModel):
     model_config = ConfigDict(extra="allow")
     type: str
-    custom_outputs: Optional[dict[str, Any]] = None
+    custom_outputs: Optional[typing.Dict[str, Any]] = None
 
     @model_validator(mode="after")
     def check_type(self) -> "ResponsesStreamEvent":

@@ -1,3 +1,5 @@
+import typing
+
 import json
 import os
 from typing import Any, Generator, Optional, Sequence, Union
@@ -59,7 +61,7 @@ def uc_tool_format() -> str:
 
 
 @tool
-def lc_tool_format() -> dict[str, Any]:
+def lc_tool_format() -> typing.Dict[str, Any]:
     """Returns lc tool format"""
     nums = [1, 2]
     return {
@@ -74,7 +76,7 @@ tools = [uc_tool_format, lc_tool_format]
 
 def create_tool_calling_agent(
     model: LanguageModelLike,
-    tools: Union[ToolNode, Sequence[BaseTool]],
+    tools: Union[ToolNode, typing.Sequence[BaseTool]],
     agent_prompt: Optional[str] = None,
 ) -> CompiledGraph:
     model = model.bind_tools(tools)
@@ -124,9 +126,9 @@ class LangGraphChatAgent(ChatAgent):
 
     def predict(
         self,
-        messages: list[ChatAgentMessage],
+        messages: typing.List[ChatAgentMessage],
         context: Optional[ChatContext] = None,
-        custom_inputs: Optional[dict[str, Any]] = None,
+        custom_inputs: Optional[typing.Dict[str, Any]] = None,
     ) -> ChatAgentResponse:
         request = {"messages": self._convert_messages_to_dict(messages)}
 
@@ -138,9 +140,9 @@ class LangGraphChatAgent(ChatAgent):
 
     def predict_stream(
         self,
-        messages: list[ChatAgentMessage],
+        messages: typing.List[ChatAgentMessage],
         context: Optional[ChatContext] = None,
-        custom_inputs: Optional[dict[str, Any]] = None,
+        custom_inputs: Optional[typing.Dict[str, Any]] = None,
     ) -> Generator[ChatAgentChunk, None, None]:
         request = {"messages": self._convert_messages_to_dict(messages)}
         for event in self.agent.stream(request, stream_mode="updates"):

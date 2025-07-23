@@ -1,3 +1,5 @@
+import typing
+
 from llama_index.core.base.llms.types import ChatMessage as LLamaChatMessage
 from llama_index.core.instrumentation.events import BaseEvent
 from llama_index.core.instrumentation.events.llm import (
@@ -15,7 +17,7 @@ from mlflow.types.chat import ChatMessage
 from mlflow.utils.pydantic_utils import model_dump_compat
 
 
-def get_chat_messages_from_event(event: BaseEvent) -> list[ChatMessage]:
+def get_chat_messages_from_event(event: BaseEvent) -> typing.List[ChatMessage]:
     """
     Extract chat messages from the LlamaIndex callback event.
     """

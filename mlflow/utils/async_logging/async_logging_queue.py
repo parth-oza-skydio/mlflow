@@ -1,3 +1,5 @@
+import typing
+
 """
 Defines an AsyncLoggingQueue that provides async fashion logging of metrics/tags/params using
 queue based approach.
@@ -51,7 +53,7 @@ class AsyncLoggingQueue:
     """
 
     def __init__(
-        self, logging_func: Callable[[str, list[Metric], list[Param], list[RunTag]], None]
+        self, logging_func: Callable[[str, typing.List[Metric], typing.List[Param], typing.List[RunTag]], None]
     ) -> None:
         """Initializes an AsyncLoggingQueue object.
 
@@ -132,7 +134,7 @@ class AsyncLoggingQueue:
 
             raise MlflowException(f"Exception inside the run data logging thread: {e}")
 
-    def _fetch_batch_from_queue(self) -> list[RunBatch]:
+    def _fetch_batch_from_queue(self) -> typing.List[RunBatch]:
         """Fetches a batch of run data from the queue.
 
         Returns:
@@ -282,15 +284,15 @@ class AsyncLoggingQueue:
         self._stop_data_logging_thread_event = threading.Event()
 
     def log_batch_async(
-        self, run_id: str, params: list[Param], tags: list[RunTag], metrics: list[Metric]
+        self, run_id: str, params: typing.List[Param], tags: typing.List[RunTag], metrics: typing.List[Metric]
     ) -> RunOperations:
         """Asynchronously logs a batch of run data (parameters, tags, and metrics).
 
         Args:
             run_id (str): The ID of the run to log data for.
-            params (list[mlflow.entities.Param]): A list of parameters to log for the run.
-            tags (list[mlflow.entities.RunTag]): A list of tags to log for the run.
-            metrics (list[mlflow.entities.Metric]): A list of metrics to log for the run.
+            params (typing.List[mlflow.entities.Param]): A list of parameters to log for the run.
+            tags (typing.List[mlflow.entities.RunTag]): A list of tags to log for the run.
+            metrics (typing.List[mlflow.entities.Metric]): A list of metrics to log for the run.
 
         Returns:
             mlflow.utils.async_utils.RunOperations: An object that encapsulates the

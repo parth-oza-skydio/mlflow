@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import urllib
 from typing import Any, Union
@@ -519,7 +521,7 @@ class SqlAlchemyStore(AbstractStore):
     def _update_query_to_exclude_prompts(
         cls,
         query: Any,
-        tag_filters: dict[str, list[Any]],
+        tag_filters: typing.Dict[str, typing.List[Any]],
         dialect: str,
         main_db_model: Union[SqlModelVersion, SqlRegisteredModel],
         tag_db_model: Union[SqlModelVersionTag, SqlRegisteredModelTag],
@@ -556,7 +558,7 @@ class SqlAlchemyStore(AbstractStore):
         ).filter(prompts_subquery.c.name.is_(None))
 
     @classmethod
-    def _is_querying_prompt(cls, parsed_filters: list[dict[str, Any]]) -> bool:
+    def _is_querying_prompt(cls, parsed_filters: typing.List[typing.Dict[str, Any]]) -> bool:
         for f in parsed_filters:
             if f["type"] != "tag" or f["key"] != IS_PROMPT_TAG_KEY:
                 continue

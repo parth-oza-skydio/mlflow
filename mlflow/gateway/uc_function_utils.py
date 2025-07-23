@@ -1,3 +1,5 @@
+import typing
+
 # TODO: Move this in mlflow/gateway/utils/uc_functions.py
 
 import json
@@ -15,7 +17,7 @@ if TYPE_CHECKING:
 _UC_FUNCTION = "uc_function"
 
 
-def uc_type_to_json_schema_type(uc_type_json: Union[str, dict[str, Any]]) -> dict[str, Any]:
+def uc_type_to_json_schema_type(uc_type_json: Union[str, typing.Dict[str, Any]]) -> typing.Dict[str, Any]:
     """
     Converts the JSON representation of a Unity Catalog data type to the corresponding JSON schema
     type. The conversion is lossy because we do not need to convert it back.
@@ -81,7 +83,7 @@ def extract_param_metadata(p: "FunctionParameterInfo") -> dict:
     return json_schema_type
 
 
-def get_func_schema(func: "FunctionInfo") -> dict[str, Any]:
+def get_func_schema(func: "FunctionInfo") -> typing.Dict[str, Any]:
     parameters = func.input_params.parameters if func.input_params else []
     return {
         "description": func.comment,
@@ -97,7 +99,7 @@ def get_func_schema(func: "FunctionInfo") -> dict[str, Any]:
 @dataclass
 class ParameterizedStatement:
     statement: str
-    parameters: list["StatementParameterListItem"]
+    parameters: typing.List["StatementParameterListItem"]
 
 
 @dataclass
@@ -128,7 +130,7 @@ def is_scalar(function: "FunctionInfo") -> bool:
 
 def get_execute_function_sql_stmt(
     function: "FunctionInfo",
-    json_params: dict[str, Any],
+    json_params: typing.Dict[str, Any],
 ) -> ParameterizedStatement:
     from databricks.sdk.service.catalog import ColumnTypeName
     from databricks.sdk.service.sql import StatementParameterListItem
@@ -188,7 +190,7 @@ def execute_function(
     ws: "WorkspaceClient",
     warehouse_id: str,
     function: "FunctionInfo",
-    parameters: dict[str, Any],
+    parameters: typing.Dict[str, Any],
 ) -> FunctionExecutionResult:
     """
     Execute a function with the given arguments and return the result.
@@ -245,7 +247,7 @@ def execute_function(
         )
 
 
-def join_uc_functions(uc_functions: list[dict[str, Any]]):
+def join_uc_functions(uc_functions: typing.List[typing.Dict[str, Any]]):
     calls = [
         f"""
 <uc_function_call>
@@ -268,8 +270,8 @@ def _get_tool_name(function: "FunctionInfo") -> str:
 
 @dataclass
 class ParseResult:
-    tool_calls: list[dict[str, Any]]
-    tool_messages: list[dict[str, Any]]
+    tool_calls: typing.List[typing.Dict[str, Any]]
+    tool_messages: typing.List[typing.Dict[str, Any]]
 
 
 _UC_REGEX = re.compile(

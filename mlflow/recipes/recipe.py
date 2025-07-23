@@ -1,3 +1,5 @@
+import typing
+
 import abc
 import logging
 import os
@@ -156,7 +158,7 @@ class BaseRecipe:
             )
         return self._steps[step_names.index(step_name)]
 
-    def _get_subgraph_for_target_step(self, target_step: BaseStep) -> list[BaseStep]:
+    def _get_subgraph_for_target_step(self, target_step: BaseStep) -> typing.List[BaseStep]:
         """
         Return a list of step objects representing a connected DAG containing the target_step.
         The returned list should be a sublist of self._steps.
@@ -313,7 +315,7 @@ class BaseRecipe:
 
         return recipe_dag_file
 
-    def _resolve_recipe_steps(self) -> list[BaseStep]:
+    def _resolve_recipe_steps(self) -> typing.List[BaseStep]:
         """
         Constructs and returns all recipe step objects from the recipe configuration.
         """

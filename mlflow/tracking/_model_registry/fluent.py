@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Optional
 
 from mlflow.entities.model_registry import ModelVersion, Prompt, RegisteredModel
@@ -22,7 +24,7 @@ def register_model(
     name,
     await_registration_for=DEFAULT_AWAIT_MAX_SLEEP_SECONDS,
     *,
-    tags: Optional[dict[str, Any]] = None,
+    tags: Optional[typing.Dict[str, Any]] = None,
 ) -> ModelVersion:
     """Create a new model version in model registry for the model files specified by ``model_uri``.
 
@@ -87,7 +89,7 @@ def _register_model(
     name,
     await_registration_for=DEFAULT_AWAIT_MAX_SLEEP_SECONDS,
     *,
-    tags: Optional[dict[str, Any]] = None,
+    tags: Optional[typing.Dict[str, Any]] = None,
     local_model_path=None,
 ) -> ModelVersion:
     client = MlflowClient()
@@ -129,8 +131,8 @@ def _register_model(
 def search_registered_models(
     max_results: Optional[int] = None,
     filter_string: Optional[str] = None,
-    order_by: Optional[list[str]] = None,
-) -> list[RegisteredModel]:
+    order_by: Optional[typing.List[str]] = None,
+) -> typing.List[RegisteredModel]:
     """Search for registered models that satisfy the filter criteria.
 
     Args:
@@ -234,8 +236,8 @@ def search_registered_models(
 def search_model_versions(
     max_results: Optional[int] = None,
     filter_string: Optional[str] = None,
-    order_by: Optional[list[str]] = None,
-) -> list[ModelVersion]:
+    order_by: Optional[typing.List[str]] = None,
+) -> typing.List[ModelVersion]:
     """Search for model versions that satisfy the filter criteria.
 
     .. warning:
@@ -334,8 +336,8 @@ def register_prompt(
     name: str,
     template: str,
     commit_message: Optional[str] = None,
-    version_metadata: Optional[dict[str, str]] = None,
-    tags: Optional[dict[str, str]] = None,
+    version_metadata: Optional[typing.Dict[str, str]] = None,
+    tags: Optional[typing.Dict[str, str]] = None,
 ) -> Prompt:
     """
     Register a new :py:class:`Prompt <mlflow.entities.Prompt>` in the MLflow Prompt Registry.

@@ -1,3 +1,5 @@
+import typing
+
 import contextlib
 import inspect
 import logging
@@ -133,7 +135,7 @@ def configure_autologging_for_evaluation(enable_tracing: bool = True):
                         )
 
 
-def _should_enable_tracing(flavor: str, autologging_config: dict[str, Any]) -> bool:
+def _should_enable_tracing(flavor: str, autologging_config: typing.Dict[str, Any]) -> bool:
     """
     Check if tracing should be enabled for the given flavor during the model evaluation.
     """
@@ -157,7 +159,7 @@ def _should_enable_tracing(flavor: str, autologging_config: dict[str, Any]) -> b
     return flavor_config.get("log_traces", True)
 
 
-def _kwargs_safe_invoke(func: Callable[..., Any], kwargs: dict[str, Any]):
+def _kwargs_safe_invoke(func: Callable[..., Any], kwargs: typing.Dict[str, Any]):
     """
     Invoke the function with the given dictionary as keyword arguments, but only include the
     arguments that are present in the function's signature.

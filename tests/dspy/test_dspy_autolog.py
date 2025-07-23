@@ -1,3 +1,5 @@
+import typing
+
 import importlib
 import json
 import time
@@ -199,7 +201,7 @@ def test_autolog_react():
         adapter=dspy.ChatAdapter(),
     )
 
-    def search(query: str) -> list[str]:
+    def search(query: str) -> typing.List[str]:
         return "Mount Everest"
 
     tools = [dspy.Tool(search)]
@@ -242,7 +244,7 @@ def test_autolog_retriever():
     dspy.settings.configure(lm=DummyLM([{"output": "test output"}]))
 
     class DummyRetriever(dspy.Retrieve):
-        def forward(self, query: str, n: int) -> list[str]:
+        def forward(self, query: str, n: int) -> typing.List[str]:
             time.sleep(0.1)
             return ["test output"] * n
 
@@ -265,7 +267,7 @@ def test_autolog_retriever():
 
 
 class DummyRetriever(dspy.Retrieve):
-    def forward(self, query: str) -> list[str]:
+    def forward(self, query: str) -> typing.List[str]:
         time.sleep(0.1)
         return ["test output"]
 

@@ -1,3 +1,5 @@
+import typing
+
 """
 This module provides a set of utilities for interpreting and creating requirements files
 (e.g. pip's `requirements.txt`), which is useful for managing ML software environments.
@@ -692,7 +694,7 @@ def _check_requirement_satisfied(requirement_str):
     return None
 
 
-def warn_dependency_requirement_mismatches(model_requirements: list[str]):
+def warn_dependency_requirement_mismatches(model_requirements: typing.List[str]):
     """
     Inspects the model's dependencies and prints a warning if the current Python environment
     doesn't satisfy them.

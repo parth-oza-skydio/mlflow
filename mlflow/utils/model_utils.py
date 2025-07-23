@@ -1,3 +1,5 @@
+import typing
+
 import contextlib
 import json
 import os
@@ -335,8 +337,8 @@ def _validate_onnx_session_options(onnx_session_options):
 
 
 def _get_overridden_pyfunc_model_config(
-    pyfunc_config: dict[str, Any], load_config: dict[str, Any], logger
-) -> dict[str, Any]:
+    pyfunc_config: typing.Dict[str, Any], load_config: typing.Dict[str, Any], logger
+) -> typing.Dict[str, Any]:
     """
     Updates the inference configuration according to the model's configuration and the overrides.
     Only arguments already present in the inference configuration can be updated. The environment

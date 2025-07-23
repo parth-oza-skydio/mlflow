@@ -1,3 +1,5 @@
+import typing
+
 import importlib.metadata
 import json
 from typing import Annotated, Any, Optional, TypedDict, Union
@@ -40,7 +42,7 @@ from mlflow.types.agent import ChatAgentMessage
 from mlflow.utils.annotations import experimental
 
 
-def _add_agent_messages(left: Union[dict, list[dict]], right: Union[dict, list[dict]]):
+def _add_agent_messages(left: Union[dict, typing.List[dict]], right: Union[dict, typing.List[dict]]):
     if not isinstance(left, list):
         left = [left]
     if not isinstance(right, list):
@@ -111,7 +113,7 @@ class ChatAgentState(TypedDict):
 
         def create_tool_calling_agent(
             model: LanguageModelLike,
-            tools: Union[ToolNode, Sequence[BaseTool]],
+            tools: Union[ToolNode, typing.Sequence[BaseTool]],
             agent_prompt: Optional[str] = None,
         ) -> CompiledGraph:
             model = model.bind_tools(tools)
@@ -175,7 +177,7 @@ class ChatAgentState(TypedDict):
 
 
         @tool
-        def generate_random_ints(min: int, max: int, size: int) -> dict[str, Any]:
+        def generate_random_ints(min: int, max: int, size: int) -> typing.Dict[str, Any]:
             \"""Generate size random ints in the range [min, max].\"""
             attachments = {"min": min, "max": max}
             custom_outputs = [randint(min, max) for _ in range(size)]
@@ -217,9 +219,9 @@ class ChatAgentState(TypedDict):
 
             def predict(
                 self,
-                messages: list[ChatAgentMessage],
+                messages: typing.List[ChatAgentMessage],
                 context: Optional[ChatContext] = None,
-                custom_inputs: Optional[dict[str, Any]] = None,
+                custom_inputs: Optional[typing.Dict[str, Any]] = None,
             ) -> ChatAgentResponse:
                 request = {"messages": self._convert_messages_to_dict(messages)}
 
@@ -233,9 +235,9 @@ class ChatAgentState(TypedDict):
 
             def predict_stream(
                 self,
-                messages: list[ChatAgentMessage],
+                messages: typing.List[ChatAgentMessage],
                 context: Optional[ChatContext] = None,
-                custom_inputs: Optional[dict[str, Any]] = None,
+                custom_inputs: Optional[typing.Dict[str, Any]] = None,
             ) -> Generator[ChatAgentChunk, None, None]:
                 request = {"messages": self._convert_messages_to_dict(messages)}
                 for event in self.agent.stream(request, stream_mode="updates"):
@@ -265,14 +267,14 @@ class ChatAgentState(TypedDict):
     """
 
     messages: Annotated[list, _add_agent_messages]
-    context: Optional[dict[str, Any]]
-    custom_inputs: Optional[dict[str, Any]]
-    custom_outputs: Optional[dict[str, Any]]
+    context: Optional[typing.Dict[str, Any]]
+    custom_inputs: Optional[typing.Dict[str, Any]]
+    custom_outputs: Optional[typing.Dict[str, Any]]
 
 
 def parse_message(
     msg: AnyMessage, name: Optional[str] = None, attachments: Optional[dict] = None
-) -> dict[str, Any]:
+) -> typing.Dict[str, Any]:
     """
     Parse different LangChain message types into their ChatAgentMessage schema dict equivalents
     """

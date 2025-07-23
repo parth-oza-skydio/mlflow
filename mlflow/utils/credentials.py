@@ -1,3 +1,5 @@
+import typing
+
 import configparser
 import getpass
 import logging
@@ -29,7 +31,7 @@ def _get_credentials_path() -> str:
     return os.path.expanduser("~/.mlflow/credentials")
 
 
-def _read_mlflow_creds_from_file() -> tuple[Optional[str], Optional[str]]:
+def _read_mlflow_creds_from_file() -> typing.Tuple[Optional[str], Optional[str]]:
     path = _get_credentials_path()
     if not os.path.exists(path):
         return None, None
@@ -45,7 +47,7 @@ def _read_mlflow_creds_from_file() -> tuple[Optional[str], Optional[str]]:
     return mlflow_cfg.get(username_key), mlflow_cfg.get(password_key)
 
 
-def _read_mlflow_creds_from_env() -> tuple[Optional[str], Optional[str]]:
+def _read_mlflow_creds_from_env() -> typing.Tuple[Optional[str], Optional[str]]:
     return MLFLOW_TRACKING_USERNAME.get(), MLFLOW_TRACKING_PASSWORD.get()
 
 

@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Optional
 
 from mlflow.pyfunc.loaders.chat_agent import _ChatAgentPyfuncWrapper
@@ -17,7 +19,7 @@ except ImportError:
     IS_RESPONSES_AGENT_AVAILABLE = False
 
 
-def _load_pyfunc(local_path: str, model_config: Optional[dict[str, Any]] = None):
+def _load_pyfunc(local_path: str, model_config: Optional[typing.Dict[str, Any]] = None):
     context, model, signature = _load_context_model_and_signature(local_path, model_config)
     if isinstance(model, ChatModel):
         return _ChatModelPyfuncWrapper(model, context, signature)

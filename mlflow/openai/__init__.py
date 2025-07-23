@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.openai`` module provides an API for logging and loading OpenAI models.
 
@@ -221,7 +223,7 @@ def _log_secrets_yaml(local_model_dir, scope):
         yaml.safe_dump({e.value: f"{scope}:{e.secret_key}" for e in _OpenAIEnvVar}, f)
 
 
-def _parse_format_fields(s) -> set[str]:
+def _parse_format_fields(s) -> typing.Set[str]:
     """Parses format fields from a given string, e.g. "Hello {name}" -> ["name"]."""
     return {fn for _, fn, _, _ in Formatter().parse(s) if fn is not None}
 
@@ -457,7 +459,7 @@ def log_model(
     extra_pip_requirements=None,
     metadata=None,
     example_no_conversion=None,
-    prompts: Optional[list[Union[str, Prompt]]] = None,
+    prompts: Optional[typing.List[Union[str, Prompt]]] = None,
     **kwargs,
 ):
     """
@@ -778,7 +780,7 @@ class _OpenAIWrapper:
 
         return [row.embedding for batch in results for row in batch.data]
 
-    def predict(self, data, params: Optional[dict[str, Any]] = None):
+    def predict(self, data, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             data: Model input data.

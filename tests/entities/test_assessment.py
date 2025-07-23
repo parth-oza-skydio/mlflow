@@ -1,3 +1,5 @@
+import typing
+
 import time
 
 import pytest
@@ -218,20 +220,20 @@ def test_assessment_conversion(expectation, feedback, source, metadata):
     assert result == assessment
 
     dict = assessment.to_dictionary()
-    assert dict["assessment_id"] == assessment.assessment_id
-    assert dict["trace_id"] == assessment.trace_id
-    assert dict["name"] == assessment.name
-    assert dict["source"] == {
+    assert typing.Dict["assessment_id"] == assessment.assessment_id
+    assert typing.Dict["trace_id"] == assessment.trace_id
+    assert typing.Dict["name"] == assessment.name
+    assert typing.Dict["source"] == {
         "source_type": source.source_type,
         "source_id": source.source_id,
     }
-    assert dict["create_time_ms"] == assessment.create_time_ms
-    assert dict["last_update_time_ms"] == assessment.last_update_time_ms
-    assert dict["rationale"] == assessment.rationale
-    assert dict["metadata"] == metadata
+    assert typing.Dict["create_time_ms"] == assessment.create_time_ms
+    assert typing.Dict["last_update_time_ms"] == assessment.last_update_time_ms
+    assert typing.Dict["rationale"] == assessment.rationale
+    assert typing.Dict["metadata"] == metadata
 
     if expectation:
-        assert dict["expectation"] == {"value": expectation.value}
+        assert typing.Dict["expectation"] == {"value": expectation.value}
 
     if feedback:
-        assert dict["feedback"] == feedback.to_dictionary()
+        assert typing.Dict["feedback"] == feedback.to_dictionary()

@@ -1,3 +1,5 @@
+import typing
+
 """
 Renders the statistics of logged data in a HTML format.
 """
@@ -217,7 +219,7 @@ def convert_to_proto(df: pd.DataFrame) -> facet_feature_statistics_pb2.DatasetFe
 
 
 def convert_to_comparison_proto(
-    dfs: Iterable[tuple[str, pd.DataFrame]],
+    dfs: typing.Iterable[typing.Tuple[str, pd.DataFrame]],
 ) -> facet_feature_statistics_pb2.DatasetFeatureStatisticsList:
     """
     Converts a collection of named stats DataFrames to a single DatasetFeatureStatisticsList proto.
@@ -302,7 +304,7 @@ def construct_facets_html(
     """  # noqa: E501
 
 
-def get_html(inputs: Union[pd.DataFrame, Iterable[tuple[str, pd.DataFrame]]]) -> str:
+def get_html(inputs: Union[pd.DataFrame, typing.Iterable[typing.Tuple[str, pd.DataFrame]]]) -> str:
     """
     Rendering the data statistics in a HTML format.
 

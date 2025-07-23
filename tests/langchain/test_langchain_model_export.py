@@ -1,3 +1,5 @@
+import typing
+
 import inspect
 import json
 import os
@@ -240,7 +242,7 @@ class FakeLLM(LLM):
         """Return type of llm."""
         return "fake"
 
-    def _call(self, prompt: str, stop: Optional[list[str]] = None, run_manager=None) -> str:
+    def _call(self, prompt: str, stop: Optional[typing.List[str]] = None, run_manager=None) -> str:
         """First try to lookup in queries, else return 'foo' or 'bar'."""
         if self.queries is not None:
             return self.queries[prompt]
@@ -250,7 +252,7 @@ class FakeLLM(LLM):
             return "bar"
 
     @property
-    def _identifying_params(self) -> Mapping[str, Any]:
+    def _identifying_params(self) -> typing.Mapping[str, Any]:
         return {}
 
 
@@ -258,20 +260,20 @@ class FakeChain(Chain):
     """Fake chain class for testing purposes."""
 
     be_correct: bool = True
-    the_input_keys: list[str] = ["foo"]
-    the_output_keys: list[str] = ["bar"]
+    the_input_keys: typing.List[str] = ["foo"]
+    the_output_keys: typing.List[str] = ["bar"]
 
     @property
-    def input_keys(self) -> list[str]:
+    def input_keys(self) -> typing.List[str]:
         """Input keys."""
         return self.the_input_keys
 
     @property
-    def output_keys(self) -> list[str]:
+    def output_keys(self) -> typing.List[str]:
         """Output key of bar."""
         return self.the_output_keys
 
-    def _call(self, inputs: dict[str, str], run_manager=None) -> dict[str, str]:
+    def _call(self, inputs: typing.Dict[str, str], run_manager=None) -> typing.Dict[str, str]:
         if self.be_correct:
             return {"bar": "baz"}
         else:
@@ -349,8 +351,8 @@ def get_fake_chat_model(endpoint_name="fake-endpoint"):
 
         def _call(
             self,
-            messages: list[BaseMessage],
-            stop: Optional[list[str]] = None,
+            messages: typing.List[BaseMessage],
+            stop: Optional[typing.List[str]] = None,
             run_manager: Optional[CallbackManagerForLLMRun] = None,
             **kwargs: Any,
         ) -> str:
@@ -379,8 +381,8 @@ def fake_classifier_chat_model():
 
         def _call(
             self,
-            messages: list[BaseMessage],
-            stop: Optional[list[str]] = None,
+            messages: typing.List[BaseMessage],
+            stop: Optional[typing.List[str]] = None,
             run_manager: Optional[CallbackManagerForLLMRun] = None,
             **kwargs: Any,
         ) -> str:
@@ -852,17 +854,17 @@ def test_log_and_load_retriever_chain(tmp_path):
         class DeterministicDummyEmbeddings(Embeddings, BaseModel):
             size: int
 
-            def _get_embedding(self, text: str) -> list[float]:
+            def _get_embedding(self, text: str) -> typing.List[float]:
                 if isinstance(text, np.ndarray):
                     text = text.item()
                 seed = abs(hash(text)) % (10**8)
                 np.random.seed(seed)
                 return list(np.random.normal(size=self.size))
 
-            def embed_documents(self, texts: list[str]) -> list[list[float]]:
+            def embed_documents(self, texts: typing.List[str]) -> typing.List[typing.List[float]]:
                 return [self._get_embedding(t) for t in texts]
 
-            def embed_query(self, text: str) -> list[float]:
+            def embed_query(self, text: str) -> typing.List[float]:
                 return self._get_embedding(text)
 
         embeddings = DeterministicDummyEmbeddings(size=5)
@@ -1209,8 +1211,8 @@ def test_predict_with_callbacks(fake_chat_model):
 
         def on_llm_start(
             self,
-            serialized: dict[str, Any],
-            prompts: list[str],
+            serialized: typing.Dict[str, Any],
+            prompts: typing.List[str],
             **kwargs: Any,
         ) -> Any:
             self.num_llm_start_calls += 1
@@ -2842,8 +2844,8 @@ def get_fake_chat_stream_model(endpoint_name="fake-stream-endpoint"):
 
         def _call(
             self,
-            messages: list[BaseMessage],
-            stop: Optional[list[str]] = None,
+            messages: typing.List[BaseMessage],
+            stop: Optional[typing.List[str]] = None,
             run_manager: Optional[CallbackManagerForLLMRun] = None,
             **kwargs: Any,
         ) -> str:
@@ -2851,8 +2853,8 @@ def get_fake_chat_stream_model(endpoint_name="fake-stream-endpoint"):
 
         def _stream(
             self,
-            messages: list[BaseMessage],
-            stop: Optional[list[str]] = None,
+            messages: typing.List[BaseMessage],
+            stop: Optional[typing.List[str]] = None,
             run_manager: Optional[CallbackManagerForLLMRun] = None,
             **kwargs: Any,
         ) -> Iterator[ChatGenerationChunk]:
@@ -2974,8 +2976,8 @@ def test_simple_chat_model_stream_with_callbacks(fake_chat_stream_model):
 
         def on_llm_start(
             self,
-            serialized: dict[str, Any],
-            prompts: list[str],
+            serialized: typing.Dict[str, Any],
+            prompts: typing.List[str],
             **kwargs: Any,
         ) -> Any:
             self.num_llm_start_calls += 1
@@ -3211,11 +3213,11 @@ def test_langchain_bindings_save_load_with_config_and_types(fake_chat_model):
             self.count = 0
 
         def on_chain_start(
-            self, serialized: dict[str, Any], inputs: dict[str, Any], **kwargs: Any
+            self, serialized: typing.Dict[str, Any], inputs: typing.Dict[str, Any], **kwargs: Any
         ) -> None:
             self.count += 1
 
-        def on_chain_end(self, outputs: dict[str, Any], **kwargs: Any) -> None:
+        def on_chain_end(self, outputs: typing.Dict[str, Any], **kwargs: Any) -> None:
             self.count += 1
 
     model = fake_chat_model | StrOutputParser()

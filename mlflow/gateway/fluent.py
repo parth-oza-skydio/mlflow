@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Optional
 
 from mlflow.gateway.client import MlflowGatewayClient
@@ -26,7 +28,7 @@ def get_route(name: str) -> Route:
 
 
 @gateway_deprecated
-def search_routes() -> list[Route]:
+def search_routes() -> typing.List[Route]:
     """
     Searches for routes in the MLflow Gateway service.
 
@@ -50,7 +52,7 @@ def search_routes() -> list[Route]:
 
 @gateway_deprecated
 def create_route(
-    name: str, route_type: Optional[str] = None, model: Optional[dict[str, Any]] = None
+    name: str, route_type: Optional[str] = None, model: Optional[typing.Dict[str, Any]] = None
 ) -> Route:
     """
     Create a new route in the Gateway.
@@ -135,7 +137,7 @@ def delete_route(name: str) -> None:
 
 
 @gateway_deprecated
-def set_limits(route: str, limits: list[dict[str, Any]]) -> LimitsConfig:
+def set_limits(route: str, limits: typing.List[typing.Dict[str, Any]]) -> LimitsConfig:
     """
     Set limits on an existing route in the Gateway.
 

@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.paddle`` module provides an API for logging and loading paddle models.
 This module exports paddle models with the following flavors:
@@ -440,7 +442,7 @@ class _PaddleWrapper:
     def predict(
         self,
         data,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:

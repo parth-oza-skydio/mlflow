@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import ast
 import re
@@ -90,7 +91,7 @@ class ExampleSyntaxError(Rule):
 
 
 class MissingDocstringParam(Rule):
-    def __init__(self, params: set[str]) -> None:
+    def __init__(self, params: typing.Set[str]) -> None:
         self.params = params
 
     def _id(self) -> str:
@@ -101,7 +102,7 @@ class MissingDocstringParam(Rule):
 
 
 class ExtraneousDocstringParam(Rule):
-    def __init__(self, params: set[str]) -> None:
+    def __init__(self, params: typing.Set[str]) -> None:
         self.params = params
 
     def _id(self) -> str:
@@ -112,7 +113,7 @@ class ExtraneousDocstringParam(Rule):
 
 
 class DocstringParamOrder(Rule):
-    def __init__(self, params: list[str]) -> None:
+    def __init__(self, params: typing.List[str]) -> None:
         self.params = params
 
     def _id(self) -> str:
@@ -305,7 +306,7 @@ class IncorrectTypeAnnotation(Rule):
 
 
 class TypingExtensions(Rule):
-    def __init__(self, *, full_name: str, allowlist: list[str]) -> None:
+    def __init__(self, *, full_name: str, allowlist: typing.List[str]) -> None:
         self.full_name = full_name
         self.allowlist = allowlist
 

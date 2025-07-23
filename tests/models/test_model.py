@@ -1,3 +1,5 @@
+import typing
+
 import os
 import pathlib
 import time
@@ -509,7 +511,7 @@ def test_save_load_input_example_with_pydantic_model(tmp_path):
         content: str
 
     class MyModel(mlflow.pyfunc.PythonModel):
-        def predict(self, context, model_input: list[Message], params=None):
+        def predict(self, context, model_input: typing.List[Message], params=None):
             return model_input
 
     with mlflow.start_run():
@@ -632,7 +634,7 @@ def test_save_model_with_prompts():
     prompt_2 = mlflow.register_prompt("prompt-2", "Hello, {{title}} {{name}}!")
 
     class MyModel(mlflow.pyfunc.PythonModel):
-        def predict(self, model_input: list[str]):
+        def predict(self, model_input: typing.List[str]):
             return model_input
 
     with mlflow.start_run():

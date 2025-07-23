@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 from typing import TYPE_CHECKING, Any, Optional
@@ -27,14 +29,14 @@ class DspyModelWrapper(PythonModel):
     def __init__(
         self,
         model: "dspy.Module",
-        dspy_settings: dict[str, Any],
-        model_config: Optional[dict[str, Any]] = None,
+        dspy_settings: typing.Dict[str, Any],
+        model_config: Optional[typing.Dict[str, Any]] = None,
     ):
         self.model = model
         self.dspy_settings = dspy_settings
         self.model_config = model_config or {}
 
-    def predict(self, inputs: Any, params: Optional[dict[str, Any]] = None):
+    def predict(self, inputs: Any, params: Optional[typing.Dict[str, Any]] = None):
         import dspy
         import numpy as np
         import pandas as pd
@@ -68,7 +70,7 @@ class DspyModelWrapper(PythonModel):
 class DspyChatModelWrapper(DspyModelWrapper):
     """MLflow PyFunc wrapper class for Dspy chat models."""
 
-    def predict(self, inputs: Any, params: Optional[dict[str, Any]] = None):
+    def predict(self, inputs: Any, params: Optional[typing.Dict[str, Any]] = None):
         import dspy
         import pandas as pd
 

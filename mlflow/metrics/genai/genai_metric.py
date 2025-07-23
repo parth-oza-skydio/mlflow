@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 import re
@@ -41,7 +43,7 @@ justification: Your reasoning for giving this score
 Do not add additional new lines. Do not add any other fields."""
 
 
-def _format_args_string(grading_context_columns: Optional[list[str]], eval_values, indx) -> str:
+def _format_args_string(grading_context_columns: Optional[typing.List[str]], eval_values, indx) -> str:
     import pandas as pd
 
     args_dict = {}
@@ -101,8 +103,8 @@ def _extract_score_and_justification(text):
 def _score_model_on_one_payload(
     payload: str,
     eval_model: str,
-    parameters: Optional[dict[str, Any]],
-    extra_headers: Optional[dict[str, str]] = None,
+    parameters: Optional[typing.Dict[str, Any]],
+    extra_headers: Optional[typing.Dict[str, str]] = None,
     proxy_url: Optional[str] = None,
 ):
     try:
@@ -129,7 +131,7 @@ def _score_model_on_one_payload(
 
 def _score_model_on_payloads(
     grading_payloads, model, parameters, headers, proxy_url, max_workers
-) -> tuple[list[int], list[str]]:
+) -> typing.Tuple[typing.List[int], typing.List[str]]:
     scores = [None] * len(grading_payloads)
     justifications = [None] * len(grading_payloads)
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -198,12 +200,12 @@ def make_genai_metric_from_prompt(
     name: str,
     judge_prompt: Optional[str] = None,
     model: Optional[str] = _get_default_model(),
-    parameters: Optional[dict[str, Any]] = None,
-    aggregations: Optional[list[str]] = None,
+    parameters: Optional[typing.Dict[str, Any]] = None,
+    aggregations: Optional[typing.List[str]] = None,
     greater_is_better: bool = True,
     max_workers: int = 10,
-    metric_metadata: Optional[dict[str, Any]] = None,
-    extra_headers: Optional[dict[str, str]] = None,
+    metric_metadata: Optional[typing.Dict[str, Any]] = None,
+    extra_headers: Optional[typing.Dict[str, str]] = None,
     proxy_url: Optional[str] = None,
 ) -> EvaluationMetric:
     """
@@ -331,17 +333,17 @@ def make_genai_metric(
     name: str,
     definition: str,
     grading_prompt: str,
-    examples: Optional[list[EvaluationExample]] = None,
+    examples: Optional[typing.List[EvaluationExample]] = None,
     version: Optional[str] = _get_latest_metric_version(),
     model: Optional[str] = _get_default_model(),
-    grading_context_columns: Optional[Union[str, list[str]]] = None,
+    grading_context_columns: Optional[Union[str, typing.List[str]]] = None,
     include_input: bool = True,
-    parameters: Optional[dict[str, Any]] = None,
-    aggregations: Optional[list[str]] = None,
+    parameters: Optional[typing.Dict[str, Any]] = None,
+    aggregations: Optional[typing.List[str]] = None,
     greater_is_better: bool = True,
     max_workers: int = 10,
-    metric_metadata: Optional[dict[str, Any]] = None,
-    extra_headers: Optional[dict[str, str]] = None,
+    metric_metadata: Optional[typing.Dict[str, Any]] = None,
+    extra_headers: Optional[typing.Dict[str, str]] = None,
     proxy_url: Optional[str] = None,
 ) -> EvaluationMetric:
     """
@@ -532,7 +534,7 @@ def make_genai_metric(
 
     def eval_fn(
         predictions: "pd.Series",
-        metrics: dict[str, MetricValue],
+        metrics: typing.Dict[str, MetricValue],
         inputs: "pd.Series",
         *args,
     ) -> MetricValue:
@@ -617,7 +619,7 @@ def make_genai_metric(
 
     signature_parameters = [
         Parameter("predictions", Parameter.POSITIONAL_OR_KEYWORD, annotation="pd.Series"),
-        Parameter("metrics", Parameter.POSITIONAL_OR_KEYWORD, annotation=dict[str, MetricValue]),
+        Parameter("metrics", Parameter.POSITIONAL_OR_KEYWORD, annotation=typing.Dict[str, MetricValue]),
         Parameter("inputs", Parameter.POSITIONAL_OR_KEYWORD, annotation="pd.Series"),
     ]
 
@@ -680,7 +682,7 @@ def retrieve_custom_metrics(
     run_id: str,
     name: Optional[str] = None,
     version: Optional[str] = None,
-) -> list[EvaluationMetric]:
+) -> typing.List[EvaluationMetric]:
     """
     Retrieve the custom metrics created by users through `make_genai_metric()` or
     `make_genai_metric_from_prompt()` that are associated with a particular evaluation run.

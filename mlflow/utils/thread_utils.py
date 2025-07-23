@@ -1,3 +1,5 @@
+import typing
+
 import os
 import threading
 from typing import Any
@@ -18,7 +20,7 @@ class ThreadLocalVariable:
         self.thread_local = threading.local()
         # The `__global_thread_values` attribute saves all thread-local values,
         # the key is thread ID.
-        self.__global_thread_values: dict[int, Any] = {}
+        self.__global_thread_values: typing.Dict[int, Any] = {}
 
     def get(self):
         """
@@ -48,7 +50,7 @@ class ThreadLocalVariable:
         self.thread_local.value = (value, os.getpid())
         self.__global_thread_values[threading.get_ident()] = value
 
-    def get_all_thread_values(self) -> dict[int, Any]:
+    def get_all_thread_values(self) -> typing.Dict[int, Any]:
         """
         Return all thread values as a dict, dict key is the thread ID.
         """

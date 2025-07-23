@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import os
 import pathlib
@@ -40,7 +42,7 @@ def get_recipe_name(recipe_root_path: Optional[str] = None) -> str:
 
 def get_recipe_config(
     recipe_root_path: Optional[str] = None, profile: Optional[str] = None
-) -> dict[str, Any]:
+) -> typing.Dict[str, Any]:
     """
     Obtains a dictionary representation of the configuration for the specified recipe.
 

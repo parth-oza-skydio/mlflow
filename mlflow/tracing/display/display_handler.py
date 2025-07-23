@@ -1,3 +1,5 @@
+import typing
+
 import html
 import json
 import logging
@@ -55,7 +57,7 @@ IFRAME_HTML = """
 """
 
 
-def get_notebook_iframe_html(traces: list["Trace"]):
+def get_notebook_iframe_html(traces: typing.List["Trace"]):
     # fetch assets from tracking server
     uri = urljoin(mlflow.get_tracking_uri(), TRACE_RENDERER_ASSET_PATH)
     query_string = _get_query_string_for_traces(traces)
@@ -65,7 +67,7 @@ def get_notebook_iframe_html(traces: list["Trace"]):
     return IFRAME_HTML.format(src=src)
 
 
-def _serialize_trace_list(traces: list["Trace"]):
+def _serialize_trace_list(traces: typing.List["Trace"]):
     return json.dumps(
         # we can't just call trace.to_json() because this
         # will cause the trace to be serialized twice (once
@@ -75,7 +77,7 @@ def _serialize_trace_list(traces: list["Trace"]):
     )
 
 
-def _get_query_string_for_traces(traces: list["Trace"]):
+def _get_query_string_for_traces(traces: typing.List["Trace"]):
     query_params = []
 
     for trace in traces:
@@ -171,7 +173,7 @@ class IPythonTraceDisplayHandler:
             _logger.error("Failed to display traces", exc_info=True)
             self.traces_to_display = {}
 
-    def get_mimebundle(self, traces: list["Trace"]):
+    def get_mimebundle(self, traces: typing.List["Trace"]):
         if len(traces) == 1:
             return traces[0]._repr_mimebundle_()
         else:
@@ -182,7 +184,7 @@ class IPythonTraceDisplayHandler:
                 bundle["text/html"] = get_notebook_iframe_html(traces)
             return bundle
 
-    def display_traces(self, traces: list["Trace"]):
+    def display_traces(self, traces: typing.List["Trace"]):
         if self.disabled or not is_trace_ui_available():
             return
 

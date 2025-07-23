@@ -1,3 +1,5 @@
+import typing
+
 import time
 import uuid
 from dataclasses import asdict, dataclass, field, fields
@@ -195,7 +197,7 @@ class ChatMessage(_BaseDataclass):
     content: Optional[str] = None
     refusal: Optional[str] = None
     name: Optional[str] = None
-    tool_calls: Optional[list[ToolCall]] = None
+    tool_calls: Optional[typing.List[ToolCall]] = None
     tool_call_id: Optional[str] = None
 
     def __post_init__(self):
@@ -240,7 +242,7 @@ class ChatChoiceDelta(_BaseDataclass):
     content: Optional[str] = None
     refusal: Optional[str] = None
     name: Optional[str] = None
-    tool_calls: Optional[list[ToolCall]] = None
+    tool_calls: Optional[typing.List[ToolCall]] = None
 
     def __post_init__(self):
         self._validate_field("role", str, False)
@@ -279,7 +281,7 @@ class ParamProperty(ParamType):
     """
 
     description: Optional[str] = None
-    enum: Optional[list[str]] = None
+    enum: Optional[typing.List[str]] = None
     items: Optional[ParamType] = None
 
     def __post_init__(self):
@@ -303,9 +305,9 @@ class ToolParamsSchema(_BaseDataclass):
             **Optional**, defaults to ``None``
     """
 
-    properties: dict[str, ParamProperty]
+    properties: typing.Dict[str, ParamProperty]
     type: Literal["object"] = "object"
-    required: Optional[list[str]] = None
+    required: Optional[typing.List[str]] = None
     additionalProperties: Optional[bool] = None
 
     def __post_init__(self):
@@ -408,7 +410,7 @@ class ChatParams(_BaseDataclass):
 
     temperature: float = 1.0
     max_tokens: Optional[int] = None
-    stop: Optional[list[str]] = None
+    stop: Optional[typing.List[str]] = None
     n: int = 1
     stream: bool = False
 
@@ -417,8 +419,8 @@ class ChatParams(_BaseDataclass):
     frequency_penalty: Optional[float] = None
     presence_penalty: Optional[float] = None
 
-    custom_inputs: Optional[dict[str, Any]] = None
-    tools: Optional[list[ToolDefinition]] = None
+    custom_inputs: Optional[typing.Dict[str, Any]] = None
+    tools: Optional[typing.List[ToolDefinition]] = None
 
     def __post_init__(self):
         self._validate_field("temperature", float, True)
@@ -448,7 +450,7 @@ class ChatParams(_BaseDataclass):
                     )
 
     @classmethod
-    def keys(cls) -> set[str]:
+    def keys(cls) -> typing.Set[str]:
         """
         Return the keys of the dataclass
         """
@@ -496,7 +498,7 @@ class ChatCompletionRequest(ChatParams):
         removed. Please provide these values explicitly in your code if needed.
     """
 
-    messages: list[ChatMessage] = field(default_factory=list)
+    messages: typing.List[ChatMessage] = field(default_factory=list)
 
     def __post_init__(self):
         self._convert_dataclass_list("messages", ChatMessage)
@@ -522,7 +524,7 @@ class TopTokenLogProb(_BaseDataclass):
 
     token: str
     logprob: float
-    bytes: Optional[list[int]] = None
+    bytes: Optional[typing.List[int]] = None
 
     def __post_init__(self):
         self._validate_field("token", str, True)
@@ -552,8 +554,8 @@ class TokenLogProb(_BaseDataclass):
 
     token: str
     logprob: float
-    top_logprobs: list[TopTokenLogProb]
-    bytes: Optional[list[int]] = None
+    top_logprobs: typing.List[TopTokenLogProb]
+    bytes: Optional[typing.List[int]] = None
 
     def __post_init__(self):
         self._validate_field("token", str, True)
@@ -571,7 +573,7 @@ class ChatChoiceLogProbs(_BaseDataclass):
         content: A list of message content tokens with log probability information.
     """
 
-    content: Optional[list[TokenLogProb]] = None
+    content: Optional[typing.List[TokenLogProb]] = None
 
     def __post_init__(self):
         self._convert_dataclass_list("content", TokenLogProb, False)
@@ -677,13 +679,13 @@ class ChatCompletionResponse(_BaseDataclass):
             **Optional**, defaults to ``None``
     """
 
-    choices: list[ChatChoice]
+    choices: typing.List[ChatChoice]
     usage: Optional[TokenUsageStats] = None
     id: Optional[str] = None
     model: Optional[str] = None
     object: str = "chat.completion"
     created: int = field(default_factory=lambda: int(time.time()))
-    custom_outputs: Optional[dict[str, Any]] = None
+    custom_outputs: Optional[typing.Dict[str, Any]] = None
 
     def __post_init__(self):
         self._validate_field("id", str, False)
@@ -715,13 +717,13 @@ class ChatCompletionChunk(_BaseDataclass):
             **Optional**, defaults to ``None``
     """
 
-    choices: list[ChatChunkChoice]
+    choices: typing.List[ChatChunkChoice]
     usage: Optional[TokenUsageStats] = None
     id: Optional[str] = None
     model: Optional[str] = None
     object: str = "chat.completion.chunk"
     created: int = field(default_factory=lambda: int(time.time()))
-    custom_outputs: Optional[dict[str, Any]] = None
+    custom_outputs: Optional[typing.Dict[str, Any]] = None
 
     def __post_init__(self):
         self._validate_field("id", str, False)

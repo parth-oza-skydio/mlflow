@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.onnx`` module provides APIs for logging and loading ONNX models in the MLflow Model
 format. This module exports MLflow Models with the following flavors:
@@ -325,7 +327,7 @@ class _OnnxModelWrapper:
                     feeds[input_name] = feed.astype(np.float32)
         return feeds
 
-    def predict(self, data, params: Optional[dict[str, Any]] = None):
+    def predict(self, data, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             data: Either a pandas DataFrame, numpy.ndarray or a dictionary.

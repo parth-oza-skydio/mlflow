@@ -1,3 +1,5 @@
+import typing
+
 import threading
 from typing import Optional
 
@@ -10,9 +12,9 @@ class RunBatch:
     def __init__(
         self,
         run_id: str,
-        params: Optional[list["Param"]] = None,
-        tags: Optional[list["RunTag"]] = None,
-        metrics: Optional[list["Metric"]] = None,
+        params: Optional[typing.List["Param"]] = None,
+        tags: Optional[typing.List["RunTag"]] = None,
+        metrics: Optional[typing.List["Metric"]] = None,
         completion_event: Optional[threading.Event] = None,
     ):
         """Initializes an instance of `RunBatch`.

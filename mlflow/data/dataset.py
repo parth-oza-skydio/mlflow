@@ -1,3 +1,5 @@
+import typing
+
 import json
 from abc import abstractmethod
 from typing import Any, Optional
@@ -37,7 +39,7 @@ class Dataset:
 
         """
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> typing.Dict[str, str]:
         """Create config dictionary for the dataset.
 
         Subclasses should override this method to provide additional fields in the config dict,

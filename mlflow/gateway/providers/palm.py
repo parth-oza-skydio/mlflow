@@ -1,3 +1,5 @@
+import typing
+
 import time
 from typing import Any
 
@@ -18,7 +20,7 @@ class PaLMProvider(BaseProvider):
             raise TypeError(f"Unexpected config type {config.model.config}")
         self.palm_config: PaLMConfig = config.model.config
 
-    async def _request(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+    async def _request(self, path: str, payload: typing.Dict[str, Any]) -> typing.Dict[str, Any]:
         headers = {"x-goog-api-key": self.palm_config.palm_api_key}
         return await send_request(
             headers=headers,

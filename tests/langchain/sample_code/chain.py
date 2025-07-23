@@ -1,3 +1,5 @@
+import typing
+
 import dbutils
 
 dbutils.library.restartPython()
@@ -31,8 +33,8 @@ def get_fake_chat_model(endpoint="fake-endpoint"):
 
         def _generate(
             self,
-            messages: list[BaseMessage],
-            stop: Optional[list[str]] = None,
+            messages: typing.List[BaseMessage],
+            stop: Optional[typing.List[str]] = None,
             run_manager: Optional[CallbackManagerForLLMRun] = None,
             **kwargs: Any,
         ) -> ChatResult:

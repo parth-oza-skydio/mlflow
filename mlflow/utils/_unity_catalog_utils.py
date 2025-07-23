@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from typing import Callable, Optional
 
@@ -118,16 +120,16 @@ def registered_model_search_from_uc_proto(uc_proto: ProtoRegisteredModel) -> Reg
 
 
 def uc_registered_model_tag_from_mlflow_tags(
-    tags: Optional[list[RegisteredModelTag]],
-) -> list[ProtoRegisteredModelTag]:
+    tags: Optional[typing.List[RegisteredModelTag]],
+) -> typing.List[ProtoRegisteredModelTag]:
     if tags is None:
         return []
     return [ProtoRegisteredModelTag(key=t.key, value=t.value) for t in tags]
 
 
 def uc_model_version_tag_from_mlflow_tags(
-    tags: Optional[list[ModelVersionTag]],
-) -> list[ProtoModelVersionTag]:
+    tags: Optional[typing.List[ModelVersionTag]],
+) -> typing.List[ProtoModelVersionTag]:
     if tags is None:
         return []
     return [ProtoModelVersionTag(key=t.key, value=t.value) for t in tags]

@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from dataclasses import dataclass
 from typing import Any, Callable, Optional
@@ -24,7 +26,7 @@ class MetricDefinition:
     name: str
     index: int
     version: Optional[str] = None
-    genai_metric_args: Optional[dict[str, Any]] = None
+    genai_metric_args: Optional[typing.Dict[str, Any]] = None
 
     @classmethod
     def from_index_and_metric(cls, index: int, metric: EvaluationMetric):

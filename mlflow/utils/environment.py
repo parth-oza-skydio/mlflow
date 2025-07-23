@@ -1,3 +1,5 @@
+import typing
+
 import hashlib
 import importlib.metadata
 import logging
@@ -674,7 +676,7 @@ def _parse_requirement_name(req: str) -> str:
         return req
 
 
-def _remove_incompatible_requirements(requirements: list[str]) -> list[str]:
+def _remove_incompatible_requirements(requirements: typing.List[str]) -> typing.List[str]:
     req_names = {_parse_requirement_name(req) for req in requirements}
     if "databricks-connect" in req_names and req_names.intersection({"pyspark", "pyspark-connect"}):
         _logger.debug(
@@ -791,7 +793,7 @@ def _get_pip_install_mlflow():
 
 def _get_requirements_from_file(
     file_path: pathlib.Path,
-) -> list[Requirement]:
+) -> typing.List[Requirement]:
     data = file_path.read_text()
     if file_path.name == _CONDA_ENV_FILE_NAME:
         conda_env = yaml.safe_load(data)
@@ -803,7 +805,7 @@ def _get_requirements_from_file(
 
 def _write_requirements_to_file(
     file_path: pathlib.Path,
-    new_reqs: list[str],
+    new_reqs: typing.List[str],
 ) -> None:
     if file_path.name == _CONDA_ENV_FILE_NAME:
         conda_env = yaml.safe_load(file_path.read_text())
@@ -815,9 +817,9 @@ def _write_requirements_to_file(
 
 
 def _add_or_overwrite_requirements(
-    new_reqs: list[Requirement],
-    old_reqs: list[Requirement],
-) -> list[str]:
+    new_reqs: typing.List[Requirement],
+    old_reqs: typing.List[Requirement],
+) -> typing.List[str]:
     deduped_new_reqs = _deduplicate_requirements([str(req) for req in new_reqs])
     deduped_new_reqs = [Requirement(req) for req in deduped_new_reqs]
 
@@ -828,9 +830,9 @@ def _add_or_overwrite_requirements(
 
 
 def _remove_requirements(
-    reqs_to_remove: list[Requirement],
-    old_reqs: list[Requirement],
-) -> list[str]:
+    reqs_to_remove: typing.List[Requirement],
+    old_reqs: typing.List[Requirement],
+) -> typing.List[str]:
     old_reqs_dict = {req.name: str(req) for req in old_reqs}
     for req in reqs_to_remove:
         if req.name not in old_reqs_dict:

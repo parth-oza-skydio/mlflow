@@ -1,3 +1,5 @@
+import typing
+
 import datetime
 import sys
 from typing import Any, Dict, List, Optional, Union, get_args
@@ -43,8 +45,8 @@ class Message(pydantic.BaseModel):
 
 
 class CustomModel2(pydantic.BaseModel):
-    custom_field: dict[str, Any]
-    messages: list[Message]
+    custom_field: typing.Dict[str, Any]
+    messages: typing.List[Message]
     optional_int: Optional[int] = None
 
 
@@ -52,7 +54,7 @@ class CustomModel2(pydantic.BaseModel):
     ("type_hint", "expected_schema"),
     [
         (
-            list[CustomModel],
+            typing.List[CustomModel],
             Schema(
                 [
                     ColSpec(
@@ -75,7 +77,7 @@ class CustomModel2(pydantic.BaseModel):
             ),
         ),
         (
-            list[list[CustomModel]],
+            typing.List[typing.List[CustomModel]],
             Schema(
                 [
                     ColSpec(
@@ -100,7 +102,7 @@ class CustomModel2(pydantic.BaseModel):
             ),
         ),
         (
-            list[CustomModel2],
+            typing.List[CustomModel2],
             Schema(
                 [
                     ColSpec(
@@ -136,28 +138,28 @@ def test_infer_schema_from_pydantic_model(type_hint, expected_schema):
     ("type_hint", "expected_schema"),
     [
         # scalars
-        (list[int], Schema([ColSpec(type=DataType.long)])),
-        (list[str], Schema([ColSpec(type=DataType.string)])),
-        (list[bool], Schema([ColSpec(type=DataType.boolean)])),
-        (list[float], Schema([ColSpec(type=DataType.double)])),
-        (list[bytes], Schema([ColSpec(type=DataType.binary)])),
-        (list[datetime.datetime], Schema([ColSpec(type=DataType.datetime)])),
+        (typing.List[int], Schema([ColSpec(type=DataType.long)])),
+        (typing.List[str], Schema([ColSpec(type=DataType.string)])),
+        (typing.List[bool], Schema([ColSpec(type=DataType.boolean)])),
+        (typing.List[float], Schema([ColSpec(type=DataType.double)])),
+        (typing.List[bytes], Schema([ColSpec(type=DataType.binary)])),
+        (typing.List[datetime.datetime], Schema([ColSpec(type=DataType.datetime)])),
         # lists
-        (list[list[str]], Schema([ColSpec(type=Array(DataType.string))])),
+        (typing.List[typing.List[str]], Schema([ColSpec(type=Array(DataType.string))])),
         (List[List[str]], Schema([ColSpec(type=Array(DataType.string))])),  # noqa: UP006
-        (list[list[list[str]]], Schema([ColSpec(type=Array(Array(DataType.string)))])),
+        (typing.List[typing.List[typing.List[str]]], Schema([ColSpec(type=Array(Array(DataType.string)))])),
         (List[List[List[str]]], Schema([ColSpec(type=Array(Array(DataType.string)))])),  # noqa: UP006
         # dictionaries
-        (list[dict[str, str]], Schema([ColSpec(type=Map(DataType.string))])),
-        (list[dict[str, int]], Schema([ColSpec(type=Map(DataType.long))])),
-        (list[Dict[str, int]], Schema([ColSpec(type=Map(DataType.long))])),  # noqa: UP006
-        (list[dict[str, list[str]]], Schema([ColSpec(type=Map(Array(DataType.string)))])),
-        (list[Dict[str, List[str]]], Schema([ColSpec(type=Map(Array(DataType.string)))])),  # noqa: UP006
+        (typing.List[typing.Dict[str, str]], Schema([ColSpec(type=Map(DataType.string))])),
+        (typing.List[typing.Dict[str, int]], Schema([ColSpec(type=Map(DataType.long))])),
+        (typing.List[Dict[str, int]], Schema([ColSpec(type=Map(DataType.long))])),  # noqa: UP006
+        (typing.List[typing.Dict[str, typing.List[str]]], Schema([ColSpec(type=Map(Array(DataType.string)))])),
+        (typing.List[Dict[str, List[str]]], Schema([ColSpec(type=Map(Array(DataType.string)))])),  # noqa: UP006
         # Union
-        (list[Union[int, str]], Schema([ColSpec(type=AnyType())])),
+        (typing.List[Union[int, str]], Schema([ColSpec(type=AnyType())])),
         # Any
-        (list[Any], Schema([ColSpec(type=AnyType())])),
-        (list[list[Any]], Schema([ColSpec(type=Array(AnyType()))])),
+        (typing.List[Any], Schema([ColSpec(type=AnyType())])),
+        (typing.List[typing.List[Any]], Schema([ColSpec(type=Array(AnyType()))])),
     ],
 )
 def test_infer_schema_from_python_type_hints(type_hint, expected_schema):
@@ -200,49 +202,49 @@ def test_infer_schema_from_type_hints_errors():
             MlflowException,
             match=message,
         ):
-            _infer_schema_from_list_type_hint(list[InvalidModel])
+            _infer_schema_from_list_type_hint(typing.List[InvalidModel])
 
         with pytest.raises(MlflowException, match=message):
-            _infer_schema_from_list_type_hint(list[list[InvalidModel]])
+            _infer_schema_from_list_type_hint(typing.List[typing.List[InvalidModel]])
 
     message = r"Input cannot be Optional type"
     with pytest.raises(MlflowException, match=message):
-        _infer_schema_from_list_type_hint(Optional[list[str]])
+        _infer_schema_from_list_type_hint(Optional[typing.List[str]])
 
     with pytest.raises(MlflowException, match=message):
-        _infer_schema_from_list_type_hint(list[Optional[str]])
+        _infer_schema_from_list_type_hint(typing.List[Optional[str]])
 
     with pytest.raises(MlflowException, match=message):
-        _infer_schema_from_list_type_hint(list[Union[str, int, type(None)]])
+        _infer_schema_from_list_type_hint(typing.List[Union[str, int, type(None)]])
 
     with pytest.raises(
         MlflowException, match=r"Collections must have only a single type definition"
     ):
-        _infer_schema_from_list_type_hint(list[str, int])
+        _infer_schema_from_list_type_hint(typing.List[str, int])
 
     with pytest.raises(MlflowException, match=r"Dictionary key type must be str"):
-        _infer_schema_from_list_type_hint(list[dict[int, int]])
+        _infer_schema_from_list_type_hint(typing.List[typing.Dict[int, int]])
 
     with pytest.raises(
         MlflowException, match=r"Dictionary type hint must contain two element types"
     ):
-        _infer_schema_from_list_type_hint(list[dict[int]])
+        _infer_schema_from_list_type_hint(typing.List[typing.Dict[int]])
 
     message = r"it must include a valid element type"
     with pytest.raises(MlflowException, match=message):
-        _infer_schema_from_list_type_hint(list[Union])
+        _infer_schema_from_list_type_hint(typing.List[Union])
 
     with pytest.raises(MlflowException, match=message):
-        _infer_schema_from_list_type_hint(list[Optional])
+        _infer_schema_from_list_type_hint(typing.List[Optional])
 
     with pytest.raises(MlflowException, match=message):
-        _infer_schema_from_list_type_hint(list[list])
+        _infer_schema_from_list_type_hint(typing.List[list])
 
     with pytest.raises(MlflowException, match=message):
-        _infer_schema_from_list_type_hint(list[dict])
+        _infer_schema_from_list_type_hint(typing.List[dict])
 
     with pytest.raises(UnsupportedTypeHintException, match=r"Unsupported type hint"):
-        _infer_schema_from_list_type_hint(list[object])
+        _infer_schema_from_list_type_hint(typing.List[object])
 
 
 @pytest.mark.parametrize(
@@ -286,7 +288,7 @@ def test_infer_schema_from_type_hints_errors():
             ),
         ),
         (
-            list[CustomModel],
+            typing.List[CustomModel],
             [
                 {
                     "long_field": 1,
@@ -350,15 +352,15 @@ def test_pydantic_model_validation(type_hint, example):
         (datetime.datetime, datetime.datetime.now()),
         (Any, "a"),
         (Any, ["a", 1]),
-        (list[str], ["a", "b"]),
-        (list[list[str]], [["a", "b"], ["c", "d"]]),
-        (dict[str, int], {"a": 1, "b": 2}),
-        (dict[str, list[str]], {"a": ["a", "b"], "b": ["c", "d"]}),
+        (typing.List[str], ["a", "b"]),
+        (typing.List[typing.List[str]], [["a", "b"], ["c", "d"]]),
+        (typing.Dict[str, int], {"a": 1, "b": 2}),
+        (typing.Dict[str, typing.List[str]], {"a": ["a", "b"], "b": ["c", "d"]}),
         (Union[int, str], 1),
         (Union[int, str], "a"),
         # Union type is inferred as AnyType, so it accepts double here as well
         (Union[int, str], 1.2),
-        (list[Any], [1, "a"]),
+        (typing.List[Any], [1, "a"]),
     ],
 )
 def test_python_type_hints_validation(type_hint, example):
@@ -373,25 +375,25 @@ def test_type_hints_validation_errors():
         _validate_data_against_type_hint("a", int)
 
     with pytest.raises(MlflowException, match=r"Expected list, but got str"):
-        _validate_data_against_type_hint("a", list[str])
+        _validate_data_against_type_hint("a", typing.List[str])
 
     with pytest.raises(
         MlflowException,
         match=r"Failed to validate data against type hint `list\[str\]`",
     ):
-        _validate_data_against_type_hint(["a", 1], list[str])
+        _validate_data_against_type_hint(["a", 1], typing.List[str])
 
     with pytest.raises(
         MlflowException,
         match=r"Expected dict, but got list",
     ):
-        _validate_data_against_type_hint(["a", 1], dict[str, int])
+        _validate_data_against_type_hint(["a", 1], typing.Dict[str, int])
 
     with pytest.raises(
         MlflowException,
         match=r"Failed to validate data against type hint `dict\[str, list\[str\]\]`",
     ):
-        _validate_data_against_type_hint({1: ["a", "b"], "a": 1}, dict[str, list[str]])
+        _validate_data_against_type_hint({1: ["a", "b"], "a": 1}, typing.Dict[str, typing.List[str]])
 
     with pytest.raises(
         MlflowException,
@@ -408,21 +410,21 @@ def test_type_hints_validation_errors():
 
 @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires Python 3.10 or higher")
 def test_type_hint_for_python_3_10():
-    assert _infer_schema_from_list_type_hint(list[bool | int | str]) == Schema(
+    assert _infer_schema_from_list_type_hint(typing.List[bool | int | str]) == Schema(
         [ColSpec(type=AnyType())]
     )
-    assert _infer_schema_from_list_type_hint(list[list[int | str]]) == Schema(
+    assert _infer_schema_from_list_type_hint(typing.List[typing.List[int | str]]) == Schema(
         [ColSpec(type=Array(AnyType()))]
     )
 
     class ToolDef(pydantic.BaseModel):
         type: str
-        function: dict[str, str]
+        function: typing.Dict[str, str]
 
     class Tool(pydantic.BaseModel):
         tool_choice: str | ToolDef
 
-    assert _infer_schema_from_list_type_hint(list[Tool]) == Schema(
+    assert _infer_schema_from_list_type_hint(typing.List[Tool]) == Schema(
         [ColSpec(type=Object([Property(name="tool_choice", dtype=AnyType())]))]
     )
 
@@ -431,14 +433,14 @@ def test_type_hint_for_python_3_10():
     ("data", "type_hint", "expected_data"),
     [
         ("a", str, "a"),
-        (["a", "b"], list[str], ["a", "b"]),
-        ({"a": 1, "b": 2}, dict[str, int], {"a": 1, "b": 2}),
+        (["a", "b"], typing.List[str], ["a", "b"]),
+        ({"a": 1, "b": 2}, typing.Dict[str, int], {"a": 1, "b": 2}),
         (1, Optional[int], 1),
         (None, Optional[int], None),
-        (pd.DataFrame({"a": ["a", "b"]}), list[str], ["a", "b"]),
-        (pd.DataFrame({"a": [{"x": "x"}]}), list[dict[str, str]], [{"x": "x"}]),
+        (pd.DataFrame({"a": ["a", "b"]}), typing.List[str], ["a", "b"]),
+        (pd.DataFrame({"a": [{"x": "x"}]}), typing.List[typing.Dict[str, str]], [{"x": "x"}]),
         # This is a temp workaround for evaluate
-        (pd.DataFrame({"a": ["x", "y"], "b": ["c", "d"]}), list[str], ["x", "y"]),
+        (pd.DataFrame({"a": ["x", "y"], "b": ["c", "d"]}), typing.List[str], ["x", "y"]),
     ],
 )
 def test_maybe_convert_data_for_type_hint(data, type_hint, expected_data):
@@ -450,7 +452,7 @@ def test_maybe_convert_data_for_type_hint(data, type_hint, expected_data):
 
 def test_maybe_convert_data_for_type_hint_errors():
     with mock.patch("mlflow.types.type_hints._logger.warning") as mock_warning:
-        _convert_data_to_type_hint(pd.DataFrame({"a": ["x", "y"], "b": ["c", "d"]}), list[str])
+        _convert_data_to_type_hint(pd.DataFrame({"a": ["x", "y"], "b": ["c", "d"]}), typing.List[str])
         assert mock_warning.call_count == 1
         assert (
             "The data will be converted to a list of the first column."
@@ -486,13 +488,13 @@ def test_is_example_valid_for_type_from_example():
 @pytest.mark.parametrize(
     "data",
     [
-        # list[scalar]
+        # typing.List[scalar]
         ["x", "y", "z"],
         [1, 2, 3],
         [1.0, 2.0, 3.0],
         [True, False, True],
         [b"Hello", b"World"],
-        # list[dict]
+        # typing.List[dict]
         [{"a": 1, "b": 2}],
         [{"role": "user", "content": "hello"}, {"role": "admin", "content": "hi"}],
         # pd Series

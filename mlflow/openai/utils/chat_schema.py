@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 from collections.abc import Iterable
@@ -31,7 +33,7 @@ _RESPONSE_API_BUILT_IN_TOOLS = {
 }
 
 
-def set_span_chat_attributes(span: LiveSpan, inputs: dict[str, Any], output: Any):
+def set_span_chat_attributes(span: LiveSpan, inputs: typing.Dict[str, Any], output: Any):
     if span.span_type not in (SpanType.CHAT_MODEL, SpanType.LLM):
         return
 
@@ -51,7 +53,7 @@ def set_span_chat_attributes(span: LiveSpan, inputs: dict[str, Any], output: Any
             _logger.debug("Failed to set chat tools on span", exc_info=True)
 
 
-def _parse_inputs_output(inputs: dict[str, Any], output: Any) -> list[ChatMessage]:
+def _parse_inputs_output(inputs: typing.Dict[str, Any], output: Any) -> typing.List[ChatMessage]:
     from openai.types.chat import ChatCompletion
 
     try:
@@ -87,9 +89,9 @@ def _parse_inputs_output(inputs: dict[str, Any], output: Any) -> list[ChatMessag
 
 
 def _parse_response_item(
-    item: Union[dict[str, Any], BaseModel],
-    past_messages: list[ChatMessage],
-) -> list[ChatMessage]:
+    item: Union[typing.Dict[str, Any], BaseModel],
+    past_messages: typing.List[ChatMessage],
+) -> typing.List[ChatMessage]:
     """Parse Response API output into MLflow standard chat messages"""
     if isinstance(item, BaseModel):
         item = item.model_dump()
@@ -168,8 +170,8 @@ def _parse_response_item(
 
 
 def _parse_message_content(
-    content: Union[str, list[dict[str, Any]]], past_messages: Optional[list[ChatMessage]] = None
-) -> tuple[ContentType, Optional[str]]:
+    content: Union[str, typing.List[typing.Dict[str, Any]]], past_messages: Optional[typing.List[ChatMessage]] = None
+) -> typing.Tuple[ContentType, Optional[str]]:
     if isinstance(content, str):
         return content, None
 
@@ -232,7 +234,7 @@ def _get_tool_call_message(tool_id: str, tool_name: str, arguments: str) -> Chat
 
 
 def _populate_tool_result_message(
-    annotations: dict[str, Any], messages: list[ChatMessage]
+    annotations: typing.Dict[str, Any], messages: typing.List[ChatMessage]
 ) -> ChatMessage:
     """
     Parses annotations from the Response API output into MLflow standard chat spec.
@@ -255,7 +257,7 @@ def _find_tool_message(messages, tool_type):
     return next((msg for msg in messages if msg.role == "tool" and msg.content == tool_type), None)
 
 
-def _parse_tools(inputs: dict[str, Any]) -> list[ChatTool]:
+def _parse_tools(inputs: typing.Dict[str, Any]) -> typing.List[ChatTool]:
     tools = inputs.get("tools", [])
 
     if tools is None or not isinstance(tools, Iterable):

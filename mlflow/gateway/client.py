@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 from typing import Any, Optional
@@ -165,7 +167,7 @@ class MlflowGatewayClient:
 
     @gateway_deprecated
     def create_route(
-        self, name: str, route_type: Optional[str] = None, model: Optional[dict[str, Any]] = None
+        self, name: str, route_type: Optional[str] = None, model: Optional[typing.Dict[str, Any]] = None
     ) -> Route:
         """
         Create a new route in the Gateway.
@@ -279,7 +281,7 @@ class MlflowGatewayClient:
         self._call_endpoint("DELETE", route)
 
     @gateway_deprecated
-    def query(self, route: str, data: dict[str, Any]):
+    def query(self, route: str, data: typing.Dict[str, Any]):
         """
         Submit a query to a configured provider route.
 
@@ -375,7 +377,7 @@ class MlflowGatewayClient:
                 raise e
 
     @gateway_deprecated
-    def set_limits(self, route: str, limits: list[dict[str, Any]]) -> LimitsConfig:
+    def set_limits(self, route: str, limits: typing.List[typing.Dict[str, Any]]) -> LimitsConfig:
         """
         Set limits on an existing route in the Gateway.
 

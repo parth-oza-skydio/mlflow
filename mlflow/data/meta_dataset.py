@@ -1,3 +1,5 @@
+import typing
+
 import hashlib
 import json
 from typing import Any, Optional
@@ -93,7 +95,7 @@ class MetaDataset(Dataset):
         """Returns the schema of the dataset."""
         return self._schema
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> typing.Dict[str, str]:
         """Create config dictionary for the MetaDataset.
 
         Returns a string dictionary containing the following fields: name, digest, source, source

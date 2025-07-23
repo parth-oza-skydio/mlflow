@@ -1,3 +1,5 @@
+import typing
+
 import time
 
 from pydantic import BaseModel, StrictFloat, StrictStr, ValidationError
@@ -12,7 +14,7 @@ from mlflow.utils.pydantic_utils import field_validator
 
 
 class ServingTextResponse(BaseModel):
-    predictions: list[StrictStr]
+    predictions: typing.List[StrictStr]
 
     @field_validator("predictions", mode="before")
     def extract_choices(cls, predictions):
@@ -34,7 +36,7 @@ class ServingTextResponse(BaseModel):
 
 
 class EmbeddingsResponse(BaseModel):
-    predictions: list[list[StrictFloat]]
+    predictions: typing.List[typing.List[StrictFloat]]
 
     @field_validator("predictions", mode="before")
     def validate_predictions(cls, predictions):

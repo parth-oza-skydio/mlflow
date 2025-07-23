@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.diviner`` module provides an API for logging, saving and loading ``diviner`` models.
 Diviner wraps several popular open source time series forecasting libraries in a unified API that
@@ -451,13 +453,13 @@ class _DivinerModelWrapper:
         """
         return self.diviner_model
 
-    def predict(self, dataframe, params: Optional[dict[str, Any]] = None) -> pd.DataFrame:
+    def predict(self, dataframe, params: Optional[typing.Dict[str, Any]] = None) -> pd.DataFrame:
         """A method that allows a pyfunc implementation of this flavor to generate forecasted values
         from the end of a trained Diviner model's training series per group.
 
         The implementation here encapsulates a config-based switch of method calling. In short:
           *  If the ``DataFrame`` supplied to this method contains a column ``groups`` whose
-             first row of data is of type List[tuple[str]] (containing the series-identifying
+             first row of data is of type List[typing.Tuple[str]] (containing the series-identifying
              group keys that were generated to identify a single underlying model during training),
              the caller will resolve to the method ``predict_groups()`` in each of the underlying
              wrapped libraries (i.e., ``GroupedProphet.predict_groups()``).
@@ -555,7 +557,7 @@ class _DivinerModelWrapper:
             # We're wrapping two different endpoints to Diviner here for the pyfunc implementation.
             # Since we're limited by a single endpoint, we can address redirecting to the
             # method ``predict_groups()`` which will allow for a subset of groups to be forecasted
-            # if the prediction configuration DataFrame contains a List[tuple[str]]] in the
+            # if the prediction configuration DataFrame contains a List[typing.Tuple[str]]] in the
             # ``groups`` column. If this column is not present, all groups will be used to generate
             # forecasts, utilizing the less computationally complex method ``forecast``.
             if not predict_groups:

@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from typing import Optional, Sequence
 
@@ -44,7 +46,7 @@ class MlflowSpanExporter(SpanExporter):
         self._trace_manager = InMemoryTraceManager.get_instance()
         self._async_queue = AsyncTraceExportQueue()
 
-    def export(self, spans: Sequence[ReadableSpan]):
+    def export(self, spans: typing.Sequence[ReadableSpan]):
         """
         Export the spans to MLflow backend.
 

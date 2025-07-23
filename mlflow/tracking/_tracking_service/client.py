@@ -1,3 +1,5 @@
+import typing
+
 """
 Internal package providing a Python CRUD interface to MLflow experiments and runs.
 This is a lower level API than the :py:mod:`mlflow.tracking.fluent` module, and is
@@ -180,8 +182,8 @@ class TrackingServiceClient:
         self,
         experiment_id: str,
         timestamp_ms: int,
-        request_metadata: dict[str, str],
-        tags: dict[str, str],
+        request_metadata: typing.Dict[str, str],
+        tags: typing.Dict[str, str],
     ):
         """
         Start an initial TraceInfo object in the backend store.
@@ -208,8 +210,8 @@ class TrackingServiceClient:
         request_id: str,
         timestamp_ms: int,
         status: TraceStatus,
-        request_metadata: dict[str, str],
-        tags: dict[str, str],
+        request_metadata: typing.Dict[str, str],
+        tags: typing.Dict[str, str],
     ) -> TraceInfo:
         """
         Update the TraceInfo object in the backend store with the completed trace info.
@@ -241,7 +243,7 @@ class TrackingServiceClient:
         experiment_id: str,
         max_timestamp_millis: Optional[int] = None,
         max_traces: Optional[int] = None,
-        request_ids: Optional[list[str]] = None,
+        request_ids: Optional[typing.List[str]] = None,
     ) -> int:
         return self.store.delete_traces(
             experiment_id=experiment_id,
@@ -299,10 +301,10 @@ class TrackingServiceClient:
 
     def _search_traces(
         self,
-        experiment_ids: list[str],
+        experiment_ids: typing.List[str],
         filter_string: Optional[str] = None,
         max_results: int = SEARCH_TRACES_DEFAULT_MAX_RESULTS,
-        order_by: Optional[list[str]] = None,
+        order_by: Optional[typing.List[str]] = None,
         page_token: Optional[str] = None,
     ):
         return self.store.search_traces(
@@ -315,10 +317,10 @@ class TrackingServiceClient:
 
     def search_traces(
         self,
-        experiment_ids: list[str],
+        experiment_ids: typing.List[str],
         filter_string: Optional[str] = None,
         max_results: int = SEARCH_TRACES_DEFAULT_MAX_RESULTS,
-        order_by: Optional[list[str]] = None,
+        order_by: Optional[typing.List[str]] = None,
         page_token: Optional[str] = None,
         run_id: Optional[str] = None,
         include_spans: bool = True,
@@ -457,7 +459,7 @@ class TrackingServiceClient:
         expectation: Optional[Expectation] = None,
         feedback: Optional[Feedback] = None,
         rationale: Optional[str] = None,
-        metadata: Optional[dict[str, str]] = None,
+        metadata: Optional[typing.Dict[str, str]] = None,
     ):
         """
         Update an existing assessment entity in the backend store.
@@ -864,7 +866,7 @@ class TrackingServiceClient:
             # Merge all the run operations into a single run operations object
             return get_combined_run_operations(run_operations_list)
 
-    def log_inputs(self, run_id: str, datasets: Optional[list[DatasetInput]] = None):
+    def log_inputs(self, run_id: str, datasets: Optional[typing.List[DatasetInput]] = None):
         """Log one or more dataset inputs to a run.
 
         Args:

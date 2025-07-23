@@ -1,3 +1,5 @@
+import typing
+
 import importlib
 
 import numpy as np
@@ -38,13 +40,13 @@ def reset_autolog(reset_autolog_state):
 class DeterministicDummyEmbeddings(Embeddings, BaseModel):
     size: int
 
-    def _get_embedding(self, text: str) -> list[float]:
+    def _get_embedding(self, text: str) -> typing.List[float]:
         seed = abs(hash(text)) % (10**8)
         np.random.seed(seed)
         return list(np.random.normal(size=self.size))
 
-    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+    def embed_documents(self, texts: typing.List[str]) -> typing.List[typing.List[float]]:
         return [self._get_embedding(t) for t in texts]
 
-    def embed_query(self, text: str) -> list[float]:
+    def embed_query(self, text: str) -> typing.List[float]:
         return self._get_embedding(text)

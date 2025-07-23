@@ -1,3 +1,5 @@
+import typing
+
 import copy
 import inspect
 import json
@@ -64,7 +66,7 @@ def _extract_raw_model(model):
 def _extract_output_and_other_columns(
     model_predictions: Union[list, dict, pd.DataFrame, pd.Series],
     output_column_name: Optional[str],
-) -> tuple[pd.Series, Optional[pd.DataFrame], str]:
+) -> typing.Tuple[pd.Series, Optional[pd.DataFrame], str]:
     y_pred = None
     other_output_columns = None
     ERROR_MISSING_OUTPUT_COLUMN_NAME = (
@@ -289,7 +291,7 @@ class BuiltInEvaluator(ModelEvaluator):
     def _evaluate(
         self,
         model: Optional["mlflow.pyfunc.PyFuncModel"],
-        extra_metrics: list[EvaluationMetric],
+        extra_metrics: typing.List[EvaluationMetric],
         custom_artifacts=None,
         **kwargs,
     ) -> Optional[EvaluationResult]:
@@ -445,7 +447,7 @@ class BuiltInEvaluator(ModelEvaluator):
         eval_df: pd.DataFrame,
         input_df: pd.DataFrame,
         other_output_df: Optional[pd.DataFrame],
-    ) -> tuple[bool, list[Union[str, pd.DataFrame]]]:
+    ) -> typing.Tuple[bool, typing.List[Union[str, pd.DataFrame]]]:
         """
         Given a metric_tuple, read the signature of the metric function and get the appropriate
         arguments from the input/output columns, other calculated metrics, and evaluator_config.
@@ -543,7 +545,7 @@ class BuiltInEvaluator(ModelEvaluator):
 
     def evaluate_and_log_custom_artifacts(
         self,
-        custom_artifacts: list[_CustomArtifact],
+        custom_artifacts: typing.List[_CustomArtifact],
         prediction: pd.Series,
         target: Optional[np.array] = None,
     ):
@@ -652,7 +654,7 @@ class BuiltInEvaluator(ModelEvaluator):
 
     def _order_metrics(
         self,
-        metrics: list[EvaluationMetric],
+        metrics: typing.List[EvaluationMetric],
         eval_df: pd.DataFrame,
         other_output_df: Optional[pd.DataFrame],
     ):
@@ -693,7 +695,7 @@ class BuiltInEvaluator(ModelEvaluator):
 
     def _test_first_row(
         self,
-        metrics: list[MetricDefinition],
+        metrics: typing.List[MetricDefinition],
         eval_df: pd.DataFrame,
         other_output_df: Optional[pd.DataFrame],
     ):
@@ -725,7 +727,7 @@ class BuiltInEvaluator(ModelEvaluator):
 
     def evaluate_metrics(
         self,
-        metrics: list[EvaluationMetric],
+        metrics: typing.List[EvaluationMetric],
         prediction: pd.Series,
         target: Optional[np.array] = None,
         other_output_df: Optional[pd.DataFrame] = None,

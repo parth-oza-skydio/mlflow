@@ -1,3 +1,5 @@
+import typing
+
 from operator import itemgetter
 from typing import Any, Generator, Optional
 
@@ -83,18 +85,18 @@ class LangChainChatAgent(ChatAgent):
 
     def predict(
         self,
-        messages: list[ChatAgentMessage],
+        messages: typing.List[ChatAgentMessage],
         context: Optional[ChatContext] = None,
-        custom_inputs: Optional[dict[str, Any]] = None,
+        custom_inputs: Optional[typing.Dict[str, Any]] = None,
     ) -> ChatAgentResponse:
         response = self.agent.invoke({"messages": self._convert_messages_to_dict(messages)})
         return ChatAgentResponse(**response)
 
     def predict_stream(
         self,
-        messages: list[ChatAgentMessage],
+        messages: typing.List[ChatAgentMessage],
         context: Optional[ChatContext] = None,
-        custom_inputs: Optional[dict[str, Any]] = None,
+        custom_inputs: Optional[typing.Dict[str, Any]] = None,
     ) -> Generator[ChatAgentChunk, None, None]:
         for event in self.agent.stream({"messages": self._convert_messages_to_dict(messages)}):
             yield ChatAgentChunk(**event)

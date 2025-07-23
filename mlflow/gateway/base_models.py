@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any
 
 from pydantic import BaseModel
@@ -54,7 +56,7 @@ class SetLimitsModel(
     extra="ignore",
 ):
     route: str
-    limits: list[dict[str, Any]]
+    limits: typing.List[typing.Dict[str, Any]]
     """
     A pydantic model representing Gateway SetLimits request body, containing route and limits.
     """

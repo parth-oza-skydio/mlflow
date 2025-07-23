@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.spacy`` module provides an API for logging and loading spaCy models.
 This module exports spacy models with the following flavors:
@@ -287,7 +289,7 @@ class _SpacyModelWrapper:
     def predict(
         self,
         dataframe,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """Only works for predicting using text categorizer.
         Not suitable for other pipeline components (e.g: parser)

@@ -1,3 +1,5 @@
+import typing
+
 import inspect
 import warnings
 from functools import lru_cache, wraps
@@ -30,7 +32,7 @@ _INVALID_SIGNATURE_ERROR_MSG = (
 
 
 class FuncInfo(NamedTuple):
-    input_type_hint: Optional[type[Any]]
+    input_type_hint: Optional[typing.Type[Any]]
     input_param_name: str
 
 
@@ -129,7 +131,7 @@ def wrap_non_list_predict_pydantic(func, input_pydantic_model, validation_error_
     return wrapper
 
 
-def _check_func_signature(func, func_name) -> list[str]:
+def _check_func_signature(func, func_name) -> typing.List[str]:
     parameters = inspect.signature(func).parameters
     param_names = [name for name in parameters.keys() if name != "self"]
     if invalid_params := set(param_names) - {"self", "context", "model_input", "params"}:

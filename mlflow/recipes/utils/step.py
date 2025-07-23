@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import os
 import shutil
@@ -24,7 +26,7 @@ _MAX_PROFILE_COL_SIZE = 10000  # 10k Cols
 
 
 def get_merged_eval_metrics(
-    eval_metrics: dict[str, dict], ordered_metric_names: Optional[list[str]] = None
+    eval_metrics: typing.Dict[str, dict], ordered_metric_names: Optional[typing.List[str]] = None
 ):
     """
     Returns a merged Pandas DataFrame from a map of dataset to evaluation metrics.
@@ -130,7 +132,7 @@ def _get_pool_size():
     return 1 if "PYTEST_CURRENT_TEST" in os.environ and is_windows() else 0
 
 
-def get_pandas_data_profiles(inputs: Iterable[tuple[str, pd.DataFrame]]) -> str:
+def get_pandas_data_profiles(inputs: typing.Iterable[typing.Tuple[str, pd.DataFrame]]) -> str:
     """
     Returns a data profiling string over input data frame.
 

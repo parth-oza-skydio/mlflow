@@ -1,3 +1,5 @@
+import typing
+
 import hashlib
 import json
 import os
@@ -83,11 +85,11 @@ def store_and_trace_info(store):
 
 
 class TraceInfos(NamedTuple):
-    trace_infos: list[TraceInfo]
+    trace_infos: typing.List[TraceInfo]
     store: FileStore
     exp_id: str
-    request_ids: list[str]
-    timestamps: list[int]
+    request_ids: typing.List[str]
+    timestamps: typing.List[int]
 
 
 @pytest.fixture
@@ -2421,7 +2423,7 @@ def test_create_experiment_appends_to_artifact_uri_path_correctly(input_uri, exp
     _assert_create_experiment_appends_to_artifact_uri_path_correctly(input_uri, expected_uri)
 
 
-def assert_dataset_inputs_equal(inputs1: list[DatasetInput], inputs2: list[DatasetInput]):
+def assert_dataset_inputs_equal(inputs1: typing.List[DatasetInput], inputs2: typing.List[DatasetInput]):
     inputs1 = sorted(inputs1, key=lambda inp: (inp.dataset.name, inp.dataset.digest))
     inputs2 = sorted(inputs2, key=lambda inp: (inp.dataset.name, inp.dataset.digest))
     assert len(inputs1) == len(inputs2)

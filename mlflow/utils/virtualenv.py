@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import os
 import re
@@ -246,9 +248,9 @@ def _create_virtualenv(
     env_dir: Path,
     pyenv_root_dir: Optional[str] = None,
     env_manager: Literal["virtualenv", "uv"] = em.UV,
-    extra_env: Optional[dict[str, str]] = None,
+    extra_env: Optional[typing.Dict[str, str]] = None,
     capture_output: bool = False,
-    pip_requirements_override: Optional[list[str]] = None,
+    pip_requirements_override: Optional[typing.List[str]] = None,
 ):
     if env_manager not in {em.VIRTUALENV, em.UV}:
         raise MlflowException.invalid_parameter_value(
@@ -377,7 +379,7 @@ def _get_or_create_virtualenv(  # noqa: D417
     env_id=None,
     env_root_dir=None,
     capture_output=False,
-    pip_requirements_override: Optional[list[str]] = None,
+    pip_requirements_override: Optional[typing.List[str]] = None,
     env_manager: Literal["virtualenv", "uv"] = em.UV,
 ):
     """Restores an MLflow model's environment in a virtual environment and returns a command

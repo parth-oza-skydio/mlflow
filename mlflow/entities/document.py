@@ -1,3 +1,5 @@
+import typing
+
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
 from typing import Any, Optional
@@ -15,7 +17,7 @@ class Document:
     """
 
     page_content: str
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: typing.Dict[str, Any] = field(default_factory=dict)
     id: Optional[str] = None
 
     @classmethod

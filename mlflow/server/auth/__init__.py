@@ -1,3 +1,5 @@
+import typing
+
 """
 Usage
 -----
@@ -429,7 +431,7 @@ def _is_proxy_artifact_path(path: str) -> bool:
 
 
 def _get_proxy_artifact_validator(
-    method: str, view_args: Optional[dict[str, Any]]
+    method: str, view_args: Optional[typing.Dict[str, Any]]
 ) -> Optional[Callable[[], bool]]:
     if view_args is None:
         return validate_can_read_experiment_artifact_proxy  # List

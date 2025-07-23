@@ -1,3 +1,5 @@
+import typing
+
 from dataclasses import dataclass
 from typing import Any, Optional
 
@@ -35,7 +37,7 @@ class MultipartUploadPart:
 class MultipartUploadCredential:
     url: str
     part_number: int
-    headers: dict[str, Any]
+    headers: typing.Dict[str, Any]
 
     def to_proto(self):
         credential = ProtoMultipartUploadCredential()
@@ -56,7 +58,7 @@ class MultipartUploadCredential:
 @dataclass
 class CreateMultipartUploadResponse:
     upload_id: Optional[str]
-    credentials: list[MultipartUploadCredential]
+    credentials: typing.List[MultipartUploadCredential]
 
     def to_proto(self):
         response = ProtoCreateMultipartUpload.Response()

@@ -1,3 +1,5 @@
+import typing
+
 """
 Example of a custom python function implementing image classifier with image preprocessing embedded
 in the model.
@@ -62,7 +64,7 @@ class KerasImageClassifierPyfunc:
     def predict(
         self,
         input,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Generate predictions for the data.

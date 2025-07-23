@@ -1,3 +1,5 @@
+import typing
+
 """Functions for saving DSPY models to MLflow."""
 
 import os
@@ -77,16 +79,16 @@ def save_model(
     model,
     path: str,
     task: Optional[str] = None,
-    model_config: Optional[dict[str, Any]] = None,
-    code_paths: Optional[list[str]] = None,
+    model_config: Optional[typing.Dict[str, Any]] = None,
+    code_paths: Optional[typing.List[str]] = None,
     mlflow_model: Optional[Model] = None,
-    conda_env: Optional[Union[list[str], str]] = None,
+    conda_env: Optional[Union[typing.List[str], str]] = None,
     signature: Optional[ModelSignature] = None,
     input_example: Optional[ModelInputExample] = None,
-    pip_requirements: Optional[Union[list[str], str]] = None,
-    extra_pip_requirements: Optional[Union[list[str], str]] = None,
-    metadata: Optional[dict[str, Any]] = None,
-    resources: Optional[Union[str, Path, list[Resource]]] = None,
+    pip_requirements: Optional[Union[typing.List[str], str]] = None,
+    extra_pip_requirements: Optional[Union[typing.List[str], str]] = None,
+    metadata: Optional[typing.Dict[str, Any]] = None,
+    resources: Optional[Union[str, Path, typing.List[Resource]]] = None,
 ):
     """
     Save a Dspy model.
@@ -259,18 +261,18 @@ def log_model(
     dspy_model,
     artifact_path: str,
     task: Optional[str] = None,
-    model_config: Optional[dict[str, Any]] = None,
-    code_paths: Optional[list[str]] = None,
-    conda_env: Optional[Union[list[str], str]] = None,
+    model_config: Optional[typing.Dict[str, Any]] = None,
+    code_paths: Optional[typing.List[str]] = None,
+    conda_env: Optional[Union[typing.List[str], str]] = None,
     signature: Optional[ModelSignature] = None,
     input_example: Optional[ModelInputExample] = None,
     registered_model_name: Optional[str] = None,
     await_registration_for: int = DEFAULT_AWAIT_MAX_SLEEP_SECONDS,
-    pip_requirements: Optional[Union[list[str], str]] = None,
-    extra_pip_requirements: Optional[Union[list[str], str]] = None,
-    metadata: Optional[dict[str, Any]] = None,
-    resources: Optional[Union[str, Path, list[Resource]]] = None,
-    prompts: Optional[list[Union[str, Prompt]]] = None,
+    pip_requirements: Optional[Union[typing.List[str], str]] = None,
+    extra_pip_requirements: Optional[Union[typing.List[str], str]] = None,
+    metadata: Optional[typing.Dict[str, Any]] = None,
+    resources: Optional[Union[str, Path, typing.List[Resource]]] = None,
+    prompts: Optional[typing.List[Union[str, Prompt]]] = None,
 ):
     """
     Log a Dspy model along with metadata to MLflow.

@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 import os
@@ -126,7 +128,7 @@ class OpenAIConfig(ConfigModel):
         return _resolve_api_key_from_input(value)
 
     @classmethod
-    def _validate_field_compatibility(cls, info: dict[str, Any]):
+    def _validate_field_compatibility(cls, info: typing.Dict[str, Any]):
         if not isinstance(info, dict):
             return info
         api_type = (info.get("openai_api_type") or OpenAIAPIType.OPENAI).lower()
@@ -160,7 +162,7 @@ class OpenAIConfig(ConfigModel):
         return info
 
     @model_validator(mode="before")
-    def validate_field_compatibility(cls, info: dict[str, Any]):
+    def validate_field_compatibility(cls, info: typing.Dict[str, Any]):
         return cls._validate_field_compatibility(info)
 
 
@@ -339,7 +341,7 @@ class Limit(LimitModel):
 
 
 class LimitsConfig(ConfigModel):
-    limits: Optional[list[Limit]] = []
+    limits: Optional[typing.List[Limit]] = []
 
 
 class RouteConfig(AliasedConfigModel):
@@ -477,7 +479,7 @@ class Route(ConfigModel):
 
 
 class GatewayConfig(AliasedConfigModel):
-    routes: list[RouteConfig] = Field(alias="endpoints")
+    routes: typing.List[RouteConfig] = Field(alias="endpoints")
 
 
 def _load_route_config(path: Union[str, Path]) -> GatewayConfig:

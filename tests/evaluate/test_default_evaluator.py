@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import io
 import json
@@ -1991,7 +1992,7 @@ def test_make_metric_name_inference():
         make_metric(eval_fn=Callable(), greater_is_better=True)
 
 
-def language_model(inputs: list[str]) -> list[str]:
+def language_model(inputs: typing.List[str]) -> typing.List[str]:
     return inputs
 
 
@@ -2611,7 +2612,7 @@ def test_extracting_output_and_other_columns():
     assert prediction_col7 == "text"
 
 
-def language_model_with_context(inputs: list[str]) -> list[dict[str, str]]:
+def language_model_with_context(inputs: typing.List[str]) -> typing.List[typing.Dict[str, str]]:
     return [
         {
             "context": f"context_{input}",
@@ -3270,7 +3271,7 @@ def test_evaluate_with_latency():
 def test_evaluate_with_latency_and_pd_series():
     with mlflow.start_run() as run:
 
-        def pd_series_model(inputs: list[str]) -> pd.Series:
+        def pd_series_model(inputs: typing.List[str]) -> pd.Series:
             return pd.Series(inputs)
 
         model_info = mlflow.pyfunc.log_model(

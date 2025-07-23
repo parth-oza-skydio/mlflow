@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.fastai`` module provides an API for logging and loading fast.ai models. This module
 exports fast.ai models with the following flavors:
@@ -362,7 +364,7 @@ class _FastaiModelWrapper:
     def predict(
         self,
         dataframe,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:

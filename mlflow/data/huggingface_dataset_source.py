@@ -1,3 +1,5 @@
+import typing
+
 from typing import TYPE_CHECKING, Any, Mapping, Optional, Sequence, Union
 
 from mlflow.data.dataset_source import DatasetSource
@@ -15,7 +17,7 @@ class HuggingFaceDatasetSource(DatasetSource):
         config_name: Optional[str] = None,
         data_dir: Optional[str] = None,
         data_files: Optional[
-            Union[str, Sequence[str], Mapping[str, Union[str, Sequence[str]]]]
+            Union[str, typing.Sequence[str], typing.Mapping[str, Union[str, typing.Sequence[str]]]]
         ] = None,
         split: Optional[Union[str, "datasets.Split"]] = None,
         revision: Optional[Union[str, "datasets.Version"]] = None,
@@ -96,7 +98,7 @@ class HuggingFaceDatasetSource(DatasetSource):
     def _resolve(cls, raw_source: str) -> "HuggingFaceDatasetSource":
         raise NotImplementedError
 
-    def to_dict(self) -> dict[Any, Any]:
+    def to_dict(self) -> typing.Dict[Any, Any]:
         return {
             "path": self.path,
             "config_name": self.config_name,
@@ -107,7 +109,7 @@ class HuggingFaceDatasetSource(DatasetSource):
         }
 
     @classmethod
-    def from_dict(cls, source_dict: dict[Any, Any]) -> "HuggingFaceDatasetSource":
+    def from_dict(cls, source_dict: typing.Dict[Any, Any]) -> "HuggingFaceDatasetSource":
         return cls(
             path=source_dict.get("path"),
             config_name=source_dict.get("config_name"),

@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 from typing import TYPE_CHECKING, Optional, Union
@@ -74,7 +76,7 @@ def convert_gemini_func_call_to_mlflow_tool_call(
 
 def parse_gemini_content_to_mlflow_chat_messages(
     content: "genai.types.ContentsType",
-) -> list[ChatMessage]:
+) -> typing.List[ChatMessage]:
     """
     Convert a gemini content to chat messages.
 
@@ -82,7 +84,7 @@ def parse_gemini_content_to_mlflow_chat_messages(
         content: A genai.types.ContentsType object representing the model content.
 
     Returns:
-        list[ChatMessage]: A list of MLflow's standard chat messages.
+        typing.List[ChatMessage]: A list of MLflow's standard chat messages.
     """
     if isinstance(content, str):
         # Assume str content is used only for user input
@@ -124,7 +126,7 @@ def parse_gemini_content_to_mlflow_chat_messages(
         return []
 
 
-def _construct_chat_message(parts: list["genai.types.PartType"], role: str) -> ChatMessage:
+def _construct_chat_message(parts: typing.List["genai.types.PartType"], role: str) -> ChatMessage:
     tool_calls = []
     content_parts = []
     for content_part in parts:

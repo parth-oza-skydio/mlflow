@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 from abc import ABC, abstractmethod
@@ -28,7 +30,7 @@ def set_retriever_schema(
     primary_key: str,
     text_column: str,
     doc_uri: Optional[str] = None,
-    other_columns: Optional[list[str]] = None,
+    other_columns: Optional[typing.List[str]] = None,
     name: Optional[str] = "retriever",
 ):
     """
@@ -210,7 +212,7 @@ class Schema(ABC):
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, data: dict[str, str]):
+    def from_dict(cls, data: typing.Dict[str, str]):
         """
         Convert the dictionary to a Resource.
         Subclasses must implement this method.
@@ -236,7 +238,7 @@ class RetrieverSchema(Schema):
         primary_key: str,
         text_column: str,
         doc_uri: Optional[str] = None,
-        other_columns: Optional[list[str]] = None,
+        other_columns: Optional[typing.List[str]] = None,
     ):
         super().__init__(type=DependenciesSchemasType.RETRIEVERS)
         self.name = name
@@ -259,7 +261,7 @@ class RetrieverSchema(Schema):
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, str]):
+    def from_dict(cls, data: typing.Dict[str, str]):
         return cls(
             name=data["name"],
             primary_key=data["primary_key"],
@@ -271,9 +273,9 @@ class RetrieverSchema(Schema):
 
 @dataclass
 class DependenciesSchemas:
-    retriever_schemas: list[RetrieverSchema] = field(default_factory=list)
+    retriever_schemas: typing.List[RetrieverSchema] = field(default_factory=list)
 
-    def to_dict(self) -> dict[str, dict[DependenciesSchemasType, list[dict]]]:
+    def to_dict(self) -> typing.Dict[str, typing.Dict[DependenciesSchemasType, typing.List[dict]]]:
         if not self.retriever_schemas:
             return None
 

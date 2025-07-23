@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 from dataclasses import dataclass
 
@@ -7,10 +8,10 @@ import tomli
 
 @dataclass
 class Config:
-    exclude: list[str]
+    exclude: typing.List[str]
     # Path -> List of modules that should not be imported globally under that path
-    forbidden_top_level_imports: dict[str, list[str]]
-    typing_extensions_allowlist: list[str]
+    forbidden_top_level_imports: typing.Dict[str, typing.List[str]]
+    typing_extensions_allowlist: typing.List[str]
 
     @classmethod
     def load(cls) -> Config:

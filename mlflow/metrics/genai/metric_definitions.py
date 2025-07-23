@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Optional
 
 from mlflow.exceptions import MlflowException
@@ -14,10 +16,10 @@ from mlflow.utils.class_utils import _get_class_from_string
 def answer_similarity(
     model: Optional[str] = None,
     metric_version: Optional[str] = None,
-    examples: Optional[list[EvaluationExample]] = None,
-    metric_metadata: Optional[dict[str, Any]] = None,
-    parameters: Optional[dict[str, Any]] = None,
-    extra_headers: Optional[dict[str, str]] = None,
+    examples: Optional[typing.List[EvaluationExample]] = None,
+    metric_metadata: Optional[typing.Dict[str, Any]] = None,
+    parameters: Optional[typing.Dict[str, Any]] = None,
+    extra_headers: Optional[typing.Dict[str, str]] = None,
     proxy_url: Optional[str] = None,
     max_workers: int = 10,
 ) -> EvaluationMetric:
@@ -105,10 +107,10 @@ def answer_similarity(
 def answer_correctness(
     model: Optional[str] = None,
     metric_version: Optional[str] = None,
-    examples: Optional[list[EvaluationExample]] = None,
-    metric_metadata: Optional[dict[str, Any]] = None,
-    parameters: Optional[dict[str, Any]] = None,
-    extra_headers: Optional[dict[str, str]] = None,
+    examples: Optional[typing.List[EvaluationExample]] = None,
+    metric_metadata: Optional[typing.Dict[str, Any]] = None,
+    parameters: Optional[typing.Dict[str, Any]] = None,
+    extra_headers: Optional[typing.Dict[str, str]] = None,
     proxy_url: Optional[str] = None,
     max_workers: int = 10,
 ) -> EvaluationMetric:
@@ -197,10 +199,10 @@ def answer_correctness(
 def faithfulness(
     model: Optional[str] = None,
     metric_version: Optional[str] = _get_latest_metric_version(),
-    examples: Optional[list[EvaluationExample]] = None,
-    metric_metadata: Optional[dict[str, Any]] = None,
-    parameters: Optional[dict[str, Any]] = None,
-    extra_headers: Optional[dict[str, str]] = None,
+    examples: Optional[typing.List[EvaluationExample]] = None,
+    metric_metadata: Optional[typing.Dict[str, Any]] = None,
+    parameters: Optional[typing.Dict[str, Any]] = None,
+    extra_headers: Optional[typing.Dict[str, str]] = None,
     proxy_url: Optional[str] = None,
     max_workers: int = 10,
 ) -> EvaluationMetric:
@@ -286,10 +288,10 @@ def faithfulness(
 def answer_relevance(
     model: Optional[str] = None,
     metric_version: Optional[str] = _get_latest_metric_version(),
-    examples: Optional[list[EvaluationExample]] = None,
-    metric_metadata: Optional[dict[str, Any]] = None,
-    parameters: Optional[dict[str, Any]] = None,
-    extra_headers: Optional[dict[str, str]] = None,
+    examples: Optional[typing.List[EvaluationExample]] = None,
+    metric_metadata: Optional[typing.Dict[str, Any]] = None,
+    parameters: Optional[typing.Dict[str, Any]] = None,
+    extra_headers: Optional[typing.Dict[str, str]] = None,
     proxy_url: Optional[str] = None,
     max_workers: int = 10,
 ) -> EvaluationMetric:
@@ -368,10 +370,10 @@ def answer_relevance(
 def relevance(
     model: Optional[str] = None,
     metric_version: Optional[str] = None,
-    examples: Optional[list[EvaluationExample]] = None,
-    metric_metadata: Optional[dict[str, Any]] = None,
-    parameters: Optional[dict[str, Any]] = None,
-    extra_headers: Optional[dict[str, str]] = None,
+    examples: Optional[typing.List[EvaluationExample]] = None,
+    metric_metadata: Optional[typing.Dict[str, Any]] = None,
+    parameters: Optional[typing.Dict[str, Any]] = None,
+    extra_headers: Optional[typing.Dict[str, str]] = None,
     proxy_url: Optional[str] = None,
     max_workers: int = 10,
 ) -> EvaluationMetric:

@@ -1,3 +1,5 @@
+import typing
+
 from dataclasses import asdict, dataclass, field
 from typing import Any, Optional
 
@@ -11,7 +13,7 @@ from mlflow.protos.service_pb2 import TraceRequestMetadata as ProtoTraceRequestM
 from mlflow.protos.service_pb2 import TraceTag as ProtoTraceTag
 
 
-def _truncate_request_metadata(d: dict[str, Any]) -> dict[str, str]:
+def _truncate_request_metadata(d: typing.Dict[str, Any]) -> typing.Dict[str, str]:
     from mlflow.tracing.constant import MAX_CHARS_IN_TRACE_INFO_METADATA
 
     return {
@@ -20,7 +22,7 @@ def _truncate_request_metadata(d: dict[str, Any]) -> dict[str, str]:
     }
 
 
-def _truncate_tags(d: dict[str, Any]) -> dict[str, str]:
+def _truncate_tags(d: typing.Dict[str, Any]) -> typing.Dict[str, str]:
     from mlflow.tracing.constant import (
         MAX_CHARS_IN_TRACE_INFO_TAGS_KEY,
         MAX_CHARS_IN_TRACE_INFO_TAGS_VALUE,
@@ -53,9 +55,9 @@ class TraceInfo(_MlflowObject):
     timestamp_ms: int
     execution_time_ms: Optional[int]
     status: TraceStatus
-    request_metadata: dict[str, str] = field(default_factory=dict)
-    tags: dict[str, str] = field(default_factory=dict)
-    assessments: list[Assessment] = field(default_factory=list)
+    request_metadata: typing.Dict[str, str] = field(default_factory=dict)
+    tags: typing.Dict[str, str] = field(default_factory=dict)
+    assessments: typing.List[Assessment] = field(default_factory=list)
 
     def __eq__(self, other):
         if type(other) is type(self):

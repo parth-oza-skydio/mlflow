@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import warnings
 from collections import defaultdict
@@ -143,7 +145,7 @@ def _infer_datatype(data: Any) -> Optional[Union[DataType, Array, Object, AnyTyp
             "with Pydantic objects. To use Pydantic objects, define your PythonModel's "
             "`predict` method with a Pydantic type hint, and model signature will be automatically "
             "inferred when logging the model. e.g. "
-            "`def predict(self, model_input: list[PydanticType])`. Check "
+            "`def predict(self, model_input: typing.List[PydanticType])`. Check "
             "https://mlflow.org/docs/latest/model/python_model.html#type-hint-usage-in-pythonmodel "
             "for more details."
         )
@@ -675,16 +677,16 @@ def _validate_input_dictionary_contains_only_strings_and_lists_of_strings(data) 
 def _is_list_str(type_hint: Any) -> bool:
     return type_hint in [
         List[str],  # noqa: UP006
-        list[str],
+        typing.List[str],
     ]
 
 
 def _is_list_dict_str(type_hint: Any) -> bool:
     return type_hint in [
         List[Dict[str, str]],  # noqa: UP006
-        list[Dict[str, str]],  # noqa: UP006
-        List[dict[str, str]],  # noqa: UP006
-        list[dict[str, str]],
+        typing.List[Dict[str, str]],  # noqa: UP006
+        List[typing.Dict[str, str]],  # noqa: UP006
+        typing.List[typing.Dict[str, str]],
     ]
 
 
@@ -728,7 +730,7 @@ def _infer_type_and_shape(value):
     )
 
 
-def _infer_param_schema(parameters: dict[str, Any]):
+def _infer_param_schema(parameters: typing.Dict[str, Any]):
     if not isinstance(parameters, dict):
         raise MlflowException.invalid_parameter_value(
             f"Expected parameters to be dict, got {type(parameters).__name__}",

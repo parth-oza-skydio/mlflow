@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 import time
@@ -89,7 +91,7 @@ def _chat_model_to_langchain_message(message: ChatMessage) -> BaseMessage:
         )
 
 
-def _get_tool_calls_from_ai_message(message: AIMessage) -> list[dict]:
+def _get_tool_calls_from_ai_message(message: AIMessage) -> typing.List[dict]:
     # AIMessage does not have tool_calls field in LangChain < 0.1.0.
     if not hasattr(message, "tool_calls"):
         return []
@@ -244,19 +246,19 @@ def try_transform_response_iter_to_chat_format(chunk_iter):
     return map(_convert, chunk_iter)
 
 
-def _convert_chat_request_or_throw(chat_request: dict[str, Any]) -> list[Union[BaseMessage]]:
+def _convert_chat_request_or_throw(chat_request: typing.Dict[str, Any]) -> typing.List[Union[BaseMessage]]:
     model = ChatCompletionRequest.validate_compat(chat_request)
     return [_chat_model_to_langchain_message(message) for message in model.messages]
 
 
-def _convert_chat_request(chat_request: Union[dict, list[dict]]):
+def _convert_chat_request(chat_request: Union[dict, typing.List[dict]]):
     if isinstance(chat_request, list):
         return [_convert_chat_request_or_throw(request) for request in chat_request]
     else:
         return _convert_chat_request_or_throw(chat_request)
 
 
-def _get_lc_model_input_fields(lc_model) -> set[str]:
+def _get_lc_model_input_fields(lc_model) -> typing.Set[str]:
     try:
         if hasattr(lc_model, "input_schema"):
             return set(lc_model.input_schema.__fields__)
@@ -316,7 +318,7 @@ def transform_request_json_for_chat_if_necessary(request_json, lc_model):
             and isinstance(json_message["messages"], list)
         )
 
-    def is_list_of_chat_messages(json_message: list[dict]):
+    def is_list_of_chat_messages(json_message: typing.List[dict]):
         return isinstance(json_message, list) and all(
             json_dict_might_be_chat_request(message) for message in json_message
         )

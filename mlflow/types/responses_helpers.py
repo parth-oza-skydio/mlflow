@@ -1,3 +1,5 @@
+import typing
+
 from mlflow.utils.pydantic_utils import IS_PYDANTIC_V2_OR_NEWER, model_validator
 
 if not IS_PYDANTIC_V2_OR_NEWER:
@@ -84,7 +86,7 @@ class Annotation(BaseModel):
 
 
 class ResponseOutputText(BaseModel):
-    annotations: Optional[list[Annotation]] = None
+    annotations: Optional[typing.List[Annotation]] = None
     text: str
     type: str = "output_text"
 
@@ -111,7 +113,7 @@ class Content(BaseModel):
 
 class ResponseOutputMessage(Status):
     id: str
-    content: list[Content]
+    content: typing.List[Content]
     role: str = "assistant"
     type: str = "message"
 
@@ -143,7 +145,7 @@ class Summary(BaseModel):
 
 class ResponseReasoningItem(Status):
     id: str
-    summary: list[Summary]
+    summary: typing.List[Summary]
     type: str = "reasoning"
 
 
@@ -187,7 +189,7 @@ class ToolChoiceFunction(BaseModel):
 
 class FunctionTool(BaseModel):
     name: str
-    parameters: dict[str, Any]
+    parameters: typing.Dict[str, Any]
     strict: Optional[bool] = None
     type: str = "function"
     description: Optional[str] = None
@@ -269,13 +271,13 @@ class Response(Truncation, ToolChoice):
     error: Optional[ResponseError] = None
     incomplete_details: Optional[IncompleteDetails] = None
     instructions: Optional[str] = None
-    metadata: Optional[dict[str, str]] = None
+    metadata: Optional[typing.Dict[str, str]] = None
     model: Optional[str] = None
     object: str = "response"
-    output: list[OutputItem]
+    output: typing.List[OutputItem]
     parallel_tool_calls: Optional[bool] = None
     temperature: Optional[float] = None
-    tools: Optional[list[Tool]] = None
+    tools: Optional[typing.List[Tool]] = None
     top_p: Optional[float] = None
     max_output_tokens: Optional[int] = None
     previous_response_id: Optional[str] = None
@@ -292,7 +294,7 @@ class Response(Truncation, ToolChoice):
 
         If no `output_text` content blocks exist, then an empty string is returned.
         """
-        texts: list[str] = []
+        texts: typing.List[str] = []
         for output in self.output:
             if output.type == "message":
                 for content in output.content:
@@ -325,7 +327,7 @@ class ResponseInputTextParam(BaseModel):
 
 
 class Message(Status):
-    content: Union[str, list[Union[ResponseInputTextParam, dict[str, Any]]]]
+    content: Union[str, typing.List[Union[ResponseInputTextParam, typing.Dict[str, Any]]]]
     role: str
     status: Optional[str] = None
     type: str = "message"
@@ -364,9 +366,9 @@ class FunctionCallOutput(Status):
 
 class BaseRequestPayload(Truncation, ToolChoice):
     max_output_tokens: Optional[int] = None
-    metadata: Optional[dict[str, str]] = None
+    metadata: Optional[typing.Dict[str, str]] = None
     parallel_tool_calls: Optional[bool] = None
-    tools: Optional[list[Tool]] = None
+    tools: Optional[typing.List[Tool]] = None
     reasoning: Optional[ReasoningParams] = None
     store: Optional[bool] = None
     stream: Optional[bool] = None

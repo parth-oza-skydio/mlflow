@@ -1,3 +1,5 @@
+import typing
+
 """
 Initialize the environment and start model serving in a Docker container.
 
@@ -123,7 +125,7 @@ def _install_pyfunc_deps(
     return activate_cmd
 
 
-def _install_model_dependencies_to_env(model_path, env_manager) -> list[str]:
+def _install_model_dependencies_to_env(model_path, env_manager) -> typing.List[str]:
     """:
     Installs model dependencies to the specified environment, which can be either a local
     environment, a conda environment, or a virtualenv.

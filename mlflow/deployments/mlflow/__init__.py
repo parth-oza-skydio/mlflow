@@ -1,3 +1,5 @@
+import typing
+
 from typing import TYPE_CHECKING, Any, Optional
 
 import requests
@@ -202,7 +204,7 @@ class MlflowDeploymentClient(BaseDeploymentClient):
         return PagedList(routes, next_page_token)
 
     @experimental
-    def list_endpoints(self) -> "list[Endpoint]":
+    def list_endpoints(self) -> "typing.List[Endpoint]":
         """
         List endpoints configured for the MLflow AI Gateway.
 
@@ -239,7 +241,7 @@ class MlflowDeploymentClient(BaseDeploymentClient):
         return endpoints
 
     @experimental
-    def predict(self, deployment_name=None, inputs=None, endpoint=None) -> dict[str, Any]:
+    def predict(self, deployment_name=None, inputs=None, endpoint=None) -> typing.Dict[str, Any]:
         """
         Submit a query to a configured provider endpoint.
 

@@ -1,3 +1,5 @@
+import typing
+
 from typing import Literal
 
 from llama_index.core.schema import NodeWithScore
@@ -31,14 +33,14 @@ class WebsearchEvent(Event):
 class RetrievalResultEvent(Event):
     """Event to send retrieval result from each retriever to the gather step."""
 
-    nodes: list[NodeWithScore]
+    nodes: typing.List[NodeWithScore]
     retriever: Literal["vector_search", "bm25", "web_search"]
 
 
 class RerankEvent(Event):
     """Event to send retrieval result to reranking step."""
 
-    nodes: list[NodeWithScore]
+    nodes: typing.List[NodeWithScore]
 
 
 class QueryEvent(Event):

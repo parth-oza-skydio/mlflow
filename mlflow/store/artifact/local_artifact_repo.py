@@ -1,3 +1,5 @@
+import typing
+
 import os
 import shutil
 from typing import Any
@@ -127,7 +129,7 @@ class LocalArtifactRepository(ArtifactRepository):
             else:
                 shutil.rmtree(artifact_path)
 
-    def download_trace_data(self) -> dict[str, Any]:
+    def download_trace_data(self) -> typing.Dict[str, Any]:
         """
         Download the trace data.
 

@@ -1,3 +1,5 @@
+import typing
+
 import io
 import json
 import logging
@@ -39,7 +41,7 @@ def patched_create_client(original, self, *args, **kwargs):
     return client
 
 
-def patch_bedrock_runtime_client(client_class: type[BaseClient]):
+def patch_bedrock_runtime_client(client_class: typing.Type[BaseClient]):
     """
     Patch the BedrockRuntime client to log traces and models.
     """
@@ -119,7 +121,7 @@ def _buffer_stream(raw_stream: StreamingBody) -> StreamingBody:
     return StreamingBody(buffered_response, raw_stream._content_length)
 
 
-def _parse_invoke_model_response_body(response_body: StreamingBody) -> Union[dict[str, Any], str]:
+def _parse_invoke_model_response_body(response_body: StreamingBody) -> Union[typing.Dict[str, Any], str]:
     content = response_body.read()
     try:
         return json.loads(content)
@@ -181,7 +183,7 @@ def _patched_converse_stream(original, self, *args, **kwargs):
     return result
 
 
-def _set_chat_messages_attributes(span, messages: list[dict], response: Optional[dict]):
+def _set_chat_messages_attributes(span, messages: typing.List[dict], response: Optional[dict]):
     """
     Extract standard chat span attributes for the Bedrock Converse API call.
 

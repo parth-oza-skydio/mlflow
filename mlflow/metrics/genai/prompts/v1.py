@@ -1,3 +1,5 @@
+import typing
+
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
@@ -69,9 +71,9 @@ class EvaluationModel:
     name: str
     definition: str
     grading_prompt: str
-    examples: Optional[list[EvaluationExample]] = None
+    examples: Optional[typing.List[EvaluationExample]] = None
     model: str = default_model
-    parameters: dict[str, Any] = field(default_factory=lambda: default_parameters)
+    parameters: typing.Dict[str, Any] = field(default_factory=lambda: default_parameters)
 
     def to_dict(self):
         examples_str = (

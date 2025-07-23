@@ -1,3 +1,5 @@
+import typing
+
 import asyncio
 import time
 from typing import Optional
@@ -159,7 +161,7 @@ async def test_litellm_tracing_async_streaming(is_in_databricks):
         messages=[{"role": "system", "content": "Hello"}],
         stream=True,
     )
-    chunks: list[Optional[str]] = []
+    chunks: typing.List[Optional[str]] = []
     async for c in response:
         chunks.append(c.choices[0].delta.content)
         # Adding a sleep here to ensure that `content` in the span outputs is

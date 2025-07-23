@@ -1,5 +1,6 @@
 # TODO: Split this file into multiple files and move under utils directory.
 from __future__ import annotations
+import typing
 
 import inspect
 import json
@@ -29,7 +30,7 @@ if TYPE_CHECKING:
     from mlflow.types.chat import ChatMessage, ChatTool
 
 
-def capture_function_input_args(func, args, kwargs) -> Optional[dict[str, Any]]:
+def capture_function_input_args(func, args, kwargs) -> Optional[typing.Dict[str, Any]]:
     try:
         # Avoid capturing `self`
         func_signature = inspect.signature(func)
@@ -161,7 +162,7 @@ def build_otel_context(trace_id: int, span_id: int) -> trace_api.SpanContext:
     )
 
 
-def deduplicate_span_names_in_place(spans: list[LiveSpan]):
+def deduplicate_span_names_in_place(spans: typing.List[LiveSpan]):
     """
     Deduplicate span names in the trace data by appending an index number to the span name.
 
@@ -236,7 +237,7 @@ def maybe_get_dependencies_schemas() -> Optional[dict]:
         return context.dependencies_schemas
 
 
-def exclude_immutable_tags(tags: dict[str, str]) -> dict[str, str]:
+def exclude_immutable_tags(tags: typing.Dict[str, str]) -> typing.Dict[str, str]:
     """Exclude immutable tags e.g. "mlflow.user" from the given tags."""
     return {k: v for k, v in tags.items() if k not in IMMUTABLE_TAGS}
 
@@ -245,7 +246,7 @@ def generate_request_id() -> str:
     return uuid.uuid4().hex
 
 
-def construct_full_inputs(func, *args, **kwargs) -> dict[str, Any]:
+def construct_full_inputs(func, *args, **kwargs) -> typing.Dict[str, Any]:
     """
     Construct the full input arguments dictionary for the given function,
     including positional and keyword arguments.
@@ -320,7 +321,7 @@ def set_span_chat_messages(
     span.set_attribute(SpanAttributeKey.CHAT_MESSAGES, sanitized_messages)
 
 
-def set_span_chat_tools(span: LiveSpan, tools: list[ChatTool]):
+def set_span_chat_tools(span: LiveSpan, tools: typing.List[ChatTool]):
     """
     Set the `mlflow.chat.tools` attribute on the specified span. This
     attribute is used in the UI, and also by downstream applications that
@@ -392,8 +393,8 @@ def start_client_span_or_trace(
     name: str,
     span_type: str,
     parent_span: Optional[LiveSpan] = None,
-    inputs: Optional[dict[str, Any]] = None,
-    attributes: Optional[dict[str, Any]] = None,
+    inputs: Optional[typing.Dict[str, Any]] = None,
+    attributes: Optional[typing.Dict[str, Any]] = None,
     start_time_ns: Optional[int] = None,
 ) -> LiveSpan:
     """
@@ -422,8 +423,8 @@ def start_client_span_or_trace(
 def end_client_span_or_trace(
     client: MlflowClient,
     span: LiveSpan,
-    outputs: Optional[dict[str, Any]] = None,
-    attributes: Optional[dict[str, Any]] = None,
+    outputs: Optional[typing.Dict[str, Any]] = None,
+    attributes: Optional[typing.Dict[str, Any]] = None,
     status: str = SpanStatusCode.OK,
     end_time_ns: Optional[int] = None,
 ) -> LiveSpan:

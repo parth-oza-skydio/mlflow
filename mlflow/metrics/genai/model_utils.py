@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import os
 import urllib.parse
@@ -105,8 +107,8 @@ def _call_llm_provider_api(
     provider_name: str,
     model: str,
     input_data: str,
-    eval_parameters: dict[str, Any],
-    extra_headers: dict[str, str],
+    eval_parameters: typing.Dict[str, Any],
+    extra_headers: typing.Dict[str, str],
     proxy_url: Optional[str] = None,
 ) -> str:
     """
@@ -260,8 +262,8 @@ def _get_provider_instance(provider: str, model: str) -> "BaseProvider":
 
 
 def _send_request(
-    endpoint: str, headers: dict[str, str], payload: dict[str, Any]
-) -> dict[str, Any]:
+    endpoint: str, headers: typing.Dict[str, str], payload: typing.Dict[str, Any]
+) -> typing.Dict[str, Any]:
     try:
         response = requests.post(
             url=endpoint,
@@ -280,8 +282,8 @@ def _send_request(
 
 def call_deployments_api(
     deployment_uri: str,
-    input_data: Union[str, dict[str, Any]],
-    eval_parameters: Optional[dict[str, Any]] = None,
+    input_data: Union[str, typing.Dict[str, Any]],
+    eval_parameters: Optional[typing.Dict[str, Any]] = None,
     endpoint_type: Optional[str] = None,
 ):
     """Call the deployment endpoint with the given payload and parameters.
@@ -351,7 +353,7 @@ def _call_gateway_api(gateway_uri, payload, eval_parameters):
         )
 
 
-def _construct_payload_from_str(prompt: str, endpoint_type: str) -> dict[str, Any]:
+def _construct_payload_from_str(prompt: str, endpoint_type: str) -> typing.Dict[str, Any]:
     """
     Construct the payload from the input string based on the endpoint type.
     If the endpoint type is not specified or unsupported one, raise an exception.
@@ -369,8 +371,8 @@ def _construct_payload_from_str(prompt: str, endpoint_type: str) -> dict[str, An
 
 
 def _parse_response(
-    response: dict[str, Any], endpoint_type: Optional[str]
-) -> Union[Optional[str], dict[str, Any]]:
+    response: typing.Dict[str, Any], endpoint_type: Optional[str]
+) -> Union[Optional[str], typing.Dict[str, Any]]:
     if endpoint_type == "llm/v1/completions":
         return _parse_completions_response_format(response)
     elif endpoint_type == "llm/v1/chat":

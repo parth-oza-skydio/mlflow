@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import re
 from typing import Optional, Union
@@ -52,9 +53,9 @@ class Prompt(ModelVersion):
         template: str,
         commit_message: Optional[str] = None,
         creation_timestamp: Optional[int] = None,
-        version_metadata: Optional[dict[str, str]] = None,
-        prompt_tags: Optional[dict[str, str]] = None,
-        aliases: Optional[list[str]] = None,
+        version_metadata: Optional[typing.Dict[str, str]] = None,
+        prompt_tags: Optional[typing.Dict[str, str]] = None,
+        aliases: Optional[typing.List[str]] = None,
     ):
         # Store template text as a tag
         version_metadata = version_metadata or {}
@@ -103,7 +104,7 @@ class Prompt(ModelVersion):
         return t
 
     @property
-    def variables(self) -> set[str]:
+    def variables(self) -> typing.Set[str]:
         """
         Return a list of variables in the template text.
         The value must be enclosed in double curly braces, e.g. {{variable}}.
@@ -118,20 +119,20 @@ class Prompt(ModelVersion):
         return self.description  # inherited from ModelVersion
 
     @property
-    def version_metadata(self) -> dict[str, str]:
+    def version_metadata(self) -> typing.Dict[str, str]:
         """Return the tags of the prompt as a dictionary."""
         # Remove the prompt text tag as it should not be user-facing
         return {key: value for key, value in self._tags.items() if not _is_reserved_tag(key)}
 
     @property
-    def tags(self) -> dict[str, str]:
+    def tags(self) -> typing.Dict[str, str]:
         """
         Return the prompt-level tags (from RegisteredModel).
         """
         return {key: value for key, value in self._prompt_tags.items() if not _is_reserved_tag(key)}
 
     @property
-    def run_ids(self) -> list[str]:
+    def run_ids(self) -> typing.List[str]:
         """Get the run IDs associated with the prompt."""
         run_tag = self._tags.get(PROMPT_ASSOCIATED_RUN_IDS_TAG_KEY)
         if not run_tag:
@@ -196,7 +197,7 @@ class Prompt(ModelVersion):
 
     @classmethod
     def from_model_version(
-        cls, model_version: ModelVersion, prompt_tags: Optional[dict[str, str]] = None
+        cls, model_version: ModelVersion, prompt_tags: Optional[typing.Dict[str, str]] = None
     ) -> Prompt:
         """
         Create a Prompt object from a ModelVersion object.

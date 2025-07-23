@@ -1,3 +1,5 @@
+import typing
+
 """The ``flavor`` module provides an example for a custom model flavor for ``sktime`` library.
 
 This module exports ``sktime`` models in the following formats:
@@ -473,7 +475,7 @@ class _SktimeModelWrapper:
     def __init__(self, sktime_model):
         self.sktime_model = sktime_model
 
-    def predict(self, dataframe, params: Optional[dict[str, Any]] = None) -> pd.DataFrame:
+    def predict(self, dataframe, params: Optional[typing.Dict[str, Any]] = None) -> pd.DataFrame:
         df_schema = dataframe.columns.values.tolist()
 
         if len(dataframe) > 1:

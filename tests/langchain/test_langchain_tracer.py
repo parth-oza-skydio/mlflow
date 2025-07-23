@@ -1,3 +1,5 @@
+import typing
+
 import random
 import time
 import uuid
@@ -588,8 +590,8 @@ def test_tracer_does_not_add_spans_to_trace_after_root_run_has_finished():
 
         def _call(
             self,
-            messages: list[BaseMessage],
-            stop: Optional[list[str]] = None,
+            messages: typing.List[BaseMessage],
+            stop: Optional[typing.List[str]] = None,
             run_manager: Optional[CallbackManagerForLLMRun] = None,
             **kwargs: Any,
         ) -> str:

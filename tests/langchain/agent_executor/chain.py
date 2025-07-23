@@ -1,3 +1,5 @@
+import typing
+
 from operator import itemgetter
 from typing import Any, Optional
 
@@ -42,8 +44,8 @@ class FakeChatModel(SimpleChatModel):
 
     def _call(
         self,
-        messages: list[BaseMessage],
-        stop: Optional[list[str]] = None,
+        messages: typing.List[BaseMessage],
+        stop: Optional[typing.List[str]] = None,
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> str:

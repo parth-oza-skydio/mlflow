@@ -1,3 +1,5 @@
+import typing
+
 import warnings
 from typing import Any, Optional
 
@@ -37,7 +39,7 @@ class DatasetSourceRegistry:
                 )
 
     def resolve(
-        self, raw_source: Any, candidate_sources: Optional[list[DatasetSource]] = None
+        self, raw_source: Any, candidate_sources: Optional[typing.List[DatasetSource]] = None
     ) -> DatasetSource:
         """Resolves a raw source object, such as a string URI, to a DatasetSource for use with
         MLflow Tracking.
@@ -127,7 +129,7 @@ def register_dataset_source(source: DatasetSource):
 
 
 def resolve_dataset_source(
-    raw_source: Any, candidate_sources: Optional[list[DatasetSource]] = None
+    raw_source: Any, candidate_sources: Optional[typing.List[DatasetSource]] = None
 ) -> DatasetSource:
     """Resolves a raw source object, such as a string URI, to a DatasetSource for use with
     MLflow Tracking.
@@ -164,7 +166,7 @@ def get_dataset_source_from_json(source_json: str, source_type: str) -> DatasetS
     )
 
 
-def get_registered_sources() -> list[DatasetSource]:
+def get_registered_sources() -> typing.List[DatasetSource]:
     """Obtains the registered dataset sources.
 
     Returns:

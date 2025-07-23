@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import contextlib
 import functools
@@ -65,7 +66,7 @@ def trace(
     func: Optional[Callable] = None,
     name: Optional[str] = None,
     span_type: str = SpanType.UNKNOWN,
-    attributes: Optional[dict[str, Any]] = None,
+    attributes: Optional[typing.Dict[str, Any]] = None,
     output_reducer: Optional[Callable] = None,
 ) -> Callable:
     """
@@ -176,7 +177,7 @@ def _wrap_function(
     fn: Callable,
     name: Optional[str] = None,
     span_type: str = SpanType.UNKNOWN,
-    attributes: Optional[dict[str, Any]] = None,
+    attributes: Optional[typing.Dict[str, Any]] = None,
 ) -> Callable:
     class _WrappingContext:
         # define the wrapping logic as a coroutine to avoid code duplication
@@ -230,7 +231,7 @@ def _wrap_generator(
     fn: Callable,
     name: Optional[str] = None,
     span_type: str = SpanType.UNKNOWN,
-    attributes: Optional[dict[str, Any]] = None,
+    attributes: Optional[typing.Dict[str, Any]] = None,
     output_reducer: Optional[Callable] = None,
 ) -> Callable:
     """
@@ -279,7 +280,7 @@ def _wrap_generator(
 
     def _end_stream_span(
         span: LiveSpan,
-        outputs: Optional[list[Any]] = None,
+        outputs: Optional[typing.List[Any]] = None,
         output_reducer: Optional[Callable] = None,
         error: Optional[Exception] = None,
     ):
@@ -362,7 +363,7 @@ def _wrap_generator(
 def start_span(
     name: str = "span",
     span_type: Optional[str] = SpanType.UNKNOWN,
-    attributes: Optional[dict[str, Any]] = None,
+    attributes: Optional[typing.Dict[str, Any]] = None,
 ) -> Generator[LiveSpan, None, None]:
     """
     Context manager to create a new span and start it as the current span in the context.
@@ -489,14 +490,14 @@ def get_trace(request_id: str) -> Optional[Trace]:
 
 
 def search_traces(
-    experiment_ids: Optional[list[str]] = None,
+    experiment_ids: Optional[typing.List[str]] = None,
     filter_string: Optional[str] = None,
     max_results: Optional[int] = None,
-    order_by: Optional[list[str]] = None,
-    extract_fields: Optional[list[str]] = None,
+    order_by: Optional[typing.List[str]] = None,
+    extract_fields: Optional[typing.List[str]] = None,
     run_id: Optional[str] = None,
     return_type: Literal["pandas", "list"] = "pandas",
-) -> Union["pandas.DataFrame", list[Trace]]:
+) -> Union["pandas.DataFrame", typing.List[Trace]]:
     """
     Return traces that match the given list of search expressions within the experiments.
 
@@ -811,7 +812,7 @@ def _set_last_active_trace_id(trace_id: str):
 
 
 def update_current_trace(
-    tags: Optional[dict[str, str]] = None,
+    tags: Optional[typing.Dict[str, str]] = None,
 ):
     """
     Update the current active trace with the given tags.
@@ -870,7 +871,7 @@ def update_current_trace(
 
 
 @experimental
-def add_trace(trace: Union[Trace, dict[str, Any]], target: Optional[LiveSpan] = None):
+def add_trace(trace: Union[Trace, typing.Dict[str, Any]], target: Optional[LiveSpan] = None):
     """
     Add a completed trace object into another trace.
 
@@ -994,9 +995,9 @@ def log_trace(
     name: str = "Task",
     request: Optional[Any] = None,
     response: Optional[Any] = None,
-    intermediate_outputs: Optional[dict[str, Any]] = None,
-    attributes: Optional[dict[str, Any]] = None,
-    tags: Optional[dict[str, str]] = None,
+    intermediate_outputs: Optional[typing.Dict[str, Any]] = None,
+    attributes: Optional[typing.Dict[str, Any]] = None,
+    tags: Optional[typing.Dict[str, str]] = None,
     start_time_ms: Optional[int] = None,
     execution_time_ms: Optional[int] = None,
 ) -> str:

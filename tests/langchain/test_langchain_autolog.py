@@ -1,3 +1,5 @@
+import typing
+
 import os
 import random
 import time
@@ -119,8 +121,8 @@ def create_fake_chat_model():
 
         def _call(
             self,
-            messages: list[BaseMessage],
-            stop: Optional[list[str]] = None,
+            messages: typing.List[BaseMessage],
+            stop: Optional[typing.List[str]] = None,
             run_manager: Optional[CallbackManagerForLLMRun] = None,
             **kwargs: Any,
         ) -> str:
@@ -649,11 +651,11 @@ class CustomCallbackHandler(BaseCallbackHandler):
         self.logs = []
 
     def on_chain_start(
-        self, serialized: dict[str, Any], inputs: dict[str, Any], **kwargs: Any
+        self, serialized: typing.Dict[str, Any], inputs: typing.Dict[str, Any], **kwargs: Any
     ) -> None:
         self.logs.append("chain_start")
 
-    def on_chain_end(self, outputs: dict[str, Any], **kwargs: Any) -> None:
+    def on_chain_end(self, outputs: typing.Dict[str, Any], **kwargs: Any) -> None:
         self.logs.append("chain_end")
 
 
@@ -662,11 +664,11 @@ class AsyncCustomCallbackHandler(AsyncCallbackHandler):
         self.logs = []
 
     async def on_chain_start(
-        self, serialized: dict[str, Any], inputs: dict[str, Any], **kwargs: Any
+        self, serialized: typing.Dict[str, Any], inputs: typing.Dict[str, Any], **kwargs: Any
     ) -> None:
         self.logs.append("chain_start")
 
-    async def on_chain_end(self, outputs: dict[str, Any], **kwargs: Any) -> None:
+    async def on_chain_end(self, outputs: typing.Dict[str, Any], **kwargs: Any) -> None:
         self.logs.append("chain_end")
 
 
@@ -691,7 +693,7 @@ def _reset_callback_handlers(handlers):
             handler.logs = []
 
 
-def _extract_callback_handlers(config) -> Optional[list[BaseCallbackHandler]]:
+def _extract_callback_handlers(config) -> Optional[typing.List[BaseCallbackHandler]]:
     if isinstance(config, list):
         callbacks = []
         for c in config:

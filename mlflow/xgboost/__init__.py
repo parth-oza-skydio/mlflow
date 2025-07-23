@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.xgboost`` module provides an API for logging and loading XGBoost models.
 This module exports XGBoost models with the following flavors:
@@ -353,7 +355,7 @@ class _XGBModelWrapper:
     def predict(
         self,
         dataframe,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:

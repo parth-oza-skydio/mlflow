@@ -1,3 +1,5 @@
+import typing
+
 import importlib
 import logging
 import os
@@ -59,7 +61,7 @@ class _Dataset:
         """
 
     @classmethod
-    def from_config(cls, dataset_config: dict[str, Any], recipe_root: str) -> "_Dataset":
+    def from_config(cls, dataset_config: typing.Dict[str, Any], recipe_root: str) -> "_Dataset":
         """
         Constructs a dataset instance from the specified dataset configuration
         and recipe root path.
@@ -113,7 +115,7 @@ class _Dataset:
         """
 
     @classmethod
-    def _get_required_config(cls, dataset_config: dict[str, Any], key: str) -> Any:
+    def _get_required_config(cls, dataset_config: typing.Dict[str, Any], key: str) -> Any:
         """
         Obtains the value associated with the specified dataset configuration key, first verifying
         that the key is present in the config and throwing if it is not.
@@ -143,7 +145,7 @@ class _LocationBasedDataset(_Dataset):
 
     def __init__(
         self,
-        location: Union[str, list[str]],
+        location: Union[str, typing.List[str]],
         dataset_format: str,
         recipe_root: str,
     ):
@@ -175,7 +177,7 @@ class _LocationBasedDataset(_Dataset):
         pass
 
     @classmethod
-    def _from_config(cls, dataset_config: dict[str, Any], recipe_root: str) -> "_Dataset":
+    def _from_config(cls, dataset_config: typing.Dict[str, Any], recipe_root: str) -> "_Dataset":
         return cls(
             location=cls._get_required_config(dataset_config=dataset_config, key="location"),
             recipe_root=recipe_root,
@@ -184,8 +186,8 @@ class _LocationBasedDataset(_Dataset):
 
     @staticmethod
     def _sanitize_local_dataset_multiple_locations_if_necessary(
-        dataset_location: Union[str, list[str]], recipe_root: str
-    ) -> list[str]:
+        dataset_location: Union[str, typing.List[str]], recipe_root: str
+    ) -> typing.List[str]:
         if isinstance(dataset_location, str):
             return [
                 _LocationBasedDataset._sanitize_local_dataset_location_if_necessary(
@@ -298,7 +300,7 @@ class _DownloadThenConvertDataset(_LocationBasedDataset):
             )
 
     @staticmethod
-    def _download_dataset(dataset_location: list[str], dst_path: str):
+    def _download_dataset(dataset_location: typing.List[str], dst_path: str):
         dest_locations = _DownloadThenConvertDataset._download_all_datasets_in_parallel(
             dataset_location, dst_path
         )
@@ -356,7 +358,7 @@ class _DownloadThenConvertDataset(_LocationBasedDataset):
             return download_artifacts(artifact_uri=dataset_location, dst_path=dst_path)
 
     @abstractmethod
-    def _convert_to_parquet(self, dataset_file_paths: list[str], dst_path: str):
+    def _convert_to_parquet(self, dataset_file_paths: typing.List[str], dst_path: str):
         """
         Converts the specified dataset files to parquet format and aggregates them together,
         writing the consolidated parquet file to the specified destination path.
@@ -376,7 +378,7 @@ class _PandasConvertibleDataset(_DownloadThenConvertDataset):
     parquet using a series of Pandas DataFrame ``read_*`` and ``concat`` operations.
     """
 
-    def _convert_to_parquet(self, dataset_file_paths: list[str], dst_path: str):
+    def _convert_to_parquet(self, dataset_file_paths: typing.List[str], dst_path: str):
         import pandas as pd
 
         aggregated_dataframe = None
@@ -517,7 +519,7 @@ class CustomDataset(_PandasConvertibleDataset):
             ) from e
 
     @classmethod
-    def _from_config(cls, dataset_config: dict[str, Any], recipe_root: str) -> "_Dataset":
+    def _from_config(cls, dataset_config: typing.Dict[str, Any], recipe_root: str) -> "_Dataset":
         return cls(
             location=cls._get_required_config(dataset_config=dataset_config, key="location"),
             dataset_format=cls._get_required_config(dataset_config=dataset_config, key="using"),
@@ -618,7 +620,7 @@ class DeltaTableDataset(_SparkDatasetMixin, _LocationBasedDataset):
         return dataset_format == "delta"
 
     @classmethod
-    def _from_config(cls, dataset_config: dict[str, Any], recipe_root: str) -> "_Dataset":
+    def _from_config(cls, dataset_config: typing.Dict[str, Any], recipe_root: str) -> "_Dataset":
         return cls(
             location=cls._get_required_config(dataset_config=dataset_config, key="location"),
             recipe_root=recipe_root,
@@ -663,7 +665,7 @@ class SparkSqlDataset(_SparkDatasetMixin, _Dataset):
         write_pandas_df_as_parquet(df=pandas_df, data_parquet_path=dst_path)
 
     @classmethod
-    def _from_config(cls, dataset_config: dict[str, Any], recipe_root: str) -> "_Dataset":
+    def _from_config(cls, dataset_config: typing.Dict[str, Any], recipe_root: str) -> "_Dataset":
         return cls(
             sql=dataset_config.get("sql"),
             location=dataset_config.get("location"),

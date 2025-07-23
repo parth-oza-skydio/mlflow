@@ -1,3 +1,5 @@
+import typing
+
 """
 A script to set a matrix for the cross version tests for MLflow Models / autologging integrations.
 
@@ -76,11 +78,11 @@ class PackageInfo(BaseModel, extra="forbid"):
 class TestConfig(BaseModel, extra="forbid"):
     minimum: Version
     maximum: Version
-    unsupported: Optional[list[Version]] = None
-    requirements: Optional[dict[str, list[str]]] = None
-    python: Optional[dict[str, str]] = None
-    runs_on: Optional[dict[str, str]] = None
-    java: Optional[dict[str, str]] = None
+    unsupported: Optional[typing.List[Version]] = None
+    requirements: Optional[typing.Dict[str, typing.List[str]]] = None
+    python: Optional[typing.Dict[str, str]] = None
+    runs_on: Optional[typing.Dict[str, str]] = None
+    java: Optional[typing.Dict[str, str]] = None
     run: str
     allow_unreleased_max_version: Optional[bool] = None
     pre_test: Optional[str] = None
@@ -108,7 +110,7 @@ class FlavorConfig(BaseModel, extra="forbid"):
     autologging: Optional[TestConfig] = None
 
     @property
-    def categories(self) -> list[tuple[str, TestConfig]]:
+    def categories(self) -> typing.List[typing.Tuple[str, TestConfig]]:
         cs = []
         if self.models:
             cs.append(("models", self.models))
@@ -157,15 +159,15 @@ def read_yaml(location, if_error=None):
         raise
 
 
-def uploaded_recently(dist: dict[str, Any]) -> bool:
+def uploaded_recently(dist: typing.Dict[str, Any]) -> bool:
     if ut := dist.get("upload_time"):
         return (datetime.now() - datetime.fromisoformat(ut)).days < 1
     return False
 
 
-def get_released_versions(package_name: str) -> list[Version]:
+def get_released_versions(package_name: str) -> typing.List[Version]:
     data = pypi_json(package_name)
-    versions: list[Version] = []
+    versions: typing.List[Version] = []
     for version, distributions in data["releases"].items():
         if len(distributions) == 0 or any(d.get("yanked", False) for d in distributions):
             continue
@@ -276,7 +278,7 @@ def get_matched_requirements(requirements, version=None):
     return sorted(reqs)
 
 
-def get_java_version(java: Optional[dict[str, str]], version: str) -> str:
+def get_java_version(java: Optional[typing.Dict[str, str]], version: str) -> str:
     if java and (match := next(_find_matches(java, version), None)):
         return match
 
@@ -284,7 +286,7 @@ def get_java_version(java: Optional[dict[str, str]], version: str) -> str:
 
 
 @functools.lru_cache(maxsize=128)
-def pypi_json(package: str) -> dict[str, Any]:
+def pypi_json(package: str) -> typing.Dict[str, Any]:
     resp = requests.get(f"https://pypi.org/pypi/{package}/json")
     resp.raise_for_status()
     return resp.json()
@@ -314,7 +316,7 @@ def infer_python_version(package: str, version: str) -> str:
     return candidates[0]
 
 
-def _find_matches(spec: dict[str, T], version: str) -> Iterator[T]:
+def _find_matches(spec: typing.Dict[str, T], version: str) -> Iterator[T]:
     """
     Args:
         spec: A dictionary with key as version specifier and value as the corresponding value.
@@ -330,14 +332,14 @@ def _find_matches(spec: dict[str, T], version: str) -> Iterator[T]:
             yield val
 
 
-def get_python_version(python: Optional[dict[str, str]], package: str, version: str) -> str:
+def get_python_version(python: Optional[typing.Dict[str, str]], package: str, version: str) -> str:
     if python and (match := next(_find_matches(python, version), None)):
         return match
 
     return infer_python_version(package, version)
 
 
-def get_runs_on(runs_on: Optional[dict[str, str]], version: str) -> str:
+def get_runs_on(runs_on: Optional[typing.Dict[str, str]], version: str) -> str:
     if runs_on and (match := next(_find_matches(runs_on, version), None)):
         return match
 
@@ -478,7 +480,7 @@ def validate_test_coverage(flavor: str, config: FlavorConfig):
 PYTEST_FILE_PATTERN = re.compile(r"^test_.*\.py$")
 
 
-def _get_test_files(test_dir_or_path: str) -> set[Path]:
+def _get_test_files(test_dir_or_path: str) -> typing.Set[Path]:
     """List all test files in the given directory or file path."""
     path = Path(test_dir_or_path)
     if path.is_dir():
@@ -508,11 +510,11 @@ def _get_test_files_from_pytest_command(cmd, test_dir):
 
 
 def validate_requirements(
-    requirements: dict[str, list[str]],
+    requirements: typing.Dict[str, typing.List[str]],
     name: str,
     category: str,
     package_info: PackageInfo,
-    versions: list[Version],
+    versions: typing.List[Version],
 ) -> None:
     """
     Validate that the requirements specified in the config don't contain unused items.
@@ -544,7 +546,7 @@ def validate_requirements(
             )
 
 
-def expand_config(config: dict[str, Any], *, is_ref: bool = False) -> set[MatrixItem]:
+def expand_config(config: typing.Dict[str, Any], *, is_ref: bool = False) -> typing.Set[MatrixItem]:
     matrix = set()
     for name, flavor_config in config.items():
         flavor = get_flavor(name)

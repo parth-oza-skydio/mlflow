@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import time
 from dataclasses import dataclass
@@ -25,7 +26,7 @@ from mlflow.utils.proto_json_utils import parse_pb_value, set_pb_value
 # - list of values of the same types as above
 # - dict with string keys and values of the same types as above
 PbValueType = Union[float, int, str, bool]
-AssessmentValueType = Union[PbValueType, dict[str, PbValueType], list[PbValueType]]
+AssessmentValueType = Union[PbValueType, typing.Dict[str, PbValueType], typing.List[PbValueType]]
 
 
 @experimental
@@ -73,7 +74,7 @@ class Assessment(_MlflowObject):
     expectation: Optional[Expectation] = None
     feedback: Optional[Feedback] = None
     rationale: Optional[str] = None
-    metadata: Optional[dict[str, str]] = None
+    metadata: Optional[typing.Dict[str, str]] = None
     span_id: Optional[str] = None
     create_time_ms: Optional[int] = None
     last_update_time_ms: Optional[int] = None

@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from typing import Any, Optional, Sequence
 
@@ -15,7 +17,7 @@ from mlflow.tracing.trace_manager import InMemoryTraceManager
 _logger = logging.getLogger(__name__)
 
 
-def pop_trace(request_id: str) -> Optional[dict[str, Any]]:
+def pop_trace(request_id: str) -> Optional[typing.Dict[str, Any]]:
     """
     Pop the completed trace data from the buffer. This method is used in
     the Databricks model serving so please be careful when modifying it.
@@ -50,7 +52,7 @@ class InferenceTableSpanExporter(SpanExporter):
     def __init__(self):
         self._trace_manager = InMemoryTraceManager.get_instance()
 
-    def export(self, spans: Sequence[ReadableSpan]):
+    def export(self, spans: typing.Sequence[ReadableSpan]):
         """
         Export the spans to Inference Table via the TTLCache buffer.
 

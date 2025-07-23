@@ -1,3 +1,5 @@
+import typing
+
 """
 THE 'mlflow.evaluation` MODULE IS LEGACY AND WILL BE REMOVED SOON. PLEASE DO NOT USE THESE CLASSES
 IN NEW CODE. INSTEAD, USE `mlflow/entities/assessment.py` FOR ASSESSMENT CLASSES.
@@ -15,8 +17,8 @@ from mlflow.utils.annotations import experimental
 
 @experimental
 def log_evaluations(
-    *, evaluations: list[Evaluation], run_id: Optional[str] = None
-) -> list[EvaluationEntity]:
+    *, evaluations: typing.List[Evaluation], run_id: Optional[str] = None
+) -> typing.List[EvaluationEntity]:
     """
     Logs one or more evaluations to an MLflow Run.
 

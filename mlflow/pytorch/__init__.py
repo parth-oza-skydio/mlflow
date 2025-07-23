@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.pytorch`` module provides an API for logging and loading PyTorch models. This module
 exports PyTorch models with the following flavors:
@@ -745,7 +747,7 @@ class _PyTorchWrapper:
         """
         return self.pytorch_model
 
-    def predict(self, data, params: Optional[dict[str, Any]] = None):
+    def predict(self, data, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             data: Model input data.

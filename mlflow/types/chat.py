@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 from typing import Annotated, Any, Literal, Optional, Union
 from uuid import uuid4
@@ -62,7 +63,7 @@ class AudioContentPart(BaseModel):
     input_audio: InputAudio
 
 
-ContentPartsList = list[
+ContentPartsList = typing.List[
     Annotated[
         Union[TextContentPart, ImageContentPart, AudioContentPart], Field(discriminator="type")
     ]
@@ -112,7 +113,7 @@ class ChatMessage(BaseModel):
     # TODO: Define a sub classes for different type of messages (request/response, and
     #   system/user/assistant/tool, etc), and create a factory function to allow users
     #   to create them without worrying about the details.
-    tool_calls: Optional[list[ToolCall]] = None
+    tool_calls: Optional[typing.List[ToolCall]] = None
     refusal: Optional[str] = None
     tool_call_id: Optional[str] = None
 
@@ -125,14 +126,14 @@ class ParamType(BaseModel):
 
 class ParamProperty(ParamType):
     description: Optional[str] = None
-    enum: Optional[list[str]] = None
+    enum: Optional[typing.List[str]] = None
     items: Optional[ParamType] = None
 
 
 class FunctionParams(BaseModel):
-    properties: dict[str, ParamProperty]
+    properties: typing.Dict[str, ParamProperty]
     type: Literal["object"] = "object"
-    required: Optional[list[str]] = None
+    required: Optional[typing.List[str]] = None
     additionalProperties: Optional[bool] = None
 
 
@@ -159,7 +160,7 @@ class BaseRequestPayload(BaseModel):
 
     temperature: float = Field(0.0, ge=0, le=2)
     n: int = Field(1, ge=1)
-    stop: Optional[list[str]] = Field(None, min_items=1)
+    stop: Optional[typing.List[str]] = Field(None, min_items=1)
     max_tokens: Optional[int] = Field(None, ge=1)
     stream: Optional[bool] = None
     model: Optional[str] = None
@@ -202,7 +203,7 @@ class ChatCompletionChunk(BaseModel):
     object: str = "chat.completion.chunk"
     created: int
     model: str
-    choices: list[ChatChunkChoice]
+    choices: typing.List[ChatChunkChoice]
 
 
 class ChatCompletionRequest(BaseRequestPayload):
@@ -213,8 +214,8 @@ class ChatCompletionRequest(BaseRequestPayload):
     https://platform.openai.com/docs/api-reference/chat
     """
 
-    messages: list[ChatMessage] = Field(..., min_items=1)
-    tools: Optional[list[ChatTool]] = Field(None, min_items=1)
+    messages: typing.List[ChatMessage] = Field(..., min_items=1)
+    tools: Optional[typing.List[ChatTool]] = Field(None, min_items=1)
 
 
 class ChatCompletionResponse(BaseModel):
@@ -229,5 +230,5 @@ class ChatCompletionResponse(BaseModel):
     object: str = "chat.completion"
     created: int
     model: str
-    choices: list[ChatChoice]
+    choices: typing.List[ChatChoice]
     usage: ChatUsage

@@ -1,3 +1,5 @@
+import typing
+
 """
 Internal module implementing the fluent API, allowing management of an active
 MLflow run. This module is exposed to users at the top-level :py:mod:`mlflow` module.
@@ -237,7 +239,7 @@ def start_run(
     run_name: Optional[str] = None,
     nested: bool = False,
     parent_run_id: Optional[str] = None,
-    tags: Optional[dict[str, Any]] = None,
+    tags: Optional[typing.Dict[str, Any]] = None,
     description: Optional[str] = None,
     log_system_metrics: Optional[bool] = None,
 ) -> ActiveRun:
@@ -931,7 +933,7 @@ def log_metric(
 
 
 def log_metrics(
-    metrics: dict[str, float],
+    metrics: typing.Dict[str, float],
     step: Optional[int] = None,
     synchronous: Optional[bool] = None,
     run_id: Optional[str] = None,
@@ -987,7 +989,7 @@ def log_metrics(
 
 
 def log_params(
-    params: dict[str, Any], synchronous: Optional[bool] = None, run_id: Optional[str] = None
+    params: typing.Dict[str, Any], synchronous: Optional[bool] = None, run_id: Optional[str] = None
 ) -> Optional[RunOperations]:
     """
     Log a batch of params for the current run. If no run is active, this method will create a
@@ -1033,7 +1035,7 @@ def log_params(
 
 
 def log_input(
-    dataset: Dataset, context: Optional[str] = None, tags: Optional[dict[str, str]] = None
+    dataset: Dataset, context: Optional[str] = None, tags: Optional[typing.Dict[str, str]] = None
 ) -> None:
     """
     Log a dataset used in the current run.
@@ -1070,7 +1072,7 @@ def log_input(
     MlflowClient().log_inputs(run_id=run_id, datasets=[dataset_input])
 
 
-def set_experiment_tags(tags: dict[str, Any]) -> None:
+def set_experiment_tags(tags: typing.Dict[str, Any]) -> None:
     """
     Set tags for the current active experiment.
 
@@ -1097,7 +1099,7 @@ def set_experiment_tags(tags: dict[str, Any]) -> None:
         set_experiment_tag(key, value)
 
 
-def set_tags(tags: dict[str, Any], synchronous: Optional[bool] = None) -> Optional[RunOperations]:
+def set_tags(tags: typing.Dict[str, Any], synchronous: Optional[bool] = None) -> Optional[RunOperations]:
     """
     Log a batch of tags for the current run. If no run is active, this method will create a
     new active run.
@@ -1251,7 +1253,7 @@ def log_text(text: str, artifact_file: str, run_id: Optional[str] = None) -> Non
     MlflowClient().log_text(run_id, text, artifact_file)
 
 
-def log_dict(dictionary: dict[str, Any], artifact_file: str, run_id: Optional[str] = None) -> None:
+def log_dict(dictionary: typing.Dict[str, Any], artifact_file: str, run_id: Optional[str] = None) -> None:
     """
     Log a JSON/YAML-serializable object (e.g. `dict`) as an artifact. The serialization
     format (JSON or YAML) is automatically inferred from the extension of `artifact_file`.
@@ -1294,7 +1296,7 @@ def log_figure(
     figure: Union["matplotlib.figure.Figure", "plotly.graph_objects.Figure"],
     artifact_file: str,
     *,
-    save_kwargs: Optional[dict[str, Any]] = None,
+    save_kwargs: Optional[typing.Dict[str, Any]] = None,
 ) -> None:
     """
     Log a figure as an artifact. The following figure objects are supported:
@@ -1475,7 +1477,7 @@ def log_image(
 
 @experimental
 def log_table(
-    data: Union[dict[str, Any], "pandas.DataFrame"],
+    data: Union[typing.Dict[str, Any], "pandas.DataFrame"],
     artifact_file: str,
     run_id: Optional[str] = None,
 ) -> None:
@@ -1529,8 +1531,8 @@ def log_table(
 @experimental
 def load_table(
     artifact_file: str,
-    run_ids: Optional[list[str]] = None,
-    extra_columns: Optional[list[str]] = None,
+    run_ids: Optional[typing.List[str]] = None,
+    extra_columns: Optional[typing.List[str]] = None,
 ) -> "pandas.DataFrame":
     """
     Load a table from MLflow Tracking as a pandas.DataFrame. The table is loaded from the
@@ -1682,8 +1684,8 @@ def search_experiments(
     view_type: int = ViewType.ACTIVE_ONLY,
     max_results: Optional[int] = None,
     filter_string: Optional[str] = None,
-    order_by: Optional[list[str]] = None,
-) -> list[Experiment]:
+    order_by: Optional[typing.List[str]] = None,
+) -> typing.List[Experiment]:
     """
     Search for experiments that match the specified search query.
 
@@ -1795,7 +1797,7 @@ def search_experiments(
 def create_experiment(
     name: str,
     artifact_location: Optional[str] = None,
-    tags: Optional[dict[str, Any]] = None,
+    tags: Optional[typing.Dict[str, Any]] = None,
 ) -> str:
     """
     Create an experiment.
@@ -1969,15 +1971,15 @@ def get_artifact_uri(artifact_path: Optional[str] = None) -> str:
 
 
 def search_runs(
-    experiment_ids: Optional[list[str]] = None,
+    experiment_ids: Optional[typing.List[str]] = None,
     filter_string: str = "",
     run_view_type: int = ViewType.ACTIVE_ONLY,
     max_results: int = SEARCH_MAX_RESULTS_PANDAS,
-    order_by: Optional[list[str]] = None,
+    order_by: Optional[typing.List[str]] = None,
     output_format: str = "pandas",
     search_all_experiments: bool = False,
-    experiment_names: Optional[list[str]] = None,
-) -> Union[list[Run], "pandas.DataFrame"]:
+    experiment_names: Optional[typing.List[str]] = None,
+) -> Union[typing.List[Run], "pandas.DataFrame"]:
     """
     Search for Runs that fit the specified criteria.
 
@@ -2235,8 +2237,8 @@ def autolog(
     exclusive: bool = False,
     disable_for_unsupported_versions: bool = False,
     silent: bool = False,
-    extra_tags: Optional[dict[str, str]] = None,
-    exclude_flavors: Optional[list[str]] = None,
+    extra_tags: Optional[typing.Dict[str, str]] = None,
+    exclude_flavors: Optional[typing.List[str]] = None,
 ) -> None:
     """
     Enables (or disables) and configures autologging for all supported integrations.

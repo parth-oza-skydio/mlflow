@@ -1,3 +1,5 @@
+import typing
+
 from typing import Optional, Union
 
 from mlflow.gateway.base_models import RequestModel, ResponseModel
@@ -11,7 +13,7 @@ _REQUEST_PAYLOAD_EXTRA_SCHEMA = {
 
 
 class RequestPayload(RequestModel):
-    input: Union[str, list[str], list[int], list[list[int]]]
+    input: Union[str, typing.List[str], typing.List[int], typing.List[typing.List[int]]]
 
     class Config:
         if IS_PYDANTIC_V2_OR_NEWER:
@@ -22,7 +24,7 @@ class RequestPayload(RequestModel):
 
 class EmbeddingObject(ResponseModel):
     object: str = "embedding"
-    embedding: Union[list[float], str]
+    embedding: Union[typing.List[float], str]
     index: int
 
 
@@ -86,7 +88,7 @@ _RESPONSE_PAYLOAD_EXTRA_SCHEMA = {
 
 class ResponsePayload(ResponseModel):
     object: str = "list"
-    data: list[EmbeddingObject]
+    data: typing.List[EmbeddingObject]
     model: str
     usage: EmbeddingsUsage
 

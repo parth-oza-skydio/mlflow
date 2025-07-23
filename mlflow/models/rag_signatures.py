@@ -1,3 +1,5 @@
+import typing
+
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -23,21 +25,21 @@ class Message:
 @deprecated("mlflow.types.llm.ChatCompletionRequest")
 @dataclass
 class ChatCompletionRequest:
-    messages: list[Message] = field(default_factory=lambda: [Message()])
+    messages: typing.List[Message] = field(default_factory=lambda: [Message()])
 
 
 @deprecated("mlflow.types.llm.ChatCompletionRequest")
 @dataclass
 class SplitChatMessagesRequest:
     query: str = "What is mlflow?"
-    history: Optional[list[Message]] = field(default_factory=list)
+    history: Optional[typing.List[Message]] = field(default_factory=list)
 
 
 @deprecated("mlflow.types.llm.ChatCompletionRequest")
 @dataclass
 class MultiturnChatRequest:
     query: str = "What is mlflow?"
-    history: Optional[list[Message]] = field(default_factory=list)
+    history: Optional[typing.List[Message]] = field(default_factory=list)
 
 
 @deprecated("mlflow.types.llm.ChatChoice")
@@ -69,7 +71,7 @@ class ChainCompletionChunk:
 @deprecated("mlflow.types.llm.ChatCompletionResponse")
 @dataclass
 class ChatCompletionResponse:
-    choices: list[ChainCompletionChoice] = field(default_factory=lambda: [ChainCompletionChoice()])
+    choices: typing.List[ChainCompletionChoice] = field(default_factory=lambda: [ChainCompletionChoice()])
     object: str = "chat.completion"
     # TODO: support ChainCompletionChunk in the future
 

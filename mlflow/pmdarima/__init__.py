@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.pmdarima`` module provides an API for logging and loading ``pmdarima`` models.
 This module exports univariate ``pmdarima`` models in the following formats:
@@ -519,7 +521,7 @@ class _PmdarimaModelWrapper:
         """
         return self.pmdarima_model
 
-    def predict(self, dataframe, params: Optional[dict[str, Any]] = None) -> pd.DataFrame:
+    def predict(self, dataframe, params: Optional[typing.Dict[str, Any]] = None) -> pd.DataFrame:
         """
         Args:
             dataframe: Model input data.

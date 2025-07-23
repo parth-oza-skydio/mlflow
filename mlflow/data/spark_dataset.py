@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 from functools import cached_property
@@ -73,7 +75,7 @@ class SparkDataset(Dataset, PyFuncConvertibleDatasetMixin):
             semantic_hash = self._df._jdf.queryExecution().analyzed().semanticHash()
         return get_normalized_md5_digest([np.int64(semantic_hash)])
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> typing.Dict[str, str]:
         """Create config dictionary for the dataset.
 
         Returns a string dictionary containing the following fields: name, digest, source, source

@@ -1,3 +1,5 @@
+import typing
+
 import functools
 import json
 import logging
@@ -252,7 +254,7 @@ def _start_run_or_log_tag(
 
 
 def _log_optional_artifacts(
-    config: AutoLoggingConfig, run_id: str, instance: Any, kwargs: dict[str, Any]
+    config: AutoLoggingConfig, run_id: str, instance: Any, kwargs: typing.Dict[str, Any]
 ):
     if hasattr(instance, "_mlflow_model_logged"):
         # Model is already logged for this instance, no need to log again
@@ -294,7 +296,7 @@ def _log_optional_artifacts(
     instance._mlflow_model_logged = True
 
 
-def _start_span(mlflow_client: MlflowClient, instance: Any, inputs: dict[str, Any], run_id: str):
+def _start_span(mlflow_client: MlflowClient, instance: Any, inputs: typing.Dict[str, Any], run_id: str):
     # Record input parameters to attributes
     attributes = {k: v for k, v in inputs.items() if k not in ("messages", "input")}
 
@@ -318,7 +320,7 @@ def _start_span(mlflow_client: MlflowClient, instance: Any, inputs: dict[str, An
 
 
 def _end_span_on_success(
-    mlflow_client: MlflowClient, span: LiveSpan, inputs: dict[str, Any], raw_result: Any
+    mlflow_client: MlflowClient, span: LiveSpan, inputs: typing.Dict[str, Any], raw_result: Any
 ):
     from openai import AsyncStream, Stream
 

@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any
 from urllib.parse import urlparse
 
@@ -39,11 +41,11 @@ class DummyDatasetSource(DatasetSource):
     def _resolve(cls, raw_source: Any) -> DatasetSource:
         return cls(raw_source)
 
-    def _to_dict(self) -> dict[Any, Any]:
+    def _to_dict(self) -> typing.Dict[Any, Any]:
         return {"uri": self.uri}
 
     @classmethod
-    def _from_dict(cls, source_dict: dict[Any, Any]) -> DatasetSource:
+    def _from_dict(cls, source_dict: typing.Dict[Any, Any]) -> DatasetSource:
         uri = source_dict.get("uri")
         if uri is None:
             raise MlflowException(

@@ -1,3 +1,5 @@
+import typing
+
 import warnings
 
 from mlflow.exceptions import MlflowException
@@ -133,7 +135,7 @@ def get_artifact_repository(artifact_uri: str) -> ArtifactRepository:
     return _artifact_repository_registry.get_artifact_repository(artifact_uri)
 
 
-def get_registered_artifact_repositories() -> dict[str, ArtifactRepository]:
+def get_registered_artifact_repositories() -> typing.Dict[str, ArtifactRepository]:
     """
     Get all registered artifact repositories.
 

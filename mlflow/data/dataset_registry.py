@@ -1,3 +1,5 @@
+import typing
+
 import inspect
 import warnings
 from contextlib import suppress
@@ -119,7 +121,7 @@ def register_constructor(constructor_fn: Callable, constructor_name: Optional[st
     return registered_constructor_name
 
 
-def get_registered_constructors() -> dict[str, Callable]:
+def get_registered_constructors() -> typing.Dict[str, Callable]:
     """Obtains the registered dataset constructors.
 
     Returns:

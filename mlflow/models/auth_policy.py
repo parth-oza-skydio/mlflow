@@ -1,3 +1,5 @@
+import typing
+
 from typing import Optional
 
 from mlflow.models.resources import Resource, _ResourceBuilder
@@ -17,15 +19,15 @@ class UserAuthPolicy:
         api_scopes: A list of scopes. Example: "vectorsearch.vector-search-indexes", "sql"
     """
 
-    def __init__(self, api_scopes: list[str]):
+    def __init__(self, api_scopes: typing.List[str]):
         self._api_scopes = api_scopes
 
     @property
-    def api_scopes(self) -> list[str]:
+    def api_scopes(self) -> typing.List[str]:
         return self._api_scopes
 
     @api_scopes.setter
-    def api_scopes(self, value: list[str]):
+    def api_scopes(self, value: typing.List[str]):
         self._api_scopes = value
 
     def to_dict(self):
@@ -38,15 +40,15 @@ class SystemAuthPolicy:
     serve this model
     """
 
-    def __init__(self, resources: list[Resource]):
+    def __init__(self, resources: typing.List[Resource]):
         self._resources = resources
 
     @property
-    def resources(self) -> list[Resource]:
+    def resources(self) -> typing.List[Resource]:
         return self._resources
 
     @resources.setter
-    def resources(self, value: list[Resource]):
+    def resources(self, value: typing.List[Resource]):
         self._resources = value
 
     def to_dict(self):

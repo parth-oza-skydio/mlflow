@@ -1,3 +1,5 @@
+import typing
+
 """
 This module defines the schemas for the MLflow AI Gateway's chat endpoint.
 
@@ -66,8 +68,8 @@ _REQUEST_PAYLOAD_EXTRA_SCHEMA = {
 
 
 class RequestPayload(ChatCompletionRequest, RequestModel):
-    messages: list[RequestMessage] = Field(..., min_items=1)
-    tools: Optional[list[ChatToolWithUC]] = None
+    messages: typing.List[RequestMessage] = Field(..., min_items=1)
+    tools: Optional[typing.List[ChatToolWithUC]] = None
 
     class Config:
         if IS_PYDANTIC_V2_OR_NEWER:
@@ -108,7 +110,7 @@ class Choice(ChatChoice, ResponseModel):
 
 class ResponsePayload(ChatCompletionResponse, ResponseModel):
     # Override the `choices` field to use the Choice model
-    choices: list[Choice]
+    choices: typing.List[Choice]
 
     class Config:
         if IS_PYDANTIC_V2_OR_NEWER:

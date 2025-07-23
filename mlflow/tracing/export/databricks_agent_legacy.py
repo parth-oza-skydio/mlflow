@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from typing import Sequence
 
@@ -27,7 +29,7 @@ class DatabricksAgentSpanExporter(SpanExporter):
         self._trace_manager = InMemoryTraceManager.get_instance()
         self._deploy_client = get_deploy_client("databricks")
 
-    def export(self, spans: Sequence[ReadableSpan]):
+    def export(self, spans: typing.Sequence[ReadableSpan]):
         """
         Export the spans to the destination.
 

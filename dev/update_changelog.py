@@ -1,3 +1,5 @@
+import typing
+
 import os
 import re
 import subprocess
@@ -32,7 +34,7 @@ class PullRequest(NamedTuple):
     title: str
     number: int
     author: str
-    labels: list[str]
+    labels: typing.List[str]
 
     @property
     def url(self):
@@ -59,7 +61,7 @@ class PullRequest(NamedTuple):
 
 class Section(NamedTuple):
     title: str
-    items: list[Any]
+    items: typing.List[Any]
 
     def __str__(self):
         if not self.items:

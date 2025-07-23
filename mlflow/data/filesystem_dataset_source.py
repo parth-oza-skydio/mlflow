@@ -1,3 +1,5 @@
+import typing
+
 from abc import abstractmethod
 from typing import Any
 
@@ -66,7 +68,7 @@ class FileSystemDatasetSource(DatasetSource):
         """
 
     @abstractmethod
-    def to_dict(self) -> dict[Any, Any]:
+    def to_dict(self) -> typing.Dict[Any, Any]:
         """
         Returns:
             A JSON-compatible dictionary representation of the FileSystemDatasetSource.
@@ -74,7 +76,7 @@ class FileSystemDatasetSource(DatasetSource):
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, source_dict: dict[Any, Any]) -> "FileSystemDatasetSource":
+    def from_dict(cls, source_dict: typing.Dict[Any, Any]) -> "FileSystemDatasetSource":
         """
         Args:
             source_dict: A dictionary representation of the FileSystemDatasetSource.

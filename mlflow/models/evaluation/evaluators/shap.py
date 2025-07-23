@@ -1,3 +1,5 @@
+import typing
+
 import functools
 import logging
 from typing import Optional
@@ -51,7 +53,7 @@ class ShapEvaluator(BuiltInEvaluator):
     def _evaluate(
         self,
         model: Optional["mlflow.pyfunc.PyFuncModel"],
-        extra_metrics: list[EvaluationMetric],
+        extra_metrics: typing.List[EvaluationMetric],
         custom_artifacts=None,
         **kwargs,
     ) -> Optional[EvaluationResult]:

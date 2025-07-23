@@ -1,3 +1,5 @@
+import typing
+
 import hashlib
 import logging
 import os
@@ -22,7 +24,7 @@ _STEP_CONF_YAML_NAME = "conf.yaml"
 
 def run_recipe_step(
     recipe_root_path: str,
-    recipe_steps: list[BaseStep],
+    recipe_steps: typing.List[BaseStep],
     target_step: BaseStep,
     template: str,
 ) -> BaseStep:
@@ -117,7 +119,7 @@ def run_recipe_step(
     return last_executed_step
 
 
-def clean_execution_state(recipe_root_path: str, recipe_steps: list[BaseStep]) -> None:
+def clean_execution_state(recipe_root_path: str, recipe_steps: typing.List[BaseStep]) -> None:
     """
     Removes all execution state for the specified recipe steps from the associated execution
     directory on the local filesystem. This method does *not* remove other execution results, such
@@ -164,7 +166,7 @@ def get_step_output_path(recipe_root_path: str, step_name: str, relative_path: s
 
 
 def _get_or_create_execution_directory(
-    recipe_root_path: str, recipe_steps: list[BaseStep], template: str
+    recipe_root_path: str, recipe_steps: typing.List[BaseStep], template: str
 ) -> str:
     """
     Obtains the path of the execution directory on the local filesystem corresponding to the
@@ -191,7 +193,7 @@ def _get_or_create_execution_directory(
     return execution_dir_path
 
 
-def _write_updated_step_confs(recipe_steps: list[BaseStep], execution_directory_path: str) -> None:
+def _write_updated_step_confs(recipe_steps: typing.List[BaseStep], execution_directory_path: str) -> None:
     """
     Compares the in-memory configuration state of the specified recipe steps with step-specific
     internal configuration files written by prior executions. If updates are found, writes updated
@@ -291,12 +293,12 @@ class _ExecutionPlan:
     _MSG_REGEX = r'^echo "Run MLflow Recipe step: (\w+)"\n$'
     _FORMAT_STEPS_CACHED = "%s: No changes. Skipping."
 
-    def __init__(self, rule_name, output_lines_of_make: list[str], recipe_step_names: list[str]):
+    def __init__(self, rule_name, output_lines_of_make: typing.List[str], recipe_step_names: typing.List[str]):
         steps_to_run = self._parse_output_lines(output_lines_of_make)
         self.steps_cached = self._infer_cached_steps(rule_name, steps_to_run, recipe_step_names)
 
     @staticmethod
-    def _parse_output_lines(output_lines_of_make: list[str]) -> list[str]:
+    def _parse_output_lines(output_lines_of_make: typing.List[str]) -> typing.List[str]:
         """
         Parse the output lines of Make to get steps to run.
         """
@@ -314,7 +316,7 @@ class _ExecutionPlan:
         return list(steps_to_run())
 
     @staticmethod
-    def _infer_cached_steps(rule_name, steps_to_run, recipe_step_names) -> list[str]:
+    def _infer_cached_steps(rule_name, steps_to_run, recipe_step_names) -> typing.List[str]:
         """
         Infer cached steps.
 
@@ -347,8 +349,8 @@ class _ExecutionPlan:
 def _run_make(
     execution_directory_path,
     rule_name: str,
-    extra_env: dict[str, str],
-    recipe_steps: list[BaseStep],
+    extra_env: typing.Dict[str, str],
+    recipe_steps: typing.List[BaseStep],
 ) -> None:
     """
     Runs the specified recipe rule with Make. This method assumes that a Makefile named `Makefile`

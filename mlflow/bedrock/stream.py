@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 from typing import Any, Optional
@@ -33,7 +35,7 @@ class BaseEventStreamWrapper:
         stream: EventStream,
         client: MlflowClient,
         span: LiveSpan,
-        inputs: Optional[dict[str, Any]] = None,
+        inputs: Optional[typing.Dict[str, Any]] = None,
     ):
         self._stream = stream
         self._span = span
@@ -154,7 +156,7 @@ class _ConverseMessageBuilder:
         else:
             _logger.debug(f"Unknown event, skipping: {event_name}")
 
-    def build(self) -> dict[str, Any]:
+    def build(self) -> typing.Dict[str, Any]:
         message = {
             "role": self._role,
             "content": [{"text": self._text_content_buffer}],

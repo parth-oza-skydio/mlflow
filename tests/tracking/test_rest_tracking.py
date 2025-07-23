@@ -1,3 +1,5 @@
+import typing
+
 """
 Integration test which starts a local Tracking Server on an ephemeral port,
 and ensures we can use the tracking API to communicate with it.
@@ -1999,7 +2001,7 @@ def test_start_and_end_trace(mlflow_client):
     client = mlflow_client._tracking_client
 
     # Helper function to remove auto-added system tags (mlflow.xxx) from testing
-    def _exclude_system_tags(tags: dict[str, str]):
+    def _exclude_system_tags(tags: typing.Dict[str, str]):
         return {k: v for k, v in tags.items() if not k.startswith("mlflow.")}
 
     trace_info = client.start_trace(

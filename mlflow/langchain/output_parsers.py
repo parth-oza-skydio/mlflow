@@ -1,3 +1,5 @@
+import typing
+
 from dataclasses import asdict
 from typing import Any, Iterator
 from uuid import uuid4
@@ -26,7 +28,7 @@ from mlflow.utils.annotations import deprecated, experimental
 
 
 @deprecated("mlflow.langchain.output_parser.ChatCompletionOutputParser")
-class ChatCompletionsOutputParser(BaseTransformOutputParser[dict[str, Any]]):
+class ChatCompletionsOutputParser(BaseTransformOutputParser[typing.Dict[str, Any]]):
     """
     OutputParser that wraps the string output into a dictionary representation of a
     :py:class:`ChatCompletionResponse`
@@ -42,7 +44,7 @@ class ChatCompletionsOutputParser(BaseTransformOutputParser[dict[str, Any]]):
         """Return the output parser type for serialization."""
         return "mlflow_simplified_chat_completions"
 
-    def parse(self, text: str) -> dict[str, Any]:
+    def parse(self, text: str) -> typing.Dict[str, Any]:
         return asdict(
             RagChatCompletionResponse(
                 choices=[ChainCompletionChoice(message=Message(role="assistant", content=text))],
@@ -68,13 +70,13 @@ class ChatCompletionOutputParser(BaseTransformOutputParser[str]):
         """Return the output parser type for serialization."""
         return "mlflow_chat_completion"
 
-    def parse(self, text: str) -> dict[str, Any]:
+    def parse(self, text: str) -> typing.Dict[str, Any]:
         """Returns the input text as a ChatCompletionResponse with no changes."""
         return ChatCompletionResponse(
             choices=[ChatChoice(message=ChatMessage(role="assistant", content=text))]
         ).to_dict()
 
-    def transform(self, input: Iterator[BaseMessage], config, **kwargs) -> Iterator[dict[str, Any]]:
+    def transform(self, input: Iterator[BaseMessage], config, **kwargs) -> Iterator[typing.Dict[str, Any]]:
         """Returns a generator of ChatCompletionChunk objects"""
         for chunk in input:
             yield ChatCompletionChunk(
@@ -83,7 +85,7 @@ class ChatCompletionOutputParser(BaseTransformOutputParser[str]):
 
 
 @deprecated("mlflow.langchain.output_parser.ChatCompletionOutputParser")
-class StringResponseOutputParser(BaseTransformOutputParser[dict[str, Any]]):
+class StringResponseOutputParser(BaseTransformOutputParser[typing.Dict[str, Any]]):
     """
     OutputParser that wraps the string output into an dictionary representation of a
     :py:class:`StringResponse`
@@ -99,7 +101,7 @@ class StringResponseOutputParser(BaseTransformOutputParser[dict[str, Any]]):
         """Return the output parser type for serialization."""
         return "mlflow_simplified_str_object"
 
-    def parse(self, text: str) -> dict[str, Any]:
+    def parse(self, text: str) -> typing.Dict[str, Any]:
         return asdict(StringResponse(content=text))
 
 
@@ -121,7 +123,7 @@ class ChatAgentOutputParser(BaseTransformOutputParser[str]):
         """Return the output parser type for serialization."""
         return "mlflow_chat_agent"
 
-    def parse(self, text: str) -> dict[str, Any]:
+    def parse(self, text: str) -> typing.Dict[str, Any]:
         """
         Returns the output text as a dictionary representation of a
         :py:class:`ChatAgentResponse <mlflow.types.agent.ChatAgentResponse>`.
@@ -130,7 +132,7 @@ class ChatAgentOutputParser(BaseTransformOutputParser[str]):
             messages=[ChatAgentMessage(content=text, role="assistant", id=str(uuid4()))]
         ).model_dump_compat(exclude_none=True)
 
-    def transform(self, input: Iterator[BaseMessage], config, **kwargs) -> Iterator[dict[str, Any]]:
+    def transform(self, input: Iterator[BaseMessage], config, **kwargs) -> Iterator[typing.Dict[str, Any]]:
         """
         Returns a generator of
         :py:class:`ChatAgentChunk <mlflow.types.agent.ChatAgentChunk>` objects

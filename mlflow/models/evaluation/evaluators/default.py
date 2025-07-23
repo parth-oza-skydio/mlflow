@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import os
 import time
@@ -53,7 +55,7 @@ class DefaultEvaluator(BuiltInEvaluator):
     def _evaluate(
         self,
         model: Optional["mlflow.pyfunc.PyFuncModel"],
-        extra_metrics: list[EvaluationMetric],
+        extra_metrics: typing.List[EvaluationMetric],
         custom_artifacts=None,
         **kwargs,
     ) -> Optional[EvaluationResult]:
@@ -89,7 +91,7 @@ class DefaultEvaluator(BuiltInEvaluator):
             metrics=self.aggregate_metrics, artifacts=self.artifacts, run_id=self.run_id
         )
 
-    def _builtin_metrics(self) -> list[Metric]:
+    def _builtin_metrics(self) -> typing.List[Metric]:
         """
         Get a list of builtin metrics for the model type.
         """
@@ -201,7 +203,7 @@ class DefaultEvaluator(BuiltInEvaluator):
 
         return y_pred, other_output_df, predictions_column_name
 
-    def _log_genai_custom_metrics(self, extra_metrics: list[EvaluationMetric]):
+    def _log_genai_custom_metrics(self, extra_metrics: typing.List[EvaluationMetric]):
         genai_custom_metrics = [
             extra_metric.genai_metric_args
             for extra_metric in extra_metrics

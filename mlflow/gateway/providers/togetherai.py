@@ -1,3 +1,5 @@
+import typing
+
 import json
 from typing import Any, AsyncGenerator, AsyncIterable
 
@@ -313,7 +315,7 @@ class TogetherAIProvider(BaseProvider):
         return {"Authorization": f"Bearer {self.togetherai_config.togetherai_api_key}"}
 
     @property
-    def adapter_class(self) -> type[ProviderAdapter]:
+    def adapter_class(self) -> typing.Type[ProviderAdapter]:
         return TogetherAIAdapter
 
     def get_endpoint_url(self, route_type: str) -> str:
@@ -326,7 +328,7 @@ class TogetherAIProvider(BaseProvider):
         else:
             raise ValueError(f"Invalid route type {route_type}")
 
-    async def _request(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+    async def _request(self, path: str, payload: typing.Dict[str, Any]) -> typing.Dict[str, Any]:
         return await send_request(
             headers=self.headers,
             base_url=self.base_url,
@@ -335,8 +337,8 @@ class TogetherAIProvider(BaseProvider):
         )
 
     async def _stream_request(
-        self, path: str, payload: dict[str, Any]
-    ) -> AsyncGenerator[bytes, None]:
+        self, path: str, payload: typing.Dict[str, Any]
+    ) -> typing.AsyncGenerator[bytes, None]:
         return send_stream_request(
             headers=self.headers,
             base_url=self.base_url,

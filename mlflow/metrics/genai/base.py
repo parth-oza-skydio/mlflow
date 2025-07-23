@@ -1,3 +1,5 @@
+import typing
+
 from dataclasses import dataclass
 from typing import Optional, Union
 
@@ -64,7 +66,7 @@ class EvaluationExample:
     score: float
     justification: str
     input: Optional[str] = None
-    grading_context: Optional[Union[dict[str, str], str]] = None
+    grading_context: Optional[Union[typing.Dict[str, str], str]] = None
 
     def _format_grading_context(self):
         if isinstance(self.grading_context, dict):

@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Generator, Optional
 
 import pydantic
@@ -18,7 +20,7 @@ from mlflow.types.type_hints import model_validate
 from mlflow.utils.annotations import experimental
 
 
-def _load_pyfunc(model_path: str, model_config: Optional[dict[str, Any]] = None):
+def _load_pyfunc(model_path: str, model_config: Optional[typing.Dict[str, Any]] = None):
     _, chat_agent, _ = _load_context_model_and_signature(model_path, model_config)
     return _ChatAgentPyfuncWrapper(chat_agent)
 
@@ -44,7 +46,7 @@ class _ChatAgentPyfuncWrapper:
 
     def _convert_input(
         self, model_input
-    ) -> tuple[list[ChatAgentMessage], Optional[ChatContext], Optional[dict[str, Any]]]:
+    ) -> typing.Tuple[typing.List[ChatAgentMessage], Optional[ChatContext], Optional[typing.Dict[str, Any]]]:
         import pandas
 
         if isinstance(model_input, dict):
@@ -67,7 +69,7 @@ class _ChatAgentPyfuncWrapper:
 
         return messages, context, custom_inputs
 
-    def _response_to_dict(self, response, pydantic_class) -> dict[str, Any]:
+    def _response_to_dict(self, response, pydantic_class) -> typing.Dict[str, Any]:
         if isinstance(response, pydantic_class):
             return response.model_dump_compat(exclude_none=True)
         try:
@@ -82,7 +84,7 @@ class _ChatAgentPyfuncWrapper:
             ) from e
         return response
 
-    def predict(self, model_input: dict[str, Any], params=None) -> dict[str, Any]:
+    def predict(self, model_input: typing.Dict[str, Any], params=None) -> typing.Dict[str, Any]:
         """
         Args:
             model_input: A dict with the
@@ -99,8 +101,8 @@ class _ChatAgentPyfuncWrapper:
         return self._response_to_dict(response, ChatAgentResponse)
 
     def predict_stream(
-        self, model_input: dict[str, Any], params=None
-    ) -> Generator[dict[str, Any], None, None]:
+        self, model_input: typing.Dict[str, Any], params=None
+    ) -> Generator[typing.Dict[str, Any], None, None]:
         """
         Args:
             model_input: A dict with the

@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import operator
 import os
@@ -255,7 +257,7 @@ class ModelValidationFailedException(MlflowException):
 
 
 def validate_evaluation_results(
-    validation_thresholds: dict[str, MetricThreshold],
+    validation_thresholds: typing.Dict[str, MetricThreshold],
     candidate_result: EvaluationResult,
     baseline_result: Optional[EvaluationResult] = None,
 ):
@@ -350,9 +352,9 @@ def validate_evaluation_results(
 
 
 def _validate(
-    validation_thresholds: dict[str, MetricThreshold],
-    candidate_metrics: dict[str, float],
-    baseline_metrics: dict[str, float],
+    validation_thresholds: typing.Dict[str, MetricThreshold],
+    candidate_metrics: typing.Dict[str, float],
+    baseline_metrics: typing.Dict[str, float],
 ):
     """
     Validate the model based on validation_thresholds by metrics value and

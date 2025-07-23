@@ -1,3 +1,5 @@
+import typing
+
 """
 The :py:mod:`mlflow.models.signature` module provides an API for specification of model signature.
 
@@ -47,10 +49,10 @@ if TYPE_CHECKING:
         import pyspark.sql.dataframe
 
         MlflowInferableDataset = Union[
-            pd.DataFrame, np.ndarray, dict[str, np.ndarray], pyspark.sql.dataframe.DataFrame
+            pd.DataFrame, np.ndarray, typing.Dict[str, np.ndarray], pyspark.sql.dataframe.DataFrame
         ]
     except ImportError:
-        MlflowInferableDataset = Union[pd.DataFrame, np.ndarray, dict[str, np.ndarray]]
+        MlflowInferableDataset = Union[pd.DataFrame, np.ndarray, typing.Dict[str, np.ndarray]]
 
 _logger = logging.getLogger(__name__)
 
@@ -122,7 +124,7 @@ class ModelSignature:
     def _is_type_hint_from_example(self, value):
         self.__is_type_hint_from_example = value
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> typing.Dict[str, Any]:
         """
         Serialize into a 'jsonable' dictionary.
 
@@ -140,7 +142,7 @@ class ModelSignature:
         }
 
     @classmethod
-    def from_dict(cls, signature_dict: dict[str, Any]):
+    def from_dict(cls, signature_dict: typing.Dict[str, Any]):
         """
         Deserialize from dictionary representation.
 
@@ -181,7 +183,7 @@ class ModelSignature:
 def infer_signature(
     model_input: Any = None,
     model_output: "MlflowInferableDataset" = None,
-    params: Optional[dict[str, Any]] = None,
+    params: Optional[typing.Dict[str, Any]] = None,
 ) -> ModelSignature:
     """
     Infer an MLflow model signature from the training data (input), model predictions (output)
@@ -299,9 +301,9 @@ def _is_list_of_string_dict(hint_str):
 
 def _infer_hint_from_str(hint_str):
     if _is_list_str(hint_str):
-        return list[str]
+        return typing.List[str]
     elif _is_list_of_string_dict(hint_str):
-        return list[dict[str, str]]
+        return typing.List[typing.Dict[str, str]]
     else:
         return None
 
@@ -350,10 +352,10 @@ def _extract_type_hints(f, input_arg_index):
         NameError,  # To handle this issue: https://github.com/python/typing/issues/797
     ):
         # ---
-        # from __future__ import annotations # postpones evaluation of 'list[str]'
+        # from __future__ import annotations # postpones evaluation of 'typing.List[str]'
         #
-        # def f(x: list[str]) -> list[str]:
-        #          ^^^^^^^^^ Evaluating this expression ('list[str]') results in a TypeError in
+        # def f(x: typing.List[str]) -> typing.List[str]:
+        #          ^^^^^^^^^ Evaluating this expression ('typing.List[str]') results in a TypeError in
         #                    Python < 3.9 because the built-in list type is not subscriptable.
         #     return x
         # ---

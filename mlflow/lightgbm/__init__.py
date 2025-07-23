@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.lightgbm`` module provides an API for logging and loading LightGBM models.
 This module exports LightGBM models with the following flavors:
@@ -478,7 +480,7 @@ class _LGBModelWrapper:
         """
         return self.lgb_model
 
-    def predict(self, dataframe, params: Optional[dict[str, Any]] = None):
+    def predict(self, dataframe, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             dataframe: Model input data.

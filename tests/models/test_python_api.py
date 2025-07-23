@@ -1,3 +1,5 @@
+import typing
+
 import datetime
 import json
 import os
@@ -348,7 +350,7 @@ def test_serialize_input_data_invalid_format(input_data, content_type):
 def test_predict_use_current_experiment():
     class TestModel(mlflow.pyfunc.PythonModel):
         @mlflow.trace
-        def predict(self, context, model_input: list[str]):
+        def predict(self, context, model_input: typing.List[str]):
             return model_input
 
     exp_id = mlflow.set_experiment("test_experiment").experiment_id

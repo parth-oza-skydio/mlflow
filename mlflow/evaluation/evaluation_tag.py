@@ -1,3 +1,5 @@
+import typing
+
 """
 THE 'mlflow.evaluation` MODULE IS LEGACY AND WILL BE REMOVED SOON. PLEASE DO NOT USE THESE CLASSES
 IN NEW CODE. INSTEAD, USE `mlflow/entities/assessment.py` FOR ASSESSMENT CLASSES.
@@ -28,7 +30,7 @@ class EvaluationTag(_MlflowObject):
         """String value of the tag."""
         return self._value
 
-    def to_dictionary(self) -> dict[str, str]:
+    def to_dictionary(self) -> typing.Dict[str, str]:
         """
         Convert the EvaluationTag object to a dictionary.
 
@@ -41,7 +43,7 @@ class EvaluationTag(_MlflowObject):
         }
 
     @classmethod
-    def from_dictionary(cls, evaluation_tag_dict: dict[str, str]):
+    def from_dictionary(cls, evaluation_tag_dict: typing.Dict[str, str]):
         """
         Create an EvaluationTag object from a dictionary.
 

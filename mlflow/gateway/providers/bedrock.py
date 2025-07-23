@@ -1,3 +1,5 @@
+import typing
+
 import json
 import time
 from enum import Enum
@@ -147,7 +149,7 @@ class AmazonBedrockModelProvider(Enum):
     ANTHROPIC = "anthropic"
 
     @property
-    def adapter_class(self) -> type[ProviderAdapter]:
+    def adapter_class(self) -> typing.Type[ProviderAdapter]:
         return AWS_MODEL_PROVIDER_TO_ADAPTER.get(self)
 
     @classmethod
@@ -253,7 +255,7 @@ class AmazonBedrockProvider(BaseProvider):
         return AmazonBedrockModelProvider.of_str(provider)
 
     @property
-    def adapter_class(self) -> type[ProviderAdapter]:
+    def adapter_class(self) -> typing.Type[ProviderAdapter]:
         provider = self._underlying_provider
         if not provider:
             raise AIGatewayException(

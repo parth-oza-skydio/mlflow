@@ -1,3 +1,5 @@
+import typing
+
 from typing import Union
 
 from mlflow import MlflowException
@@ -8,16 +10,16 @@ from mlflow.utils.plugins import get_entry_points
 
 class ProviderRegistry:
     def __init__(self):
-        self._providers: dict[Union[str, Provider], type[BaseProvider]] = {}
+        self._providers: typing.Dict[Union[str, Provider], typing.Type[BaseProvider]] = {}
 
-    def register(self, name: str, provider: type[BaseProvider]):
+    def register(self, name: str, provider: typing.Type[BaseProvider]):
         if name in self._providers:
             raise MlflowException.invalid_parameter_value(
                 f"Provider {name} is already registered: {self._providers[name]}"
             )
         self._providers[name] = provider
 
-    def get(self, name: str) -> type[BaseProvider]:
+    def get(self, name: str) -> typing.Type[BaseProvider]:
         if name not in self._providers:
             raise MlflowException.invalid_parameter_value(f"Provider {name} not found")
         return self._providers[name]

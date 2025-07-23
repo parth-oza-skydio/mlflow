@@ -1,3 +1,5 @@
+import typing
+
 from abc import abstractmethod
 from dataclasses import dataclass
 from typing import Optional
@@ -8,8 +10,8 @@ from mlflow.models.utils import PyFuncInput, PyFuncOutput
 
 @dataclass
 class PyFuncInputsOutputs:
-    inputs: list[PyFuncInput]
-    outputs: Optional[list[PyFuncOutput]] = None
+    inputs: typing.List[PyFuncInput]
+    outputs: Optional[typing.List[PyFuncOutput]] = None
 
 
 class PyFuncConvertibleDatasetMixin:

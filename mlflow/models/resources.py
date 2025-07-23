@@ -1,3 +1,5 @@
+import typing
+
 import os
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -54,7 +56,7 @@ class Resource(ABC):
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, data: dict[str, str]):
+    def from_dict(cls, data: typing.Dict[str, str]):
         """
         Convert the dictionary to a Resource.
         Subclasses must implement this method.
@@ -92,7 +94,7 @@ class DatabricksResource(Resource, ABC):
         return result
 
     @classmethod
-    def from_dict(cls, data: dict[str, str]):
+    def from_dict(cls, data: typing.Dict[str, str]):
         return cls(data["name"], data.get("on_behalf_of_user"))
 
 
@@ -258,8 +260,8 @@ class _ResourceBuilder:
 
     @staticmethod
     def from_resources(
-        resources: list[Resource], api_version: str = DEFAULT_API_VERSION
-    ) -> dict[str, dict[ResourceType, list[dict]]]:
+        resources: typing.List[Resource], api_version: str = DEFAULT_API_VERSION
+    ) -> typing.Dict[str, typing.Dict[ResourceType, typing.List[dict]]]:
         resource_dict = {}
         for resource in resources:
             resource_data = resource.to_dict()
@@ -272,7 +274,7 @@ class _ResourceBuilder:
         return resource_dict
 
     @staticmethod
-    def from_dict(data) -> dict[str, dict[ResourceType, list[dict]]]:
+    def from_dict(data) -> typing.Dict[str, typing.Dict[ResourceType, typing.List[dict]]]:
         resources = []
         api_version = data.pop("api_version")
         if api_version == "1":
@@ -289,7 +291,7 @@ class _ResourceBuilder:
         return _ResourceBuilder.from_resources(resources, api_version)
 
     @staticmethod
-    def from_yaml_file(path: str) -> dict[str, dict[ResourceType, list[dict]]]:
+    def from_yaml_file(path: str) -> typing.Dict[str, typing.Dict[ResourceType, typing.List[dict]]]:
         if not os.path.exists(path):
             raise OSError(f"No such file or directory: '{path}'")
         path = os.path.abspath(path)

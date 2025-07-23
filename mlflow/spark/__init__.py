@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.spark`` module provides an API for logging and loading Spark MLlib models. This module
 exports Spark MLlib models with the following flavors:
@@ -1102,7 +1104,7 @@ class _PyFuncModelWrapper:
     def predict(
         self,
         pandas_df,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Generate predictions given input data in a pandas DataFrame.

@@ -1,3 +1,5 @@
+import typing
+
 from abc import ABC, abstractmethod
 from typing import AsyncIterable
 
@@ -15,8 +17,8 @@ class BaseProvider(ABC):
     """
 
     NAME: str = ""
-    SUPPORTED_ROUTE_TYPES: tuple[str, ...]
-    CONFIG_TYPE: type[ConfigModel]
+    SUPPORTED_ROUTE_TYPES: typing.Tuple[str, ...]
+    CONFIG_TYPE: typing.Type[ConfigModel]
 
     def __init__(self, config: RouteConfig):
         if self.NAME == "":

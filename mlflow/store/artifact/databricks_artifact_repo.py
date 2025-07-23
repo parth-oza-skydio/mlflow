@@ -1,3 +1,5 @@
+import typing
+
 import base64
 import json
 import logging
@@ -232,7 +234,7 @@ class DatabricksArtifactRepository(CloudArtifactRepository):
             GetCredentialsForWrite, self.run_id, run_relative_remote_paths
         )
 
-    def download_trace_data(self) -> dict[str, Any]:
+    def download_trace_data(self) -> typing.Dict[str, Any]:
         cred = self._call_endpoint(
             DatabricksMlflowArtifactsService,
             GetCredentialsForTraceDataDownload,

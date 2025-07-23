@@ -1,3 +1,5 @@
+import typing
+
 import os
 import re
 
@@ -16,7 +18,7 @@ class _PromptlabModel:
         self.model_route = model_route
         self.prompt_template = prompt_template
 
-    def predict(self, inputs: pd.DataFrame) -> list[str]:
+    def predict(self, inputs: pd.DataFrame) -> typing.List[str]:
         from mlflow.gateway import query
 
         results = []

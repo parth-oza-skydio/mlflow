@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from typing import Any
 
@@ -8,7 +10,7 @@ from mlflow.tracing import set_span_chat_messages
 _logger = logging.getLogger(__name__)
 
 
-def set_span_chat_attributes(span: LiveSpan, messages: list[dict[str, Any]], output: Any):
+def set_span_chat_attributes(span: LiveSpan, messages: typing.List[typing.Dict[str, Any]], output: Any):
     """
     This method logs chat messages to a span when LLM class is called. Since the CrewAI library
     includes tool definition in the text content, mlflow.chat.tools attribute is not recorded.

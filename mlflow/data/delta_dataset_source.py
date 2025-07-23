@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from typing import Any, Optional
 
@@ -141,7 +143,7 @@ class DeltaDatasetSource(DatasetSource):
         except Exception:
             return None
 
-    def to_dict(self) -> dict[Any, Any]:
+    def to_dict(self) -> typing.Dict[Any, Any]:
         info = {}
         if self._path:
             info["path"] = self._path
@@ -158,7 +160,7 @@ class DeltaDatasetSource(DatasetSource):
         return info
 
     @classmethod
-    def from_dict(cls, source_dict: dict[Any, Any]) -> "DeltaDatasetSource":
+    def from_dict(cls, source_dict: typing.Dict[Any, Any]) -> "DeltaDatasetSource":
         return cls(
             path=source_dict.get("path"),
             delta_table_name=source_dict.get("delta_table_name"),

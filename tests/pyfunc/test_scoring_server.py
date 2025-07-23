@@ -1,3 +1,5 @@
+import typing
+
 import json
 import math
 import os
@@ -708,7 +710,7 @@ def test_numpy_encoder_for_pydantic():
         content: str
 
     class Messages(pydantic.BaseModel):
-        messages: list[Message]
+        messages: typing.List[Message]
 
     messages = Messages(
         messages=[Message(role="user", content="hello!"), Message(role="assistant", content="hi!")]

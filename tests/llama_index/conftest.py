@@ -1,3 +1,5 @@
+import typing
+
 import os
 import re
 import shutil
@@ -49,7 +51,7 @@ def mock_openai():
 
 
 #### Settings ####
-def _mock_tokenizer(text: str) -> list[str]:
+def _mock_tokenizer(text: str) -> typing.List[str]:
     """Mock tokenizer."""
     tokens = re.split(r"[ \n]", text)
     result = []

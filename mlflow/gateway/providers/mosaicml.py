@@ -1,3 +1,5 @@
+import typing
+
 import time
 from contextlib import contextmanager
 from typing import Any
@@ -20,7 +22,7 @@ class MosaicMLProvider(BaseProvider):
             raise TypeError(f"Unexpected config type {config.model.config}")
         self.mosaicml_config: MosaicMLConfig = config.model.config
 
-    async def _request(self, model: str, payload: dict[str, Any]) -> dict[str, Any]:
+    async def _request(self, model: str, payload: typing.Dict[str, Any]) -> typing.Dict[str, Any]:
         headers = {"Authorization": f"{self.mosaicml_config.mosaicml_api_key}"}
         return await send_request(
             headers=headers,
@@ -33,7 +35,7 @@ class MosaicMLProvider(BaseProvider):
     # NB: as this parser performs no blocking operations, we are intentionally not defining it
     # as async due to the overhead of spawning an additional thread if we did.
     @staticmethod
-    def _parse_chat_messages_to_prompt(messages: list[chat.RequestMessage]) -> str:
+    def _parse_chat_messages_to_prompt(messages: typing.List[chat.RequestMessage]) -> str:
         """
         This parser is based on the format described in
         https://huggingface.co/blog/llama2#how-to-prompt-llama-2 .

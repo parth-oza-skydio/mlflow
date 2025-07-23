@@ -1,3 +1,5 @@
+import typing
+
 import time
 from typing import Any
 
@@ -158,7 +160,7 @@ class MistralProvider(BaseProvider):
         self.mistral_config: MistralConfig = config.model.config
 
     @property
-    def headers(self) -> dict[str, str]:
+    def headers(self) -> typing.Dict[str, str]:
         return {"Authorization": f"Bearer {self.mistral_config.mistral_api_key}"}
 
     @property
@@ -166,7 +168,7 @@ class MistralProvider(BaseProvider):
         return "https://api.mistral.ai/v1"
 
     @property
-    def adapter_class(self) -> type[ProviderAdapter]:
+    def adapter_class(self) -> typing.Type[ProviderAdapter]:
         return MistralAdapter
 
     def get_endpoint_url(self, route_type: str) -> str:
@@ -175,7 +177,7 @@ class MistralProvider(BaseProvider):
         else:
             raise ValueError(f"Invalid route type {route_type}")
 
-    async def _request(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+    async def _request(self, path: str, payload: typing.Dict[str, Any]) -> typing.Dict[str, Any]:
         return await send_request(
             headers=self.headers,
             base_url=self.base_url,

@@ -1,3 +1,5 @@
+import typing
+
 import functools
 from pathlib import Path
 from typing import Any, Optional, Union
@@ -53,7 +55,7 @@ class GatewayAPI(FastAPI):
         super().__init__(*args, **kwargs)
         self.state.limiter = limiter
         self.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-        self.dynamic_routes: dict[str, RouteConfig] = {}
+        self.dynamic_routes: typing.Dict[str, RouteConfig] = {}
         self.set_dynamic_routes(config, limiter)
 
     def set_dynamic_routes(self, config: GatewayConfig, limiter: Limiter) -> None:
@@ -167,7 +169,7 @@ class HealthResponse(BaseModel):
 
 
 class ListEndpointsResponse(BaseModel):
-    endpoints: list[Endpoint]
+    endpoints: typing.List[Endpoint]
     next_page_token: Optional[str] = None
 
     class Config:
@@ -206,7 +208,7 @@ class ListEndpointsResponse(BaseModel):
 
 
 class SearchRoutesResponse(BaseModel):
-    routes: list[Route]
+    routes: typing.List[Route]
     next_page_token: Optional[str] = None
 
     class Config:

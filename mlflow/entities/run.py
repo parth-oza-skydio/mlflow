@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Optional
 
 from mlflow.entities._mlflow_object import _MlflowObject
@@ -66,7 +68,7 @@ class Run(_MlflowObject):
             RunInputs.from_proto(proto.inputs),
         )
 
-    def to_dictionary(self) -> dict[Any, Any]:
+    def to_dictionary(self) -> typing.Dict[Any, Any]:
         run_dict = {
             "info": dict(self.info),
         }

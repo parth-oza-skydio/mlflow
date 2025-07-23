@@ -1,3 +1,5 @@
+import typing
+
 """
 Defines an MlflowAutologgingQueueingClient developer API that provides batching, queueing, and
 asynchronous execution capabilities for a subset of MLflow Tracking logging operations used most
@@ -141,7 +143,7 @@ class MlflowAutologgingQueueingClient:
         self,
         experiment_id: str,
         start_time: Optional[int] = None,
-        tags: Optional[dict[str, Any]] = None,
+        tags: Optional[typing.Dict[str, Any]] = None,
         run_name: Optional[str] = None,
     ) -> PendingRunId:
         """
@@ -182,7 +184,7 @@ class MlflowAutologgingQueueingClient:
             set_terminated=_PendingSetTerminated(status=status, end_time=end_time)
         )
 
-    def log_params(self, run_id: Union[str, PendingRunId], params: dict[str, Any]) -> None:
+    def log_params(self, run_id: Union[str, PendingRunId], params: typing.Dict[str, Any]) -> None:
         """
         Enqueues a collection of Parameters to be logged to the run specified by `run_id`.
         """
@@ -193,7 +195,7 @@ class MlflowAutologgingQueueingClient:
         self._get_pending_operations(run_id).enqueue(params=params_arr)
 
     def log_inputs(
-        self, run_id: Union[str, PendingRunId], datasets: Optional[list[DatasetInput]]
+        self, run_id: Union[str, PendingRunId], datasets: Optional[typing.List[DatasetInput]]
     ) -> None:
         """
         Enqueues a collection of Dataset to be logged to the run specified by `run_id`.
@@ -205,7 +207,7 @@ class MlflowAutologgingQueueingClient:
     def log_metrics(
         self,
         run_id: Union[str, PendingRunId],
-        metrics: dict[str, float],
+        metrics: typing.Dict[str, float],
         step: Optional[int] = None,
     ) -> None:
         """
@@ -219,7 +221,7 @@ class MlflowAutologgingQueueingClient:
         ]
         self._get_pending_operations(run_id).enqueue(metrics=metrics_arr)
 
-    def set_tags(self, run_id: Union[str, PendingRunId], tags: dict[str, Any]) -> None:
+    def set_tags(self, run_id: Union[str, PendingRunId], tags: typing.Dict[str, Any]) -> None:
         """
         Enqueues a collection of Tags to be logged to the run specified by `run_id`.
         """

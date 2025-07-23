@@ -1,3 +1,5 @@
+import typing
+
 import json
 import os
 import tempfile
@@ -28,13 +30,13 @@ def _create_promptlab_run_impl(
     store,
     experiment_id: str,
     run_name: str,
-    tags: list[RunTag],
+    tags: typing.List[RunTag],
     prompt_template: str,
-    prompt_parameters: list[Param],
+    prompt_parameters: typing.List[Param],
     model_route: str,
-    model_parameters: list[Param],
+    model_parameters: typing.List[Param],
     model_input: str,
-    model_output_parameters: list[Param],
+    model_output_parameters: typing.List[Param],
     model_output: str,
     mlflow_version: str,
     user_id: str,

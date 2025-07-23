@@ -1,3 +1,5 @@
+import typing
+
 import os
 from typing import Any, Optional
 
@@ -15,7 +17,7 @@ class CustomPredict(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         self.model = mlflow.sklearn.load_model(context.artifacts["custom_model"])
 
-    def predict(self, context, model_input, params: Optional[dict[str, Any]] = None):
+    def predict(self, context, model_input, params: Optional[typing.Dict[str, Any]] = None):
         prediction = self.model.predict(model_input)
         return iris_classes(prediction)
 

@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 import os
@@ -351,7 +353,7 @@ class ArtifactRepository:
         num_cpus = os.cpu_count() or _NUM_DEFAULT_CPUS
         return min(num_cpus * _NUM_MAX_THREADS_PER_CPU, _NUM_MAX_THREADS)
 
-    def download_trace_data(self) -> dict[str, Any]:
+    def download_trace_data(self) -> typing.Dict[str, Any]:
         """
         Download the trace data.
 
@@ -425,7 +427,7 @@ class MultipartUploadMixin(ABC):
         self,
         local_file: str,
         upload_id: str,
-        parts: list[MultipartUploadPart],
+        parts: typing.List[MultipartUploadPart],
         artifact_path: Optional[str] = None,
     ) -> None:
         """

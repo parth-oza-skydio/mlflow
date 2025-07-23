@@ -1,3 +1,5 @@
+import typing
+
 import os
 import pathlib
 import posixpath
@@ -320,7 +322,7 @@ def append_to_uri_path(uri, *paths):
     return prefix + urllib.parse.urlunparse(new_parsed_uri)
 
 
-def append_to_uri_query_params(uri, *query_params: tuple[str, Any]) -> str:
+def append_to_uri_query_params(uri, *query_params: typing.Tuple[str, Any]) -> str:
     """Appends the specified query parameters to an existing URI.
 
     Args:

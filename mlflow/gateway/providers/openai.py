@@ -1,3 +1,5 @@
+import typing
+
 import json
 import os
 from typing import TYPE_CHECKING, AsyncIterable
@@ -413,7 +415,7 @@ class OpenAIProvider(BaseProvider):
             token_usage_accumulator.update(resp.get("usage", {}))
         elif any(t["type"] == _UC_FUNCTION for t in payload.get("tools", [])):
             updated_tools = []
-            uc_func_mapping: dict[str, "FunctionInfo"] = {}
+            uc_func_mapping: typing.Dict[str, "FunctionInfo"] = {}
             for tool in payload.get("tools", []):
                 if tool["type"] == _UC_FUNCTION:
                     function_name = tool[_UC_FUNCTION]["name"]

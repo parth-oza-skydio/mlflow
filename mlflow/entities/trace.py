@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import json
 import logging
@@ -33,7 +34,7 @@ class Trace(_MlflowObject):
     def __repr__(self) -> str:
         return f"Trace(request_id={self.info.request_id})"
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> typing.Dict[str, Any]:
         return {"info": self.info.to_dict(), "data": self.data.to_dict()}
 
     def to_json(self, pretty=False) -> str:
@@ -42,7 +43,7 @@ class Trace(_MlflowObject):
         return json.dumps(self.to_dict(), cls=TraceJSONEncoder, indent=2 if pretty else None)
 
     @classmethod
-    def from_dict(cls, trace_dict: dict[str, Any]) -> Trace:
+    def from_dict(cls, trace_dict: typing.Dict[str, Any]) -> Trace:
         info = trace_dict.get("info")
         data = trace_dict.get("data")
         if info is None or data is None:
@@ -101,7 +102,7 @@ class Trace(_MlflowObject):
 
         return bundle
 
-    def to_pandas_dataframe_row(self) -> dict[str, Any]:
+    def to_pandas_dataframe_row(self) -> typing.Dict[str, Any]:
         return {
             "request_id": self.info.request_id,
             "trace": self,
@@ -125,7 +126,7 @@ class Trace(_MlflowObject):
 
     def search_spans(
         self, span_type: Optional[SpanType] = None, name: Optional[Union[str, re.Pattern]] = None
-    ) -> list[Span]:
+    ) -> typing.List[Span]:
         """
         Search for spans that match the given criteria within the trace.
 
@@ -222,7 +223,7 @@ class Trace(_MlflowObject):
         return [span for span in self.data.spans if _match_name(span) and _match_type(span)]
 
     @staticmethod
-    def pandas_dataframe_columns() -> list[str]:
+    def pandas_dataframe_columns() -> typing.List[str]:
         return [
             "request_id",
             "trace",

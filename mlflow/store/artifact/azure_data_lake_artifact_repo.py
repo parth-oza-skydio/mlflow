@@ -1,3 +1,5 @@
+import typing
+
 import os
 import posixpath
 import re
@@ -280,13 +282,13 @@ class AzureDataLakeArtifactRepository(CloudArtifactRepository):
             f"{self.base_data_lake_directory}/{artifact_file_path}{sas_token}"
         )
 
-    def _get_write_credential_infos(self, remote_file_paths) -> list[ArtifactCredentialInfo]:
+    def _get_write_credential_infos(self, remote_file_paths) -> typing.List[ArtifactCredentialInfo]:
         return [
             ArtifactCredentialInfo(signed_uri=self._get_presigned_uri(path))
             for path in remote_file_paths
         ]
 
-    def _get_read_credential_infos(self, remote_file_paths) -> list[ArtifactCredentialInfo]:
+    def _get_read_credential_infos(self, remote_file_paths) -> typing.List[ArtifactCredentialInfo]:
         return [
             ArtifactCredentialInfo(signed_uri=self._get_presigned_uri(path))
             for path in remote_file_paths

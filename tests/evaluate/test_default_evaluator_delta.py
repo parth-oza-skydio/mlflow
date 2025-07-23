@@ -1,3 +1,5 @@
+import typing
+
 import tempfile
 
 import pandas as pd
@@ -8,7 +10,7 @@ import mlflow
 from mlflow.exceptions import MlflowException
 
 
-def language_model(inputs: list[str]) -> list[str]:
+def language_model(inputs: typing.List[str]) -> typing.List[str]:
     return inputs
 
 

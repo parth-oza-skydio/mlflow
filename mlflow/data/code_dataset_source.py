@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any
 
 from typing_extensions import Self
@@ -8,7 +10,7 @@ from mlflow.data.dataset_source import DatasetSource
 class CodeDatasetSource(DatasetSource):
     def __init__(
         self,
-        tags: dict[Any, Any],
+        tags: typing.Dict[Any, Any],
     ):
         self._tags = tags
 
@@ -30,11 +32,11 @@ class CodeDatasetSource(DatasetSource):
     def _resolve(cls, raw_source: str) -> Self:
         raise NotImplementedError
 
-    def to_dict(self) -> dict[Any, Any]:
+    def to_dict(self) -> typing.Dict[Any, Any]:
         return {"tags": self._tags}
 
     @classmethod
-    def from_dict(cls, source_dict: dict[Any, Any]) -> Self:
+    def from_dict(cls, source_dict: typing.Dict[Any, Any]) -> Self:
         return cls(
             tags=source_dict.get("tags"),
         )

@@ -1,3 +1,5 @@
+import typing
+
 import hashlib
 from typing import Any
 
@@ -85,7 +87,7 @@ def compute_numpy_digest(features, targets=None) -> str:
     return get_normalized_md5_digest(hashable_elements)
 
 
-def get_normalized_md5_digest(elements: list[Any]) -> str:
+def get_normalized_md5_digest(elements: typing.List[Any]) -> str:
     """Computes a normalized digest for a list of hashable elements.
 
     Args:

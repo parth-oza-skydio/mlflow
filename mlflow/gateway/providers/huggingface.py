@@ -1,3 +1,5 @@
+import typing
+
 import time
 from typing import Any
 
@@ -24,7 +26,7 @@ class HFTextGenerationInferenceServerProvider(BaseProvider):
         self.huggingface_config: HuggingFaceTextGenerationInferenceConfig = config.model.config
         self.headers = {"Content-Type": "application/json"}
 
-    async def _request(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+    async def _request(self, path: str, payload: typing.Dict[str, Any]) -> typing.Dict[str, Any]:
         return await send_request(
             headers=self.headers,
             base_url=self.huggingface_config.hf_server_url,

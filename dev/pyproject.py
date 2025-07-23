@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import re
 import shutil
@@ -71,7 +72,7 @@ def find_duplicates(seq):
     return [item for item, count in counted.items() if count > 1]
 
 
-def read_requirements(path: Path) -> list[str]:
+def read_requirements(path: Path) -> typing.List[str]:
     lines = (l.strip() for l in path.read_text().splitlines())
     return [l for l in lines if l and not l.startswith("#")]
 

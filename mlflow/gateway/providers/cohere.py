@@ -1,3 +1,5 @@
+import typing
+
 import json
 import time
 from typing import Any, AsyncGenerator, AsyncIterable
@@ -333,7 +335,7 @@ class CohereProvider(BaseProvider):
         self.cohere_config: CohereConfig = config.model.config
 
     @property
-    def headers(self) -> dict[str, str]:
+    def headers(self) -> typing.Dict[str, str]:
         return {"Authorization": f"Bearer {self.cohere_config.cohere_api_key}"}
 
     @property
@@ -341,7 +343,7 @@ class CohereProvider(BaseProvider):
         return "https://api.cohere.ai/v1"
 
     @property
-    def adapter_class(self) -> type[ProviderAdapter]:
+    def adapter_class(self) -> typing.Type[ProviderAdapter]:
         return CohereAdapter
 
     def get_endpoint_url(self, route_type: str) -> str:
@@ -354,7 +356,7 @@ class CohereProvider(BaseProvider):
         else:
             raise ValueError(f"Invalid route type {route_type}")
 
-    async def _request(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+    async def _request(self, path: str, payload: typing.Dict[str, Any]) -> typing.Dict[str, Any]:
         return await send_request(
             headers=self.headers,
             base_url=self.base_url,
@@ -362,7 +364,7 @@ class CohereProvider(BaseProvider):
             payload=payload,
         )
 
-    def _stream_request(self, path: str, payload: dict[str, Any]) -> AsyncGenerator[bytes, None]:
+    def _stream_request(self, path: str, payload: typing.Dict[str, Any]) -> typing.AsyncGenerator[bytes, None]:
         return send_stream_request(
             headers=self.headers,
             base_url=self.base_url,

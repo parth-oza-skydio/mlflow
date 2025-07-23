@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 import tempfile
@@ -26,7 +28,7 @@ class BaseScoringServerClient(ABC):
         """
 
     @abstractmethod
-    def invoke(self, data, params: Optional[dict[str, Any]] = None):
+    def invoke(self, data, params: Optional[typing.Dict[str, Any]] = None):
         """
         Invoke inference on input data. The input data must be pandas dataframe or numpy array or
         a dict of numpy arrays.
@@ -73,7 +75,7 @@ class ScoringServerClient(BaseScoringServerClient):
                     raise RuntimeError(f"Server process already exit with returncode {return_code}")
         raise RuntimeError("Wait scoring server ready timeout.")
 
-    def invoke(self, data, params: Optional[dict[str, Any]] = None):
+    def invoke(self, data, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             data: Model input data.
@@ -106,7 +108,7 @@ class StdinScoringServerClient(BaseScoringServerClient):
         if return_code is not None:
             raise RuntimeError(f"Server process already exit with returncode {return_code}")
 
-    def invoke(self, data, params: Optional[dict[str, Any]] = None):
+    def invoke(self, data, params: Optional[typing.Dict[str, Any]] = None):
         """
         Invoke inference on input data. The input data must be pandas dataframe or numpy array or
         a dict of numpy arrays.

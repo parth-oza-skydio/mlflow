@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from typing import Any
 
@@ -100,7 +102,7 @@ def _get_span_type(task_name: str) -> str:
     return span_type_mapping.get(task_name, SpanType.UNKNOWN)
 
 
-def _set_tool_attribute(span: LiveSpan, inputs: dict[str, Any]):
+def _set_tool_attribute(span: LiveSpan, inputs: typing.Dict[str, Any]):
     if (tools := inputs.get("tools")) is not None:
         try:
             tools = [convert_tool_to_mlflow_chat_tool(tool) for tool in tools]
@@ -109,7 +111,7 @@ def _set_tool_attribute(span: LiveSpan, inputs: dict[str, Any]):
             _logger.debug(f"Failed to set tools for {span}. Error: {e}")
 
 
-def _set_chat_message_attribute(span: LiveSpan, inputs: dict[str, Any], output: Any):
+def _set_chat_message_attribute(span: LiveSpan, inputs: typing.Dict[str, Any], output: Any):
     try:
         messages = [convert_message_to_mlflow_chat(msg) for msg in inputs.get("messages", [])]
         if output is not None:

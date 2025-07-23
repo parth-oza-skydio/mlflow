@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Callable
 
 import pydantic
@@ -39,7 +41,7 @@ def model_validator(mode: str, skip_on_failure: bool = False):
     return decorator
 
 
-def model_dump_compat(pydantic_model: BaseModel, **kwargs: Any) -> dict[str, Any]:
+def model_dump_compat(pydantic_model: BaseModel, **kwargs: Any) -> typing.Dict[str, Any]:
     """
     Dump the Pydantic model to dictionary, in a compatible way for Pydantic v1 and v2.
 

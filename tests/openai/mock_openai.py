@@ -1,3 +1,5 @@
+import typing
+
 import json
 from typing import Any, Optional, Union
 
@@ -281,7 +283,7 @@ _DUMMY_RESPONSES_STREAM_EVENTS = [
 
 class ResponsesPayload(BaseModel):
     input: Any
-    tools: Optional[list[Any]] = None
+    tools: Optional[typing.List[Any]] = None
     stream: bool = False
 
 
@@ -313,7 +315,7 @@ async def responses(payload: ResponsesPayload):
 
 
 class CompletionsPayload(BaseModel):
-    prompt: Union[str, list[str]]
+    prompt: Union[str, typing.List[str]]
     stream: bool = False
 
 
@@ -390,7 +392,7 @@ def completions(payload: CompletionsPayload):
 
 
 class EmbeddingsPayload(BaseModel):
-    input: Union[str, list[str]]
+    input: Union[str, typing.List[str]]
 
 
 @app.post("/embeddings")

@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Optional, Union
 
 from mlflow.entities.assessment import (
@@ -19,7 +21,7 @@ def log_expectation(
     name: str,
     source: Union[str, AssessmentSource],
     value: AssessmentValueType,
-    metadata: Optional[dict[str, Any]] = None,
+    metadata: Optional[typing.Dict[str, Any]] = None,
     span_id: Optional[str] = None,
 ) -> Assessment:
     """
@@ -80,7 +82,7 @@ def update_expectation(
     assessment_id: str,
     name: Optional[str] = None,
     value: Optional[AssessmentValueType] = None,
-    metadata: Optional[dict[str, Any]] = None,
+    metadata: Optional[typing.Dict[str, Any]] = None,
 ) -> Assessment:
     """
     .. important::
@@ -157,7 +159,7 @@ def log_feedback(
     value: Optional[AssessmentValueType] = None,
     error: Optional[AssessmentError] = None,
     rationale: Optional[str] = None,
-    metadata: Optional[dict[str, Any]] = None,
+    metadata: Optional[typing.Dict[str, Any]] = None,
     span_id: Optional[str] = None,
 ) -> Assessment:
     """
@@ -256,7 +258,7 @@ def update_feedback(
     name: Optional[str] = None,
     value: Optional[AssessmentValueType] = None,
     rationale: Optional[str] = None,
-    metadata: Optional[dict[str, Any]] = None,
+    metadata: Optional[typing.Dict[str, Any]] = None,
 ) -> Assessment:
     """
     .. important::

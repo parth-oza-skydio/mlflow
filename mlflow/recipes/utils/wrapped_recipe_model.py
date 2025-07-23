@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any, Optional
 
 import numpy as np
@@ -23,7 +25,7 @@ class WrappedRecipeModel(PythonModel):
         self,
         context,
         model_input,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:

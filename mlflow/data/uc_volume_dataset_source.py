@@ -1,3 +1,5 @@
+import typing
+
 import logging
 from typing import Any
 
@@ -73,9 +75,9 @@ class UCVolumeDatasetSource(DatasetSource):
     def _resolve(cls, raw_source: str):
         raise NotImplementedError
 
-    def to_dict(self) -> dict[Any, Any]:
+    def to_dict(self) -> typing.Dict[Any, Any]:
         return {"path": self.path}
 
     @classmethod
-    def from_dict(cls, source_dict: dict[Any, Any]) -> "UCVolumeDatasetSource":
+    def from_dict(cls, source_dict: typing.Dict[Any, Any]) -> "UCVolumeDatasetSource":
         return cls(**source_dict)

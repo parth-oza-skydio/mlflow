@@ -1,3 +1,5 @@
+import typing
+
 import json
 import pathlib
 import pickle
@@ -119,12 +121,12 @@ def get_mock_response(messages, params):
 
 class SimpleChatModel(mlflow.pyfunc.ChatModel):
     def predict(
-        self, context, messages: list[ChatMessage], params: ChatParams
+        self, context, messages: typing.List[ChatMessage], params: ChatParams
     ) -> ChatCompletionResponse:
         mock_response = get_mock_response(messages, params)
         return ChatCompletionResponse.from_dict(mock_response)
 
-    def predict_stream(self, context, messages: list[ChatMessage], params: ChatParams):
+    def predict_stream(self, context, messages: typing.List[ChatMessage], params: ChatParams):
         num_chunks = 10
         for i in range(num_chunks):
             mock_response = get_mock_streaming_response(
@@ -139,7 +141,7 @@ class ChatModelWithContext(mlflow.pyfunc.ChatModel):
         self.predict_fn = pickle.loads(predict_path.read_bytes())
 
     def predict(
-        self, context, messages: list[ChatMessage], params: ChatParams
+        self, context, messages: typing.List[ChatMessage], params: ChatParams
     ) -> ChatCompletionResponse:
         message = ChatMessage(role="assistant", content=self.predict_fn())
         return ChatCompletionResponse.from_dict(get_mock_response([message], params))
@@ -148,7 +150,7 @@ class ChatModelWithContext(mlflow.pyfunc.ChatModel):
 class ChatModelWithTrace(mlflow.pyfunc.ChatModel):
     @mlflow.trace
     def predict(
-        self, context, messages: list[ChatMessage], params: ChatParams
+        self, context, messages: typing.List[ChatMessage], params: ChatParams
     ) -> ChatCompletionResponse:
         mock_response = get_mock_response(messages, params)
         return ChatCompletionResponse.from_dict(mock_response)
@@ -156,7 +158,7 @@ class ChatModelWithTrace(mlflow.pyfunc.ChatModel):
 
 class ChatModelWithMetadata(mlflow.pyfunc.ChatModel):
     def predict(
-        self, context, messages: list[ChatMessage], params: ChatParams
+        self, context, messages: typing.List[ChatMessage], params: ChatParams
     ) -> ChatCompletionResponse:
         mock_response = get_mock_response(messages, params)
         return ChatCompletionResponse(
@@ -167,7 +169,7 @@ class ChatModelWithMetadata(mlflow.pyfunc.ChatModel):
 
 class ChatModelWithToolCalling(mlflow.pyfunc.ChatModel):
     def predict(
-        self, context, messages: list[ChatMessage], params: ChatParams
+        self, context, messages: typing.List[ChatMessage], params: ChatParams
     ) -> ChatCompletionResponse:
         tools = params.tools
 
@@ -640,10 +642,10 @@ def test_chat_model_without_context_in_predict():
     )
 
     class Model(mlflow.pyfunc.ChatModel):
-        def predict(self, messages: list[ChatMessage], params: ChatParams):
+        def predict(self, messages: typing.List[ChatMessage], params: ChatParams):
             return response
 
-        def predict_stream(self, messages: list[ChatMessage], params: ChatParams):
+        def predict_stream(self, messages: typing.List[ChatMessage], params: ChatParams):
             yield chunk_response
 
     model = Model()

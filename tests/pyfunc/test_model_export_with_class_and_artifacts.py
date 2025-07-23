@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import json
 import os
@@ -1284,7 +1285,7 @@ def test_functional_python_model_list_dict_to_list(tmp_path):
     assert loaded_model.predict([{"a": "x", "b": "y"}]) == ["abxy"]
 
 
-def list_dict_to_list_dict(x: list[dict[str, str]]) -> list[dict[str, str]]:
+def list_dict_to_list_dict(x: typing.List[typing.Dict[str, str]]) -> typing.List[typing.Dict[str, str]]:
     return [{v: k for k, v in d.items()} for d in x]  # swap keys and values
 
 
@@ -1309,7 +1310,7 @@ def test_functional_python_model_list_dict_to_list_dict():
 
 def test_list_dict_with_signature_override():
     class CustomModel(mlflow.pyfunc.PythonModel):
-        def predict(self, context, model_input: list[dict[str, str]], params=None):
+        def predict(self, context, model_input: typing.List[typing.Dict[str, str]], params=None):
             return model_input
 
     signature = infer_signature([{"a": "x", "b": "y"}, {"a": "z"}])
@@ -1319,12 +1320,12 @@ def test_list_dict_with_signature_override():
             python_model=CustomModel(),
             signature=signature,
         )
-    assert model_info.signature.inputs == _infer_schema_from_list_type_hint(list[dict[str, str]])
+    assert model_info.signature.inputs == _infer_schema_from_list_type_hint(typing.List[typing.Dict[str, str]])
     pyfunc_model = mlflow.pyfunc.load_model(model_info.model_uri)
     assert pyfunc_model.predict([{"a": "z"}]) == [{"a": "z"}]
 
 
-def list_dict_to_list_dict_pep585(x: list[dict[str, str]]) -> list[dict[str, str]]:
+def list_dict_to_list_dict_pep585(x: typing.List[typing.Dict[str, str]]) -> typing.List[typing.Dict[str, str]]:
     return [{v: k for k, v in d.items()} for d in x]  # swap keys and values
 
 
@@ -1345,7 +1346,7 @@ def test_functional_python_model_list_dict_to_list_dict_with_example_pep585(tmp_
     assert loaded_model.predict([{"a": "x", "b": "y"}]) == [{"x": "a", "y": "b"}]
 
 
-def multiple_arguments(x: list[str], y: list[str]) -> list[str]:
+def multiple_arguments(x: typing.List[str], y: typing.List[str]) -> typing.List[str]:
     return x + y
 
 
@@ -1356,7 +1357,7 @@ def test_functional_python_model_multiple_arguments(tmp_path):
         mlflow.pyfunc.save_model(path=tmp_path, python_model=multiple_arguments)
 
 
-def no_arguments() -> list[str]:
+def no_arguments() -> typing.List[str]:
     return []
 
 
@@ -1367,7 +1368,7 @@ def test_functional_python_model_no_arguments(tmp_path):
         mlflow.pyfunc.save_model(path=tmp_path, python_model=no_arguments)
 
 
-def requires_sklearn(x: list[str]) -> list[str]:
+def requires_sklearn(x: typing.List[str]) -> typing.List[str]:
     import sklearn  # noqa: F401
 
     return x
@@ -1399,7 +1400,7 @@ def test_functional_python_model_throws_when_required_arguments_are_missing(tmp_
 
 
 class AnnotatedPythonModel(mlflow.pyfunc.PythonModel):
-    def predict(self, context: dict[str, Any], model_input: list[str], params=None) -> list[str]:
+    def predict(self, context: typing.Dict[str, Any], model_input: typing.List[str], params=None) -> typing.List[str]:
         assert isinstance(model_input, list)
         assert all(isinstance(x, str) for x in model_input)
         return model_input
@@ -1489,7 +1490,7 @@ def test_load_model_fails_for_feature_store_models(tmp_path):
 
 def test_pyfunc_model_infer_signature_from_type_hints():
     class TestModel(mlflow.pyfunc.PythonModel):
-        def predict(self, context, model_input: list[str], params=None) -> list[str]:
+        def predict(self, context, model_input: typing.List[str], params=None) -> typing.List[str]:
             return model_input
 
     with mlflow.start_run():

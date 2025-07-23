@@ -1,3 +1,5 @@
+import typing
+
 """
 Utilities for validating user inputs such as metric names and parameter names.
 """
@@ -550,7 +552,7 @@ def _validate_tag_value(value):
         raise MlflowException("Tag value cannot be None", INVALID_PARAMETER_VALUE)
 
 
-def _validate_dataset_inputs(dataset_inputs: list[DatasetInput]):
+def _validate_dataset_inputs(dataset_inputs: typing.List[DatasetInput]):
     for dataset_input in dataset_inputs:
         _validate_dataset(dataset_input.dataset)
         _validate_input_tags(dataset_input.tags)
@@ -594,7 +596,7 @@ def _validate_dataset(dataset: Dataset):
         )
 
 
-def _validate_input_tags(input_tags: list[InputTag]):
+def _validate_input_tags(input_tags: typing.List[InputTag]):
     for input_tag in input_tags:
         _validate_input_tag(input_tag)
 

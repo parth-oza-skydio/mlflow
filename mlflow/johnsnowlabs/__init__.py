@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.johnsnowlabs`` module provides an API for logging and loading Spark NLP and NLU models.
 This module exports the following flavors:
@@ -875,7 +877,7 @@ class _PyFuncModelWrapper:
         """
         return self.spark_model
 
-    def predict(self, text, params: Optional[dict[str, Any]] = None):
+    def predict(self, text, params: Optional[typing.Dict[str, Any]] = None):
         """Generate predictions given input data in a pandas DataFrame.
 
         Args:

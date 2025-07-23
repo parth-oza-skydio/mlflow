@@ -1,3 +1,5 @@
+import typing
+
 import os
 import random
 import tempfile
@@ -22,7 +24,7 @@ from mlflow.pyspark.optuna.storage import MlflowStorage
 
 ALL_STATES = list(TrialState)
 
-EXAMPLE_ATTRS: dict[str, Any] = {
+EXAMPLE_ATTRS: typing.Dict[str, Any] = {
     "dataset": "MNIST",
     "none": None,
     "json_serializable": {"baseline_score": 0.001, "tags": ["image", "classification"]},
@@ -35,10 +37,10 @@ def _setup_studies(
     n_trial: int,
     seed: int,
     direction: StudyDirection = None,
-) -> tuple[dict[int, FrozenStudy], dict[int, dict[int, FrozenTrial]]]:
+) -> typing.Tuple[typing.Dict[int, FrozenStudy], typing.Dict[int, typing.Dict[int, FrozenTrial]]]:
     generator = random.Random(seed)
-    study_id_to_frozen_study: dict[int, FrozenStudy] = {}
-    study_id_to_trials: dict[int, dict[int, FrozenTrial]] = {}
+    study_id_to_frozen_study: typing.Dict[int, FrozenStudy] = {}
+    study_id_to_trials: typing.Dict[int, typing.Dict[int, FrozenTrial]] = {}
     for i in range(n_study):
         study_name = "test-study-name-{}".format(i)
         if direction is None:
@@ -84,7 +86,7 @@ def _generate_trial(generator: random.Random) -> FrozenTrial:
     params = {}
     distributions = {}
     user_attrs = {}
-    system_attrs: dict[str, Any] = {}
+    system_attrs: typing.Dict[str, Any] = {}
     intermediate_values = {}
     for key, (value, dist) in example_params.items():
         if generator.choice([True, False]):
@@ -399,7 +401,7 @@ def test_create_new_trial(setup_storage):
     storage = setup_storage
 
     def _check_trials(
-        trials: list[FrozenTrial],
+        trials: typing.List[FrozenTrial],
         idx: int,
         trial_id: int,
         time_before_creation: datetime,
@@ -457,7 +459,7 @@ def test_create_new_trial_with_template_trial(setup_storage):
         trial_id=-1,  # dummy value (unused).
     )
 
-    def _check_trials(trials: list[FrozenTrial], idx: int, trial_id: int) -> None:
+    def _check_trials(trials: typing.List[FrozenTrial], idx: int, trial_id: int) -> None:
         assert len(trials) == idx + 1
         assert len({t._trial_id for t in trials}) == idx + 1
         assert trial_id in {t._trial_id for t in trials}

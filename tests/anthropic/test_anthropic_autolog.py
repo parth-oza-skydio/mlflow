@@ -1,3 +1,5 @@
+import typing
+
 import asyncio
 import base64
 from typing import Any
@@ -161,7 +163,7 @@ def is_async(request):
     return request.param
 
 
-def _call_anthropic(request: dict[str, Any], mock_response: Message, is_async: bool):
+def _call_anthropic(request: typing.Dict[str, Any], mock_response: Message, is_async: bool):
     if is_async:
         with patch("anthropic._base_client.AsyncAPIClient.post", return_value=mock_response):
             client = anthropic.AsyncAnthropic(api_key="test_key")

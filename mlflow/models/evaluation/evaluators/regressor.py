@@ -1,3 +1,5 @@
+import typing
+
 from typing import Optional
 
 import numpy as np
@@ -27,7 +29,7 @@ class RegressorEvaluator(BuiltInEvaluator):
     def _evaluate(
         self,
         model: Optional["mlflow.pyfunc.PyFuncModel"],
-        extra_metrics: list[EvaluationMetric],
+        extra_metrics: typing.List[EvaluationMetric],
         custom_artifacts=None,
         **kwargs,
     ) -> Optional[EvaluationResult]:

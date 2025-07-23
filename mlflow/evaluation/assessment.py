@@ -1,3 +1,5 @@
+import typing
+
 """
 THE 'mlflow.evaluation` MODULE IS LEGACY AND WILL BE REMOVED SOON. PLEASE DO NOT USE THESE CLASSES
 IN NEW CODE. INSTEAD, USE `mlflow/entities/assessment.py` FOR ASSESSMENT CLASSES.
@@ -30,7 +32,7 @@ class AssessmentEntity(_MlflowObject):
         numeric_value: Optional[float] = None,
         string_value: Optional[str] = None,
         rationale: Optional[str] = None,
-        metadata: Optional[dict[str, str]] = None,
+        metadata: Optional[typing.Dict[str, str]] = None,
         error_code: Optional[str] = None,
         error_message: Optional[str] = None,
         span_id: Optional[str] = None,
@@ -128,7 +130,7 @@ class AssessmentEntity(_MlflowObject):
         return self._source
 
     @property
-    def metadata(self) -> dict[str, Any]:
+    def metadata(self) -> typing.Dict[str, Any]:
         """The metadata associated with the assessment."""
         return self._metadata
 
@@ -152,7 +154,7 @@ class AssessmentEntity(_MlflowObject):
             return self.to_dictionary() == __o.to_dictionary()
         return False
 
-    def to_dictionary(self) -> dict[str, Any]:
+    def to_dictionary(self) -> typing.Dict[str, Any]:
         return {
             "evaluation_id": self.evaluation_id,
             "name": self.name,
@@ -169,7 +171,7 @@ class AssessmentEntity(_MlflowObject):
         }
 
     @classmethod
-    def from_dictionary(cls, assessment_dict: dict[str, Any]) -> "AssessmentEntity":
+    def from_dictionary(cls, assessment_dict: typing.Dict[str, Any]) -> "AssessmentEntity":
         """
         Create an Assessment object from a dictionary.
 
@@ -222,7 +224,7 @@ class Assessment(_MlflowObject):
         source: Optional[AssessmentSource] = None,
         value: Optional[Union[bool, float, str]] = None,
         rationale: Optional[str] = None,
-        metadata: Optional[dict[str, Any]] = None,
+        metadata: Optional[typing.Dict[str, Any]] = None,
         error_code: Optional[str] = None,
         error_message: Optional[str] = None,
     ):
@@ -293,7 +295,7 @@ class Assessment(_MlflowObject):
         return self._source
 
     @property
-    def metadata(self) -> dict[str, Any]:
+    def metadata(self) -> typing.Dict[str, Any]:
         """The metadata associated with the assessment."""
         return self._metadata
 
@@ -312,7 +314,7 @@ class Assessment(_MlflowObject):
             return self.to_dictionary() == __o.to_dictionary()
         return False
 
-    def to_dictionary(self) -> dict[str, Any]:
+    def to_dictionary(self) -> typing.Dict[str, Any]:
         return {
             "name": self.name,
             "source": self.source.to_dictionary() if self.source is not None else None,
@@ -324,7 +326,7 @@ class Assessment(_MlflowObject):
         }
 
     @classmethod
-    def from_dictionary(cls, assessment_dict: dict[str, Any]) -> "Assessment":
+    def from_dictionary(cls, assessment_dict: typing.Dict[str, Any]) -> "Assessment":
         """
         Create an Assessment object from a dictionary.
 

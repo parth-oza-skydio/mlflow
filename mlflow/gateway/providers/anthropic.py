@@ -1,3 +1,5 @@
+import typing
+
 import json
 import time
 from typing import AsyncIterable
@@ -236,7 +238,7 @@ class AnthropicProvider(BaseProvider, AnthropicAdapter):
         self.anthropic_config: AnthropicConfig = config.model.config
 
     @property
-    def headers(self) -> dict[str, str]:
+    def headers(self) -> typing.Dict[str, str]:
         return {
             "x-api-key": self.anthropic_config.anthropic_api_key,
             "anthropic-version": self.anthropic_config.anthropic_version,
@@ -247,7 +249,7 @@ class AnthropicProvider(BaseProvider, AnthropicAdapter):
         return "https://api.anthropic.com/v1"
 
     @property
-    def adapter_class(self) -> type[ProviderAdapter]:
+    def adapter_class(self) -> typing.Type[ProviderAdapter]:
         return AnthropicAdapter
 
     def get_endpoint_url(self, route_type: str) -> str:

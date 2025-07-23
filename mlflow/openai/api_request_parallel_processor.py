@@ -18,6 +18,7 @@ Features:
 """
 
 from __future__ import annotations
+import typing
 
 import logging
 import threading
@@ -61,7 +62,7 @@ class StatusTracker:
 
 
 def call_api(
-    index: int, results: list[tuple[int, Any]], task: Callable, status_tracker: StatusTracker
+    index: int, results: typing.List[typing.Tuple[int, Any]], task: Callable, status_tracker: StatusTracker
 ):
     import openai
 
@@ -87,14 +88,14 @@ def call_api(
 
 
 def process_api_requests(
-    request_tasks: list[Callable[[], Any]],
+    request_tasks: typing.List[Callable[[], Any]],
     max_workers: int = 10,
 ):
     """Processes API requests in parallel"""
     # initialize trackers
     status_tracker = StatusTracker()  # single instance to track a collection of variables
 
-    results: list[tuple[int, Any]] = []
+    results: typing.List[typing.Tuple[int, Any]] = []
     request_tasks_iter = enumerate(request_tasks)
     _logger.debug(f"Request pool executor will run {len(request_tasks)} requests")
     with ThreadPoolExecutor(max_workers=max_workers) as executor:

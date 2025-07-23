@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any
 
 from mlflow.gateway.config import GeminiConfig, RouteConfig
@@ -120,7 +122,7 @@ class GeminiProvider(BaseProvider):
     def adapter_class(self):
         return GeminiAdapter
 
-    async def _request(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+    async def _request(self, path: str, payload: typing.Dict[str, Any]) -> typing.Dict[str, Any]:
         return await send_request(
             headers=self.headers,
             base_url=self.base_url,

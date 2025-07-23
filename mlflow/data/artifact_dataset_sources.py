@@ -1,3 +1,5 @@
+import typing
+
 import re
 import warnings
 from pathlib import Path
@@ -140,7 +142,7 @@ def _create_dataset_source_for_artifact_repo(scheme: str, dataset_source_name: s
         def _resolve(cls, raw_source: Any) -> DatasetForArtifactRepoSourceType:
             return cls(str(raw_source))
 
-        def to_dict(self) -> dict[Any, Any]:
+        def to_dict(self) -> typing.Dict[Any, Any]:
             """
             Returns:
                 A JSON-compatible dictionary representation of the {dataset_source_name}.
@@ -150,7 +152,7 @@ def _create_dataset_source_for_artifact_repo(scheme: str, dataset_source_name: s
             }
 
         @classmethod
-        def from_dict(cls, source_dict: dict[Any, Any]) -> DatasetForArtifactRepoSourceType:
+        def from_dict(cls, source_dict: typing.Dict[Any, Any]) -> DatasetForArtifactRepoSourceType:
             uri = source_dict.get("uri")
             if uri is None:
                 raise MlflowException(

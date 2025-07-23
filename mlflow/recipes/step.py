@@ -1,3 +1,5 @@
+import typing
+
 import abc
 import json
 import logging
@@ -70,7 +72,7 @@ class StepExecutionState:
         self.last_updated_timestamp = last_updated_timestamp
         self.stack_trace = stack_trace
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> typing.Dict[str, Any]:
         """
         Creates a dictionary representation of the step execution state.
         """
@@ -99,7 +101,7 @@ class BaseStep(metaclass=abc.ABCMeta):
 
     _EXECUTION_STATE_FILE_NAME = "execution_state.json"
 
-    def __init__(self, step_config: dict[str, Any], recipe_root: str):
+    def __init__(self, step_config: typing.Dict[str, Any], recipe_root: str):
         """
         Args:
             step_config: Dictionary of the config needed to run/implement the step.
@@ -191,7 +193,7 @@ class BaseStep(metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def from_recipe_config(cls, recipe_config: dict[str, Any], recipe_root: str) -> "BaseStep":
+    def from_recipe_config(cls, recipe_config: typing.Dict[str, Any], recipe_root: str) -> "BaseStep":
         """
         Constructs a step class instance by creating a step config using the recipe
         config.
@@ -234,14 +236,14 @@ class BaseStep(metaclass=abc.ABCMeta):
         """
 
     @property
-    def environment(self) -> dict[str, str]:
+    def environment(self) -> typing.Dict[str, str]:
         """
         Returns environment variables associated with step that should be set when the
         step is executed.
         """
         return {}
 
-    def get_artifacts(self) -> list[Any]:
+    def get_artifacts(self) -> typing.List[Any]:
         """
         Returns the named artifacts produced by the step for the current class instance.
         """

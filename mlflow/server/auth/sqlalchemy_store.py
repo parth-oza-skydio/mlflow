@@ -1,3 +1,5 @@
+import typing
+
 from typing import Optional
 
 from sqlalchemy.exc import IntegrityError, MultipleResultsFound, NoResultFound
@@ -79,7 +81,7 @@ class SqlAlchemyStore:
         with self.ManagedSessionMaker() as session:
             return self._get_user(session, username).to_mlflow_entity()
 
-    def list_users(self) -> list[User]:
+    def list_users(self) -> typing.List[User]:
         with self.ManagedSessionMaker() as session:
             users = session.query(SqlUser).all()
             return [u.to_mlflow_entity() for u in users]
@@ -153,7 +155,7 @@ class SqlAlchemyStore:
                 session, experiment_id, username
             ).to_mlflow_entity()
 
-    def list_experiment_permissions(self, username: str) -> list[ExperimentPermission]:
+    def list_experiment_permissions(self, username: str) -> typing.List[ExperimentPermission]:
         with self.ManagedSessionMaker() as session:
             user = self._get_user(session, username=username)
             perms = (
@@ -228,7 +230,7 @@ class SqlAlchemyStore:
         with self.ManagedSessionMaker() as session:
             return self._get_registered_model_permission(session, name, username).to_mlflow_entity()
 
-    def list_registered_model_permissions(self, username: str) -> list[RegisteredModelPermission]:
+    def list_registered_model_permissions(self, username: str) -> typing.List[RegisteredModelPermission]:
         with self.ManagedSessionMaker() as session:
             user = self._get_user(session, username=username)
             perms = (

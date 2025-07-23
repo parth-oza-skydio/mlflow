@@ -1,6 +1,7 @@
 """MLflow module for HuggingFace/transformer support."""
 
 from __future__ import annotations
+import typing
 
 import ast
 import base64
@@ -190,7 +191,7 @@ _logger = logging.getLogger(__name__)
 
 
 @experimental
-def get_default_pip_requirements(model) -> list[str]:
+def get_default_pip_requirements(model) -> typing.List[str]:
     """
     Args:
         model: The model instance to be saved in order to provide the required underlying
@@ -278,16 +279,16 @@ def save_model(
     task: Optional[str] = None,
     torch_dtype: Optional[torch.dtype] = None,
     model_card=None,
-    inference_config: Optional[dict[str, Any]] = None,
-    code_paths: Optional[list[str]] = None,
+    inference_config: Optional[typing.Dict[str, Any]] = None,
+    code_paths: Optional[typing.List[str]] = None,
     mlflow_model: Optional[Model] = None,
     signature: Optional[ModelSignature] = None,
     input_example: Optional[ModelInputExample] = None,
-    pip_requirements: Optional[Union[list[str], str]] = None,
-    extra_pip_requirements: Optional[Union[list[str], str]] = None,
+    pip_requirements: Optional[Union[typing.List[str], str]] = None,
+    extra_pip_requirements: Optional[Union[typing.List[str], str]] = None,
     conda_env=None,
-    metadata: Optional[dict[str, Any]] = None,
-    model_config: Optional[dict[str, Any]] = None,
+    metadata: Optional[typing.Dict[str, Any]] = None,
+    model_config: Optional[typing.Dict[str, Any]] = None,
     example_no_conversion: Optional[bool] = None,
     prompt_template: Optional[str] = None,
     save_pretrained: bool = True,
@@ -798,21 +799,21 @@ def log_model(
     task: Optional[str] = None,
     torch_dtype: Optional[torch.dtype] = None,
     model_card=None,
-    inference_config: Optional[dict[str, Any]] = None,
-    code_paths: Optional[list[str]] = None,
+    inference_config: Optional[typing.Dict[str, Any]] = None,
+    code_paths: Optional[typing.List[str]] = None,
     registered_model_name: Optional[str] = None,
     signature: Optional[ModelSignature] = None,
     input_example: Optional[ModelInputExample] = None,
     await_registration_for=DEFAULT_AWAIT_MAX_SLEEP_SECONDS,
-    pip_requirements: Optional[Union[list[str], str]] = None,
-    extra_pip_requirements: Optional[Union[list[str], str]] = None,
+    pip_requirements: Optional[Union[typing.List[str], str]] = None,
+    extra_pip_requirements: Optional[Union[typing.List[str], str]] = None,
     conda_env=None,
-    metadata: Optional[dict[str, Any]] = None,
-    model_config: Optional[dict[str, Any]] = None,
+    metadata: Optional[typing.Dict[str, Any]] = None,
+    model_config: Optional[typing.Dict[str, Any]] = None,
     example_no_conversion: Optional[bool] = None,
     prompt_template: Optional[str] = None,
     save_pretrained: bool = True,
-    prompts: Optional[list[Union[str, Prompt]]] = None,
+    prompts: Optional[typing.List[Union[str, Prompt]]] = None,
     **kwargs,
 ):
     """
@@ -1477,7 +1478,7 @@ def _get_supported_pretrained_model_types():
     return supported_model_types
 
 
-def _build_pipeline_from_model_input(model_dict: dict[str, Any], task: Optional[str]) -> Pipeline:
+def _build_pipeline_from_model_input(model_dict: typing.Dict[str, Any], task: Optional[str]) -> Pipeline:
     """
     Utility for generating a pipeline from component parts. If required components are not
     specified, use the transformers library pipeline component validation to force raising an
@@ -1651,7 +1652,7 @@ def _get_model_config(local_path, pyfunc_config):
         return pyfunc_config or {}
 
 
-def _load_pyfunc(path, model_config: Optional[dict[str, Any]] = None):
+def _load_pyfunc(path, model_config: Optional[typing.Dict[str, Any]] = None):
     """
     Loads the model as pyfunc model
     """
@@ -1835,7 +1836,7 @@ class _TransformersWrapper:
                 ) from e
             raise
 
-    def predict(self, data, params: Optional[dict[str, Any]] = None):
+    def predict(self, data, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             data: Model input data.
@@ -2214,8 +2215,8 @@ class _TransformersWrapper:
             return data
 
     def _coerce_exploded_dict_to_single_dict(
-        self, data: list[dict[str, Any]]
-    ) -> dict[str, list[Any]]:
+        self, data: typing.List[typing.Dict[str, Any]]
+    ) -> typing.Dict[str, typing.List[Any]]:
         """
         Parses the result of Pandas DataFrame.to_dict(orient="records") from pyfunc
         signature validation to coerce the output to the required format for a
@@ -2421,7 +2422,7 @@ class _TransformersWrapper:
         else:
             return output_data
 
-    def _parse_lists_of_dict_to_list_of_str(self, output_data, target_dict_key) -> list[str]:
+    def _parse_lists_of_dict_to_list_of_str(self, output_data, target_dict_key) -> typing.List[str]:
         """
         Parses the output results from select Pipeline types to extract specific values from a
         target key.
@@ -2787,8 +2788,8 @@ class _TransformersWrapper:
         return input_data
 
     def _convert_audio_input(
-        self, data: Union[AudioInput, list[dict[int, list[AudioInput]]]]
-    ) -> Union[AudioInput, list[AudioInput]]:
+        self, data: Union[AudioInput, typing.List[typing.Dict[int, typing.List[AudioInput]]]]
+    ) -> Union[AudioInput, typing.List[AudioInput]]:
         """
         Convert the input data into the format that the Transformers pipeline expects.
 

@@ -1,10 +1,12 @@
+import typing
+
 import os
 from pathlib import Path
 
 import requests
 
 
-def fetch_changed_files(pr: str) -> list[Path]:
+def fetch_changed_files(pr: str) -> typing.List[Path]:
     pr_num = pr.rsplit("/", 1)[-1]
     url = f"https://api.github.com/repos/mlflow/mlflow/pulls/{pr_num}/files"
     per_page = 100
@@ -25,7 +27,7 @@ def main() -> None:
 
     BUILD_DIR = Path("build/latest/")
     DOCS_DIR = Path("docs/docs/")
-    changed_pages: list[Path] = []
+    changed_pages: typing.List[Path] = []
     for f in fetch_changed_files(pr):
         if f.suffix == ".mdx":
             path = (

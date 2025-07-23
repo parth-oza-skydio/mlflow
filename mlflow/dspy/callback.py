@@ -1,3 +1,5 @@
+import typing
+
 import logging
 import threading
 from collections import defaultdict
@@ -42,11 +44,11 @@ def skip_if_trace_disabled(func):
 class MlflowCallback(BaseCallback):
     """Callback for generating MLflow traces for DSPy components"""
 
-    def __init__(self, dependencies_schema: Optional[dict[str, Any]] = None):
+    def __init__(self, dependencies_schema: Optional[typing.Dict[str, Any]] = None):
         self._client = mlflow.MlflowClient()
         self._dependencies_schema = dependencies_schema
         # call_id: (LiveSpan, OTel token)
-        self._call_id_to_span: dict[str, SpanWithToken] = {}
+        self._call_id_to_span: typing.Dict[str, SpanWithToken] = {}
 
         ###### state management for optimization process ######
         # The current callback logic assumes there is no optimization running in parallel.
@@ -55,10 +57,10 @@ class MlflowCallback(BaseCallback):
         # we cannot use boolean flag because the callback can be nested
         self.optimizer_stack_level = 0
         # call_id: (key, step)
-        self._call_id_to_metric_key: dict[str, tuple[str, int]] = {}
+        self._call_id_to_metric_key: typing.Dict[str, typing.Tuple[str, int]] = {}
         self._evaluation_counter = defaultdict(int)
 
-    def set_dependencies_schema(self, dependencies_schema: dict[str, Any]):
+    def set_dependencies_schema(self, dependencies_schema: typing.Dict[str, Any]):
         if self._dependencies_schema:
             raise MlflowException(
                 "Dependencies schema should be set only once to the callback.",
@@ -67,7 +69,7 @@ class MlflowCallback(BaseCallback):
         self._dependencies_schema = dependencies_schema
 
     @skip_if_trace_disabled
-    def on_module_start(self, call_id: str, instance: Any, inputs: dict[str, Any]):
+    def on_module_start(self, call_id: str, instance: Any, inputs: typing.Dict[str, Any]):
         span_type = self._get_span_type_for_module(instance)
         attributes = self._get_span_attribute_for_module(instance)
 
@@ -98,7 +100,7 @@ class MlflowCallback(BaseCallback):
         self._end_span(call_id, outputs, exception)
 
     @skip_if_trace_disabled
-    def on_lm_start(self, call_id: str, instance: Any, inputs: dict[str, Any]):
+    def on_lm_start(self, call_id: str, instance: Any, inputs: typing.Dict[str, Any]):
         span_type = (
             SpanType.CHAT_MODEL if getattr(instance, "model_type", None) == "chat" else SpanType.LLM
         )
@@ -139,15 +141,15 @@ class MlflowCallback(BaseCallback):
 
         self._end_span(call_id, outputs, exception)
 
-    def _extract_messages_from_lm_inputs(self, inputs: dict[str, Any]) -> list[dict[str, str]]:
+    def _extract_messages_from_lm_inputs(self, inputs: typing.Dict[str, Any]) -> typing.List[typing.Dict[str, str]]:
         # LM input is either a list of messages or a prompt string
         # https://github.com/stanfordnlp/dspy/blob/ac5bf56bb1ed7261d9637168563328c1dfeb27af/dspy/clients/lm.py#L92
         # TODO: Extract tool definition once https://github.com/stanfordnlp/dspy/pull/2023 is merged
         return inputs.get("messages") or [{"role": "user", "content": inputs.get("prompt")}]
 
     def _extract_messages_from_lm_outputs(
-        self, outputs: list[Union[str, dict[str, Any]]]
-    ) -> list[dict[str, str]]:
+        self, outputs: typing.List[Union[str, typing.Dict[str, Any]]]
+    ) -> typing.List[typing.Dict[str, str]]:
         # LM output is either a string or a dictionary of text and logprobs
         # https://github.com/stanfordnlp/dspy/blob/ac5bf56bb1ed7261d9637168563328c1dfeb27af/dspy/clients/lm.py#L105-L114
         # TODO: Extract tool calls once https://github.com/stanfordnlp/dspy/pull/2023 is merged
@@ -157,7 +159,7 @@ class MlflowCallback(BaseCallback):
         ]
 
     @skip_if_trace_disabled
-    def on_adapter_format_start(self, call_id: str, instance: Any, inputs: dict[str, Any]):
+    def on_adapter_format_start(self, call_id: str, instance: Any, inputs: typing.Dict[str, Any]):
         self._start_span(
             call_id,
             name=f"{instance.__class__.__name__}.format",
@@ -173,7 +175,7 @@ class MlflowCallback(BaseCallback):
         self._end_span(call_id, outputs, exception)
 
     @skip_if_trace_disabled
-    def on_adapter_parse_start(self, call_id: str, instance: Any, inputs: dict[str, Any]):
+    def on_adapter_parse_start(self, call_id: str, instance: Any, inputs: typing.Dict[str, Any]):
         self._start_span(
             call_id,
             name=f"{instance.__class__.__name__}.parse",
@@ -189,7 +191,7 @@ class MlflowCallback(BaseCallback):
         self._end_span(call_id, outputs, exception)
 
     @skip_if_trace_disabled
-    def on_tool_start(self, call_id: str, instance: Any, inputs: dict[str, Any]):
+    def on_tool_start(self, call_id: str, instance: Any, inputs: typing.Dict[str, Any]):
         # DSPy uses the special "finish" tool to signal the end of the agent.
         if instance.name == "finish":
             return
@@ -217,7 +219,7 @@ class MlflowCallback(BaseCallback):
         if call_id in self._call_id_to_span:
             self._end_span(call_id, outputs, exception)
 
-    def on_evaluate_start(self, call_id: str, instance: Any, inputs: dict[str, Any]):
+    def on_evaluate_start(self, call_id: str, instance: Any, inputs: typing.Dict[str, Any]):
         """
         Callback handler at the beginning of evaluation call. Available with DSPy>=2.6.9.
         This callback starts a nested run for each evaluation call inside optimization.
@@ -288,7 +290,7 @@ class MlflowCallback(BaseCallback):
                 )
 
     def reset(self):
-        self._call_id_to_metric_key: dict[str, tuple[str, int]] = {}
+        self._call_id_to_metric_key: typing.Dict[str, typing.Tuple[str, int]] = {}
         self._evaluation_counter = defaultdict(int)
 
     def _start_span(
@@ -296,8 +298,8 @@ class MlflowCallback(BaseCallback):
         call_id: str,
         name: str,
         span_type: SpanType,
-        inputs: dict[str, Any],
-        attributes: dict[str, Any],
+        inputs: typing.Dict[str, Any],
+        attributes: typing.Dict[str, Any],
     ):
         prediction_context = get_prediction_context()
         if prediction_context and self._dependencies_schema:
@@ -372,7 +374,7 @@ class MlflowCallback(BaseCallback):
             return attributes
         return {}
 
-    def _unpack_kwargs(self, inputs: dict[str, Any]) -> dict[str, Any]:
+    def _unpack_kwargs(self, inputs: typing.Dict[str, Any]) -> typing.Dict[str, Any]:
         """Unpacks the kwargs from the inputs dictionary"""
         # NB: Not using pop() to avoid modifying the original inputs dictionary
         kwargs = inputs.get("kwargs", {})
@@ -380,8 +382,8 @@ class MlflowCallback(BaseCallback):
         return {**inputs_wo_kwargs, **kwargs}
 
     def _generate_result_table(
-        self, outputs: list[tuple[dspy.Example, dspy.Prediction, Any]]
-    ) -> dict[str, list[Any]]:
+        self, outputs: typing.List[typing.Tuple[dspy.Example, dspy.Prediction, Any]]
+    ) -> typing.Dict[str, typing.List[Any]]:
         result = {"score": []}
         for i, (example, prediction, score) in enumerate(outputs):
             for k, v in example.items():

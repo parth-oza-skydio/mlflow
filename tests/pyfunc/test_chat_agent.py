@@ -1,3 +1,5 @@
+import typing
+
 import json
 from typing import Any
 from uuid import uuid4
@@ -33,7 +35,7 @@ from tests.helper_functions import (
 from tests.tracing.helper import get_traces
 
 
-def get_mock_response(messages: list[ChatAgentMessage], message=None):
+def get_mock_response(messages: typing.List[ChatAgentMessage], message=None):
     return {
         "messages": [
             {
@@ -50,13 +52,13 @@ def get_mock_response(messages: list[ChatAgentMessage], message=None):
 class SimpleChatAgent(ChatAgent):
     @mlflow.trace
     def predict(
-        self, messages: list[ChatAgentMessage], context: ChatContext, custom_inputs: dict[str, Any]
+        self, messages: typing.List[ChatAgentMessage], context: ChatContext, custom_inputs: typing.Dict[str, Any]
     ) -> ChatAgentResponse:
         mock_response = get_mock_response(messages)
         return ChatAgentResponse(**mock_response)
 
     def predict_stream(
-        self, messages: list[ChatAgentMessage], context: ChatContext, custom_inputs: dict[str, Any]
+        self, messages: typing.List[ChatAgentMessage], context: ChatContext, custom_inputs: typing.Dict[str, Any]
     ):
         for i in range(5):
             mock_response = get_mock_response(messages, f"message {i}")
@@ -68,13 +70,13 @@ class SimpleChatAgent(ChatAgent):
 class SimpleBadChatAgent(ChatAgent):
     @mlflow.trace
     def predict(
-        self, messages: list[ChatAgentMessage], context: ChatContext, custom_inputs: dict[str, Any]
+        self, messages: typing.List[ChatAgentMessage], context: ChatContext, custom_inputs: typing.Dict[str, Any]
     ) -> ChatAgentResponse:
         mock_response = get_mock_response(messages)
         return ChatAgentResponse(messages=mock_response)
 
     def predict_stream(
-        self, messages: list[ChatAgentMessage], context: ChatContext, custom_inputs: dict[str, Any]
+        self, messages: typing.List[ChatAgentMessage], context: ChatContext, custom_inputs: typing.Dict[str, Any]
     ):
         for i in range(5):
             mock_response = get_mock_response(messages, f"message {i}")
@@ -85,7 +87,7 @@ class SimpleBadChatAgent(ChatAgent):
 class SimpleDictChatAgent(ChatAgent):
     @mlflow.trace
     def predict(
-        self, messages: list[ChatAgentMessage], context: ChatContext, custom_inputs: dict[str, Any]
+        self, messages: typing.List[ChatAgentMessage], context: ChatContext, custom_inputs: typing.Dict[str, Any]
     ) -> ChatAgentResponse:
         mock_response = get_mock_response(messages)
         return ChatAgentResponse(**mock_response).model_dump_compat()
@@ -93,7 +95,7 @@ class SimpleDictChatAgent(ChatAgent):
 
 class ChatAgentWithCustomInputs(ChatAgent):
     def predict(
-        self, messages: list[ChatAgentMessage], context: ChatContext, custom_inputs: dict[str, Any]
+        self, messages: typing.List[ChatAgentMessage], context: ChatContext, custom_inputs: typing.Dict[str, Any]
     ) -> ChatAgentResponse:
         mock_response = get_mock_response(messages)
         return ChatAgentResponse(
@@ -182,9 +184,9 @@ def test_save_throws_on_invalid_output(tmp_path, ret):
     class BadChatAgent(ChatAgent):
         def predict(
             self,
-            messages: list[ChatAgentMessage],
+            messages: typing.List[ChatAgentMessage],
             context: ChatContext,
-            custom_inputs: dict[str, Any],
+            custom_inputs: typing.Dict[str, Any],
         ) -> ChatAgentResponse:
             return ret
 

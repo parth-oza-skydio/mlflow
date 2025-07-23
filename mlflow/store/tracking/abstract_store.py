@@ -1,3 +1,5 @@
+import typing
+
 from abc import ABCMeta, abstractmethod
 from typing import Optional
 
@@ -237,8 +239,8 @@ class AbstractStore:
         self,
         experiment_id: str,
         timestamp_ms: int,
-        request_metadata: dict[str, str],
-        tags: dict[str, str],
+        request_metadata: typing.Dict[str, str],
+        tags: typing.Dict[str, str],
     ) -> TraceInfo:
         """
         Start an initial TraceInfo object in the backend store.
@@ -261,8 +263,8 @@ class AbstractStore:
         request_id: str,
         timestamp_ms: int,
         status: TraceStatus,
-        request_metadata: dict[str, str],
-        tags: dict[str, str],
+        request_metadata: typing.Dict[str, str],
+        tags: typing.Dict[str, str],
     ) -> TraceInfo:
         """
         Update the TraceInfo object in the backend store with the completed trace info.
@@ -287,7 +289,7 @@ class AbstractStore:
         experiment_id: str,
         max_timestamp_millis: Optional[int] = None,
         max_traces: Optional[int] = None,
-        request_ids: Optional[list[str]] = None,
+        request_ids: Optional[typing.List[str]] = None,
     ) -> int:
         """
         Delete traces based on the specified criteria.
@@ -331,7 +333,7 @@ class AbstractStore:
         experiment_id: str,
         max_timestamp_millis: Optional[int] = None,
         max_traces: Optional[int] = None,
-        request_ids: Optional[list[str]] = None,
+        request_ids: Optional[typing.List[str]] = None,
     ) -> int:
         raise NotImplementedError
 
@@ -349,12 +351,12 @@ class AbstractStore:
 
     def search_traces(
         self,
-        experiment_ids: list[str],
+        experiment_ids: typing.List[str],
         filter_string: Optional[str] = None,
         max_results: int = SEARCH_TRACES_DEFAULT_MAX_RESULTS,
-        order_by: Optional[list[str]] = None,
+        order_by: Optional[typing.List[str]] = None,
         page_token: Optional[str] = None,
-    ) -> tuple[list[TraceInfo], Optional[str]]:
+    ) -> typing.Tuple[typing.List[TraceInfo], Optional[str]]:
         """
         Return traces that match the given list of search expressions within the experiments.
 
@@ -668,7 +670,7 @@ class AbstractStore:
         """
 
     @abstractmethod
-    def log_inputs(self, run_id: str, datasets: Optional[list[DatasetInput]] = None):
+    def log_inputs(self, run_id: str, datasets: Optional[typing.List[DatasetInput]] = None):
         """
         Log inputs, such as datasets, to the specified run.
 

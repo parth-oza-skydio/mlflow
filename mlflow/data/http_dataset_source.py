@@ -1,3 +1,5 @@
+import typing
+
 import os
 import re
 from typing import Any
@@ -120,7 +122,7 @@ class HTTPDatasetSource(DatasetSource):
         """
         return HTTPDatasetSource(raw_source)
 
-    def to_dict(self) -> dict[Any, Any]:
+    def to_dict(self) -> typing.Dict[Any, Any]:
         """
         Returns:
             A JSON-compatible dictionary representation of the HTTPDatasetSource.
@@ -130,7 +132,7 @@ class HTTPDatasetSource(DatasetSource):
         }
 
     @classmethod
-    def from_dict(cls, source_dict: dict[Any, Any]) -> "HTTPDatasetSource":
+    def from_dict(cls, source_dict: typing.Dict[Any, Any]) -> "HTTPDatasetSource":
         """
         Args:
             source_dict: A dictionary representation of the HTTPDatasetSource.

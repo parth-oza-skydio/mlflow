@@ -1,3 +1,5 @@
+import typing
+
 import datetime
 import json
 import os
@@ -61,8 +63,8 @@ class Message(pydantic.BaseModel):
 
 
 class CustomExample2(pydantic.BaseModel):
-    custom_field: dict[str, Any]
-    messages: list[Message]
+    custom_field: typing.Dict[str, Any]
+    messages: typing.List[Message]
     optional_int: Optional[int] = None
 
 
@@ -70,21 +72,21 @@ class CustomExample2(pydantic.BaseModel):
     ("type_hint", "expected_schema", "input_example"),
     [
         # scalars
-        (list[int], Schema([ColSpec(type=DataType.long)]), [123]),
-        (list[str], Schema([ColSpec(type=DataType.string)]), ["string"]),
-        (list[bool], Schema([ColSpec(type=DataType.boolean)]), [True]),
-        (list[float], Schema([ColSpec(type=DataType.double)]), [1.23]),
-        (list[bytes], Schema([ColSpec(type=DataType.binary)]), [b"bytes"]),
+        (typing.List[int], Schema([ColSpec(type=DataType.long)]), [123]),
+        (typing.List[str], Schema([ColSpec(type=DataType.string)]), ["string"]),
+        (typing.List[bool], Schema([ColSpec(type=DataType.boolean)]), [True]),
+        (typing.List[float], Schema([ColSpec(type=DataType.double)]), [1.23]),
+        (typing.List[bytes], Schema([ColSpec(type=DataType.binary)]), [b"bytes"]),
         (
-            list[datetime.datetime],
+            typing.List[datetime.datetime],
             Schema([ColSpec(type=DataType.datetime)]),
             [datetime.datetime.now()],
         ),
         # lists
-        (list[list[str]], Schema([ColSpec(type=Array(DataType.string))]), [["a", "b"]]),
+        (typing.List[typing.List[str]], Schema([ColSpec(type=Array(DataType.string))]), [["a", "b"]]),
         (List[List[str]], Schema([ColSpec(type=Array(DataType.string))]), [["a"], ["b"]]),  # noqa: UP006
         (
-            list[list[list[str]]],
+            typing.List[typing.List[typing.List[str]]],
             Schema([ColSpec(type=Array(Array(DataType.string)))]),
             [[["a", "b"], ["c"]]],
         ),
@@ -94,20 +96,20 @@ class CustomExample2(pydantic.BaseModel):
             [[["a"], ["b"]]],
         ),
         (
-            list[list[dict[str, str]]],
+            typing.List[typing.List[typing.Dict[str, str]]],
             Schema([ColSpec(type=Array(Map(DataType.string)))]),
             [[{"a": "b"}]],
         ),
         # dictionaries
         (
-            list[dict[str, str]],
+            typing.List[typing.Dict[str, str]],
             Schema([ColSpec(type=Map(DataType.string))]),
             [{"a": "b"}, {"c": "d"}],
         ),
-        (list[dict[str, int]], Schema([ColSpec(type=Map(DataType.long))]), [{"a": 1}, {"a": 2}]),
-        (list[Dict[str, int]], Schema([ColSpec(type=Map(DataType.long))]), [{"a": 1, "b": 2}]),  # noqa: UP006
+        (typing.List[typing.Dict[str, int]], Schema([ColSpec(type=Map(DataType.long))]), [{"a": 1}, {"a": 2}]),
+        (typing.List[Dict[str, int]], Schema([ColSpec(type=Map(DataType.long))]), [{"a": 1, "b": 2}]),  # noqa: UP006
         (
-            list[dict[str, list[str]]],
+            typing.List[typing.Dict[str, typing.List[str]]],
             Schema([ColSpec(type=Map(Array(DataType.string)))]),
             [{"a": ["b"]}],
         ),
@@ -117,13 +119,13 @@ class CustomExample2(pydantic.BaseModel):
             [{"a": ["a", "b"]}],
         ),
         # Union
-        (list[Union[int, str]], Schema([ColSpec(type=AnyType())]), [1, "a", 234]),
+        (typing.List[Union[int, str]], Schema([ColSpec(type=AnyType())]), [1, "a", 234]),
         # Any
-        (list[Any], Schema([ColSpec(type=AnyType())]), [1, "a", 234]),
-        (list[list[Any]], Schema([ColSpec(type=Array(AnyType()))]), [[True], ["abc"], [123]]),
+        (typing.List[Any], Schema([ColSpec(type=AnyType())]), [1, "a", 234]),
+        (typing.List[typing.List[Any]], Schema([ColSpec(type=Array(AnyType()))]), [[True], ["abc"], [123]]),
         # Pydantic Models
         (
-            list[CustomExample],
+            typing.List[CustomExample],
             Schema(
                 [
                     ColSpec(
@@ -154,7 +156,7 @@ class CustomExample2(pydantic.BaseModel):
             ],
         ),
         (
-            list[CustomExample2],
+            typing.List[CustomExample2],
             Schema(
                 [
                     ColSpec(
@@ -253,8 +255,8 @@ def test_pyfunc_model_infer_signature_from_type_hints(
 
 
 class CustomExample3(pydantic.BaseModel):
-    custom_field: dict[str, list[str]]
-    messages: list[Message]
+    custom_field: typing.Dict[str, typing.List[str]]
+    messages: typing.List[Message]
     optional_int: Optional[int] = None
 
 
@@ -263,30 +265,30 @@ class CustomExample3(pydantic.BaseModel):
     [
         # scalars
         # bytes and datetime are not supported in spark_udf
-        (list[int], None, [1, 2, 3]),
-        (list[str], None, ["a", "b", "c"]),
-        (list[bool], None, [True, False, True]),
-        (list[float], None, [1.23, 2.34, 3.45]),
+        (typing.List[int], None, [1, 2, 3]),
+        (typing.List[str], None, ["a", "b", "c"]),
+        (typing.List[bool], None, [True, False, True]),
+        (typing.List[float], None, [1.23, 2.34, 3.45]),
         # lists
-        (list[list[str]], ArrayType(StringType()), [["a", "b"], ["c", "d"]]),
+        (typing.List[typing.List[str]], ArrayType(StringType()), [["a", "b"], ["c", "d"]]),
         # dictionaries
         (
-            list[dict[str, str]],
+            typing.List[typing.Dict[str, str]],
             MapType(StringType(), StringType()),
             [{"a": "b"}, {"c": "d"}],
         ),
         (
-            list[dict[str, list[str]]],
+            typing.List[typing.Dict[str, typing.List[str]]],
             MapType(StringType(), ArrayType(StringType())),
             [{"a": ["b"]}, {"c": ["d"]}],
         ),
         # Union type is not supported because fields in the same column of spark DataFrame
         # must be of same type
         # Any type is not supported yet
-        # (list[Any], Schema([ColSpec(type=AnyType())]), ["a", "b", "c"]),
+        # (typing.List[Any], Schema([ColSpec(type=AnyType())]), ["a", "b", "c"]),
         # Pydantic Models
         (
-            list[CustomExample3],
+            typing.List[CustomExample3],
             StructType(
                 [
                     StructField("custom_field", MapType(StringType(), ArrayType(StringType()))),
@@ -383,7 +385,7 @@ def test_pyfunc_model_with_no_op_type_hint_pass_signature_works():
 
 
 def test_pyfunc_model_infer_signature_from_type_hints_errors(recwarn):
-    def predict(model_input: list[int]) -> int:
+    def predict(model_input: typing.List[int]) -> int:
         return model_input
 
     with mlflow.start_run():
@@ -394,7 +396,7 @@ def test_pyfunc_model_infer_signature_from_type_hints_errors(recwarn):
             in mock_warning.call_args[0][0]
         )
 
-    def predict(model_input: list[int]) -> str:
+    def predict(model_input: typing.List[int]) -> str:
         return model_input
 
     output_hints = _extract_type_hints(predict, 0).output
@@ -432,7 +434,7 @@ def test_pyfunc_model_infer_signature_from_type_hints_errors(recwarn):
 
 @pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires Python 3.10 or higher")
 def test_pyfunc_model_infer_signature_from_type_hints_for_python_3_10():
-    def predict(model_input: list[int | str]) -> list[int | str]:
+    def predict(model_input: typing.List[int | str]) -> typing.List[int | str]:
         return model_input
 
     with mlflow.start_run():
@@ -491,18 +493,18 @@ class TypeHintExample(NamedTuple):
 @pytest.mark.parametrize(
     "type_hint_example",
     [
-        TypeHintExample("list[int]", [123]),
-        TypeHintExample("list[str]", ["string"]),
-        TypeHintExample("list[bool]", [True]),
-        TypeHintExample("list[float]", [1.23]),
-        TypeHintExample("list[bytes]", [b"bytes"]),
-        TypeHintExample("list[datetime.datetime]", [datetime.datetime.now()]),
-        TypeHintExample("list[Any]", ["any"]),
-        TypeHintExample("list[list[str]]", [["a"], ["b"]]),
-        TypeHintExample("list[dict[str, int]]", [{"a": 1}]),
-        TypeHintExample("list[Union[int, str]]", [123, "abc"]),
+        TypeHintExample("typing.List[int]", [123]),
+        TypeHintExample("typing.List[str]", ["string"]),
+        TypeHintExample("typing.List[bool]", [True]),
+        TypeHintExample("typing.List[float]", [1.23]),
+        TypeHintExample("typing.List[bytes]", [b"bytes"]),
+        TypeHintExample("typing.List[datetime.datetime]", [datetime.datetime.now()]),
+        TypeHintExample("typing.List[Any]", ["any"]),
+        TypeHintExample("typing.List[typing.List[str]]", [["a"], ["b"]]),
+        TypeHintExample("typing.List[typing.Dict[str, int]]", [{"a": 1}]),
+        TypeHintExample("typing.List[Union[int, str]]", [123, "abc"]),
         TypeHintExample(
-            "list[CustomExample2]",
+            "typing.List[CustomExample2]",
             [
                 CustomExample2(
                     custom_field={"a": 1},
@@ -517,8 +519,8 @@ class Message(pydantic.BaseModel):
 
 
 class CustomExample2(pydantic.BaseModel):
-    custom_field: dict[str, Any]
-    messages: list[Message]
+    custom_field: typing.Dict[str, Any]
+    messages: typing.List[Message]
     optional_int: Optional[int] = None
 """,
         ),
@@ -552,7 +554,7 @@ def test_pyfunc_model_with_type_hints_code_based_logging(
 
 
 def test_functional_python_model_only_input_type_hints():
-    def python_model(x: list[str]):
+    def python_model(x: typing.List[str]):
         return x
 
     with mlflow.start_run():
@@ -564,7 +566,7 @@ def test_functional_python_model_only_input_type_hints():
 
 
 def test_functional_python_model_only_output_type_hints():
-    def python_model(x) -> list[str]:
+    def python_model(x) -> typing.List[str]:
         return x
 
     with mlflow.start_run():
@@ -576,7 +578,7 @@ def test_functional_python_model_only_output_type_hints():
 
 
 class CallableObject:
-    def __call__(self, x: list[str]) -> list[str]:
+    def __call__(self, x: typing.List[str]) -> typing.List[str]:
         return x
 
 
@@ -593,11 +595,11 @@ def test_functional_python_model_callable_object():
 
 def test_python_model_local_testing():
     class ModelWOTypeHint(mlflow.pyfunc.PythonModel):
-        def predict(self, model_input, params=None) -> list[str]:
+        def predict(self, model_input, params=None) -> typing.List[str]:
             return model_input
 
     class ModelWithTypeHint(mlflow.pyfunc.PythonModel):
-        def predict(self, model_input: list[dict[str, str]], params=None) -> list[str]:
+        def predict(self, model_input: typing.List[typing.Dict[str, str]], params=None) -> typing.List[str]:
             return [m["x"] for m in model_input]
 
     model1 = ModelWOTypeHint()
@@ -610,7 +612,7 @@ def test_python_model_local_testing():
 
 def test_python_model_with_optional_input_local_testing():
     class Model(mlflow.pyfunc.PythonModel):
-        def predict(self, model_input: list[dict[str, Optional[str]]], params=None) -> Any:
+        def predict(self, model_input: typing.List[typing.Dict[str, Optional[str]]], params=None) -> Any:
             return [x["key"] if x.get("key") else "default" for x in model_input]
 
     model = Model()
@@ -622,7 +624,7 @@ def test_python_model_with_optional_input_local_testing():
 
 def test_callable_local_testing():
     @pyfunc
-    def predict(model_input: list[str]) -> list[str]:
+    def predict(model_input: typing.List[str]) -> typing.List[str]:
         return model_input
 
     assert predict(["a"]) == ["a"]
@@ -630,7 +632,7 @@ def test_callable_local_testing():
         predict("a")
 
     @pyfunc
-    def predict(messages: list[Message]) -> dict[str, str]:
+    def predict(messages: typing.List[Message]) -> typing.Dict[str, str]:
         return {m.role: m.content for m in messages}
 
     assert predict([Message(role="admin", content="hello")]) == {"admin": "hello"}
@@ -652,7 +654,7 @@ def test_callable_local_testing():
     assert pyfunc_model.predict(pdf) == {"admin": "hello"}
 
     # without decorator
-    def predict(messages: list[Message]) -> dict[str, str]:
+    def predict(messages: typing.List[Message]) -> typing.Dict[str, str]:
         return {m.role: m.content for m in messages}
 
     with pytest.raises(AttributeError, match=r"'dict' object has no attribute 'role'"):
@@ -696,7 +698,7 @@ def test_no_warning_for_unsupported_type_hint_with_decorator(recwarn):
 
 def test_python_model_local_testing_data_validation():
     class Model(mlflow.pyfunc.PythonModel):
-        def predict(self, model_input: list[Message], params=None) -> dict[str, str]:
+        def predict(self, model_input: typing.List[Message], params=None) -> typing.Dict[str, str]:
             return {m.role: m.content for m in model_input}
 
     model = Model()
@@ -721,7 +723,7 @@ def test_python_model_local_testing_data_validation():
 
 def test_python_model_local_testing_same_as_pyfunc_predict():
     class MyModel(mlflow.pyfunc.PythonModel):
-        def predict(self, context, model_input: list[str], params=None) -> list[str]:
+        def predict(self, context, model_input: typing.List[str], params=None) -> typing.List[str]:
             return model_input
 
     model = MyModel()
@@ -741,7 +743,7 @@ def test_unsupported_type_hint_in_python_model(recwarn):
     invalid_type_hint_msg = "Type hint used in the model's predict function is not supported"
 
     class MyModel(mlflow.pyfunc.PythonModel):
-        def predict(self, model_input: list[object], params=None) -> str:
+        def predict(self, model_input: typing.List[object], params=None) -> str:
             if isinstance(model_input, list):
                 return model_input[0]
             return "abc"
@@ -760,7 +762,7 @@ def test_unsupported_type_hint_in_python_model(recwarn):
 
 def test_unsupported_type_hint_in_callable(recwarn):
     @pyfunc
-    def predict(model_input: list[object]) -> str:
+    def predict(model_input: typing.List[object]) -> str:
         if isinstance(model_input, list):
             return model_input[0]
         return "abc"
@@ -778,7 +780,7 @@ def test_unsupported_type_hint_in_callable(recwarn):
     recwarn.clear()
 
     # without decorator
-    def predict(model_input: list[object]) -> str:
+    def predict(model_input: typing.List[object]) -> str:
         if isinstance(model_input, list):
             return model_input[0]
         return "abc"
@@ -792,7 +794,7 @@ def test_unsupported_type_hint_in_callable(recwarn):
 
 
 def test_log_model_warn_only_if_model_with_valid_type_hint_not_decorated(recwarn):
-    def predict(model_input: list[str]) -> list[str]:
+    def predict(model_input: typing.List[str]) -> typing.List[str]:
         return model_input
 
     with mlflow.start_run():
@@ -801,7 +803,7 @@ def test_log_model_warn_only_if_model_with_valid_type_hint_not_decorated(recwarn
         recwarn.clear()
 
     class Model(mlflow.pyfunc.PythonModel):
-        def predict(self, model_input: list[str], params=None) -> list[str]:
+        def predict(self, model_input: typing.List[str], params=None) -> typing.List[str]:
             return model_input
 
     def predict_df(model_input: pd.DataFrame) -> pd.DataFrame:
@@ -831,7 +833,7 @@ def test_serving_environment(monkeypatch):
 
 def test_predict_model_with_type_hints():
     class TestModel(mlflow.pyfunc.PythonModel):
-        def predict(self, model_input: list[str]) -> list[str]:
+        def predict(self, model_input: typing.List[str]) -> typing.List[str]:
             return model_input
 
     with mlflow.start_run():
@@ -862,14 +864,14 @@ def test_predict_with_wrong_signature_warns():
     with pytest.warns(FutureWarning, match=message):
 
         class ModelWithTypeHint(mlflow.pyfunc.PythonModel):
-            def predict(self, messages: list[str], params=None) -> list[str]:
+            def predict(self, messages: typing.List[str], params=None) -> typing.List[str]:
                 return messages
 
     # applying @pyfunc on the callable should trigger the warning
     with pytest.warns(FutureWarning, match=message):
 
         @pyfunc
-        def predict(messages: list[str]) -> list[str]:
+        def predict(messages: typing.List[str]) -> typing.List[str]:
             return messages
 
     with pytest.warns(FutureWarning, match=message):
@@ -879,7 +881,7 @@ def test_predict_with_wrong_signature_warns():
             return message
 
     # no @pyfunc decorator, then logging it should trigger the warning
-    def predict(messages) -> list[str]:
+    def predict(messages) -> typing.List[str]:
         return messages
 
     with mlflow.start_run():
@@ -889,7 +891,7 @@ def test_predict_with_wrong_signature_warns():
 
 def test_model_with_wrong_predict_signature_works():
     class Model(mlflow.pyfunc.PythonModel):
-        def predict(self, messages: list[Message], params=None) -> list[str]:
+        def predict(self, messages: typing.List[Message], params=None) -> typing.List[str]:
             return [m.content for m in messages]
 
     model = Model()
@@ -899,7 +901,7 @@ def test_model_with_wrong_predict_signature_works():
     assert model.predict(messages=input_example) == expected_response
 
     @pyfunc
-    def predict(messages: list[Message]) -> list[str]:
+    def predict(messages: typing.List[Message]) -> typing.List[str]:
         return [m.content for m in messages]
 
     assert predict(input_example) == expected_response
@@ -919,7 +921,7 @@ def test_warning_message_when_logging_model():
 
     # invalid type hint + invalid input example
     class TestModel(mlflow.pyfunc.PythonModel):
-        def predict(self, model_input: list[object], params=None) -> str:
+        def predict(self, model_input: typing.List[object], params=None) -> str:
             raise ValueError("test")
 
     with mlflow.start_run():
@@ -971,12 +973,12 @@ def type_from_example_model(request):
 @pytest.mark.parametrize(
     "input_example",
     [
-        # list[scalar]
+        # typing.List[scalar]
         ["x", "y", "z"],
         [1, 2, 3],
         [1.0, 2.0, 3.0],
         [True, False, True],
-        # list[dict]
+        # typing.List[dict]
         [{"x": True}],
         [{"a": 1, "b": 2}],
         [{"role": "user", "content": "hello"}, {"role": "admin", "content": "hi"}],
@@ -1048,13 +1050,13 @@ def test_invalid_type_hint_raise_exception():
     with pytest.raises(MlflowException, match="To disable data validation, remove the type hint"):
 
         class TestModel(mlflow.pyfunc.PythonModel):
-            def predict(self, model_input: list[Message], params=None):
+            def predict(self, model_input: typing.List[Message], params=None):
                 return model_input
 
     with pytest.raises(MlflowException, match="To disable data validation, remove the type hint"):
 
         @pyfunc
-        def predict(model_input: list[Message]):
+        def predict(model_input: typing.List[Message]):
             return model_input
 
 
@@ -1100,7 +1102,7 @@ def test_type_hint_warning_not_shown_for_builtin_subclasses(mock_warning):
 
     # Subclass of ChatModel should not warn (exception to the rule)
     class ChatModelSubclass(ChatModel):
-        def predict(self, model_input: list[ChatMessage], params: Optional[ChatParams] = None):
+        def predict(self, model_input: typing.List[ChatMessage], params: Optional[ChatParams] = None):
             return model_input
 
     assert mock_warning.call_count == 0
@@ -1109,9 +1111,9 @@ def test_type_hint_warning_not_shown_for_builtin_subclasses(mock_warning):
     class SimpleChatAgent(ChatAgent):
         def predict(
             self,
-            messages: list[ChatAgentMessage],
+            messages: typing.List[ChatAgentMessage],
             context: Optional[ChatContext] = None,
-            custom_inputs: Optional[dict[str, Any]] = None,
+            custom_inputs: Optional[typing.Dict[str, Any]] = None,
         ) -> ChatAgentResponse:
             pass
 
@@ -1137,7 +1139,7 @@ def test_load_context_type_hint():
         def load_context(self, context):
             self.context_loaded = True
 
-        def predict(self, model_input: list[str], params=None) -> list[str]:
+        def predict(self, model_input: typing.List[str], params=None) -> typing.List[str]:
             assert getattr(self, "context_loaded", False), "load_context was not executed"
             return model_input
 

@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.tensorflow`` module provides an API for logging and loading TensorFlow models.
 This module exports TensorFlow models with the following flavors:
@@ -772,7 +774,7 @@ class _TF2Wrapper:
     def predict(
         self,
         data,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:
@@ -831,7 +833,7 @@ class _TF2ModuleWrapper:
     def predict(
         self,
         data,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:
@@ -870,7 +872,7 @@ class _KerasModelWrapper:
     def predict(
         self,
         data,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:
@@ -1214,7 +1216,7 @@ def autolog(
                     "Cannot log input example or model signature for input with type"
                     f" {type(input_training_data)}. TensorFlow Keras autologging can"
                     " only log input examples and model signatures for the following"
-                    " input types: numpy.ndarray, dict[string -> numpy.ndarray],"
+                    " input types: numpy.ndarray, typing.Dict[string -> numpy.ndarray],"
                     " tensorflow.keras.utils.Sequence, and"
                     " tensorflow.data.Dataset (TensorFlow >= 2.1.0 required)",
                     INVALID_PARAMETER_VALUE,

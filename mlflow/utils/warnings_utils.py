@@ -1,3 +1,5 @@
+import typing
+
 import warnings
 
 # ANSI escape code
@@ -14,7 +16,7 @@ COLORS = {
 RESET = "\033[0m"
 
 
-def color_warning(message: str, stacklevel: int, color: str, category: type[Warning] = UserWarning):
+def color_warning(message: str, stacklevel: int, color: str, category: typing.Type[Warning] = UserWarning):
     if color in COLORS:
         message = f"{COLORS[color]}{message}{RESET}"
 

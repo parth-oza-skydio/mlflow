@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 from functools import cached_property
@@ -67,7 +69,7 @@ class HuggingFaceDataset(Dataset, PyFuncConvertibleDatasetMixin):
         )
         return compute_pandas_digest(df)
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> typing.Dict[str, str]:
         """Create config dictionary for the dataset.
 
         Returns a string dictionary containing the following fields: name, digest, source, source
@@ -177,7 +179,7 @@ def from_huggingface(
     path: Optional[str] = None,
     targets: Optional[str] = None,
     data_dir: Optional[str] = None,
-    data_files: Optional[Union[str, Sequence[str], Mapping[str, Union[str, Sequence[str]]]]] = None,
+    data_files: Optional[Union[str, typing.Sequence[str], typing.Mapping[str, Union[str, typing.Sequence[str]]]]] = None,
     revision=None,
     name: Optional[str] = None,
     digest: Optional[str] = None,

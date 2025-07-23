@@ -1,3 +1,5 @@
+import typing
+
 import importlib.metadata
 import json
 
@@ -30,7 +32,7 @@ def test_save_dspy_module_state(tmp_path):
 
 
 def test_log_dspy_module_state_params():
-    program = dspy.Predict("question -> answer: list[str]")
+    program = dspy.Predict("question -> answer: typing.List[str]")
     program.demos = [
         dspy.Example(question="What are cities in Japan?", answer=["Tokyo", "Osaka"]).with_inputs(
             "question"

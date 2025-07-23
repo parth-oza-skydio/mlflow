@@ -1,3 +1,5 @@
+import typing
+
 """
 Sample code to define a query engine with post processors and save it with model-from-code logging.
 
@@ -27,8 +29,8 @@ class CustomNodePostprocessor(BaseNodePostprocessor):
     call_count: int = 0
 
     def _postprocess_nodes(
-        self, nodes: list[NodeWithScore], query_bundle: Optional[QueryBundle]
-    ) -> list[NodeWithScore]:
+        self, nodes: typing.List[NodeWithScore], query_bundle: Optional[QueryBundle]
+    ) -> typing.List[NodeWithScore]:
         # subtracts 1 from the score
         self.call_count += 1
         return nodes

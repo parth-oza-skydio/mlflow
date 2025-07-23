@@ -1,3 +1,5 @@
+import typing
+
 import functools
 import logging
 import time
@@ -45,7 +47,7 @@ class ChatState:
     # LLM/Tool Spans created after the last message in the chat session.
     # We consider them as operations for generating the next message and
     # re-locate them under the corresponding message span.
-    pending_spans: list[Span] = field(default_factory=list)
+    pending_spans: typing.List[Span] = field(default_factory=list)
 
     def clear(self):
         self.session_span = None
@@ -73,7 +75,7 @@ class MlflowAutogenLogger(BaseLogger):
         return "session_id"
 
     @_catch_exception
-    def log_new_agent(self, agent: ConversableAgent, init_args: dict[str, Any]) -> None:
+    def log_new_agent(self, agent: ConversableAgent, init_args: typing.Dict[str, Any]) -> None:
         """
         This handler is called whenever a new agent instance is created.
         Here we patch the agent's methods to start and end a trace around its chat session.
@@ -179,8 +181,8 @@ class MlflowAutogenLogger(BaseLogger):
         self,
         name: str,
         span_type: str,
-        inputs: dict[str, Any],
-        attributes: Optional[dict[str, Any]] = None,
+        inputs: typing.Dict[str, Any],
+        attributes: Optional[typing.Dict[str, Any]] = None,
         start_time_ns: Optional[int] = None,
     ) -> Span:
         """
@@ -205,7 +207,7 @@ class MlflowAutogenLogger(BaseLogger):
         )
 
     @_catch_exception
-    def log_event(self, source: Union[str, Agent], name: str, **kwargs: dict[str, Any]):
+    def log_event(self, source: Union[str, Agent], name: str, **kwargs: typing.Dict[str, Any]):
         event_end_time = time.time_ns()
         if name == "received_message":
             if (self._chat_state.last_message is not None) and (
@@ -240,7 +242,7 @@ class MlflowAutogenLogger(BaseLogger):
         client_id: int,
         wrapper_id: int,
         source: Union[str, Agent],
-        request: dict[str, Union[float, str, list[dict[str, str]]]],
+        request: typing.Dict[str, Union[float, str, typing.List[typing.Dict[str, str]]]],
         response: Union[str, ChatCompletion],
         is_cached: int,
         cost: float,

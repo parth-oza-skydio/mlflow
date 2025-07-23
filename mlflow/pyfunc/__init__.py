@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``python_function`` model flavor serves as a default model interface for MLflow Python models.
 Any MLflow Python model is expected to be loadable as a ``python_function`` model.
@@ -804,14 +806,14 @@ class PyFuncModel:
     def input_example(self, value: Any) -> None:
         self._input_example = value
 
-    def predict(self, data: PyFuncInput, params: Optional[dict[str, Any]] = None) -> PyFuncOutput:
+    def predict(self, data: PyFuncInput, params: Optional[typing.Dict[str, Any]] = None) -> PyFuncOutput:
         context = _try_get_prediction_context() or Context()
         with set_prediction_context(context):
             if schema := _get_dependencies_schema_from_model(self._model_meta):
                 context.update(**schema)
             return self._predict(data, params)
 
-    def _predict(self, data: PyFuncInput, params: Optional[dict[str, Any]] = None) -> PyFuncOutput:
+    def _predict(self, data: PyFuncInput, params: Optional[typing.Dict[str, Any]] = None) -> PyFuncOutput:
         """
         Generates model predictions.
 
@@ -865,7 +867,7 @@ class PyFuncModel:
         return self._predict_fn(data)
 
     def predict_stream(
-        self, data: PyFuncLLMSingleInput, params: Optional[dict[str, Any]] = None
+        self, data: PyFuncLLMSingleInput, params: Optional[typing.Dict[str, Any]] = None
     ) -> Iterator[PyFuncLLMOutputChunk]:
         context = _try_get_prediction_context() or Context()
 
@@ -882,7 +884,7 @@ class PyFuncModel:
         return _gen_with_context(data, params)
 
     def _predict_stream(
-        self, data: PyFuncLLMSingleInput, params: Optional[dict[str, Any]] = None
+        self, data: PyFuncLLMSingleInput, params: Optional[typing.Dict[str, Any]] = None
     ) -> Iterator[PyFuncLLMOutputChunk]:
         """
         Generates streaming model predictions. Only LLM supports this method.
@@ -1043,7 +1045,7 @@ def load_model(
     model_uri: str,
     suppress_warnings: bool = False,
     dst_path: Optional[str] = None,
-    model_config: Optional[Union[str, Path, dict[str, Any]]] = None,
+    model_config: Optional[Union[str, Path, typing.Dict[str, Any]]] = None,
 ) -> PyFuncModel:
     """
     Load a model stored in Python function format.
@@ -1213,7 +1215,7 @@ class _ServedPyFuncModel(PyFuncModel):
 
 
 def _load_model_or_server(
-    model_uri: str, env_manager: str, model_config: Optional[dict[str, Any]] = None
+    model_uri: str, env_manager: str, model_config: Optional[typing.Dict[str, Any]] = None
 ):
     """
     Load a model with env restoration. If a non-local ``env_manager`` is specified, prepare an
@@ -1675,7 +1677,7 @@ def _check_udf_return_type(data_type):
 
 
 def _convert_struct_values(
-    result: Union[pandas.DataFrame, dict[str, Any]],
+    result: Union[pandas.DataFrame, typing.Dict[str, Any]],
     result_type,
 ):
     """
@@ -2006,10 +2008,10 @@ def spark_udf(
     model_uri,
     result_type=None,
     env_manager=None,
-    params: Optional[dict[str, Any]] = None,
-    extra_env: Optional[dict[str, str]] = None,
+    params: Optional[typing.Dict[str, Any]] = None,
+    extra_env: Optional[typing.Dict[str, str]] = None,
     prebuilt_env_uri: Optional[str] = None,
-    model_config: Optional[Union[str, Path, dict[str, Any]]] = None,
+    model_config: Optional[Union[str, Path, typing.Dict[str, Any]]] = None,
 ):
     """
     A Spark UDF that can be used to invoke the Python function formatted model.
@@ -2794,7 +2796,7 @@ def save_model(
     model_config=None,
     example_no_conversion=None,
     streamable=None,
-    resources: Optional[Union[str, list[Resource]]] = None,
+    resources: Optional[Union[str, typing.List[Resource]]] = None,
     auth_policy: Optional[AuthPolicy] = None,
     **kwargs,
 ):
@@ -3346,9 +3348,9 @@ def log_model(
     model_config=None,
     example_no_conversion=None,
     streamable=None,
-    resources: Optional[Union[str, list[Resource]]] = None,
+    resources: Optional[Union[str, typing.List[Resource]]] = None,
     auth_policy: Optional[AuthPolicy] = None,
-    prompts: Optional[list[Union[str, Prompt]]] = None,
+    prompts: Optional[typing.List[Union[str, Prompt]]] = None,
 ):
     """
     Log a Pyfunc model with custom inference logic and optional data dependencies as an MLflow

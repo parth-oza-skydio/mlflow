@@ -1,3 +1,5 @@
+import typing
+
 """
 The ``mlflow.pyfunc.model`` module defines logic for saving and loading custom "python_function"
 models with a user-defined ``PythonModel`` subclass.
@@ -181,7 +183,7 @@ class PythonModel:
             cls.predict._is_pyfunc = True
 
     @abstractmethod
-    def predict(self, context, model_input, params: Optional[dict[str, Any]] = None):
+    def predict(self, context, model_input, params: Optional[typing.Dict[str, Any]] = None):
         """
         Evaluates a pyfunc-compatible input and produces a pyfunc-compatible output.
         For more information about the pyfunc input/output API, see the :ref:`pyfunc-inference-api`.
@@ -197,7 +199,7 @@ class PythonModel:
             signature if it's not used. `def predict(self, model_input, params=None)` is valid.
         """
 
-    def predict_stream(self, context, model_input, params: Optional[dict[str, Any]] = None):
+    def predict_stream(self, context, model_input, params: Optional[typing.Dict[str, Any]] = None):
         """
         Evaluates a pyfunc-compatible input and produces an iterator of output.
         For more information about the pyfunc input API, see the :ref:`pyfunc-inference-api`.
@@ -240,7 +242,7 @@ class _FunctionPythonModel(PythonModel):
     def predict(
         self,
         model_input,
-        params: Optional[dict[str, Any]] = None,
+        params: Optional[typing.Dict[str, Any]] = None,
     ):
         """
         Args:
@@ -342,7 +344,7 @@ class ChatModel(PythonModel, metaclass=ABCMeta):
 
     @abstractmethod
     def predict(
-        self, context, messages: list[ChatMessage], params: ChatParams
+        self, context, messages: typing.List[ChatMessage], params: ChatParams
     ) -> ChatCompletionResponse:
         """
         Evaluates a chat input and produces a chat output.
@@ -361,7 +363,7 @@ class ChatModel(PythonModel, metaclass=ABCMeta):
         .. tip::
             Since MLflow 2.20.0, `context` parameter can be removed from `predict` function
             signature if it's not used.
-            `def predict(self, messages: list[ChatMessage], params: ChatParams)` is valid.
+            `def predict(self, messages: typing.List[ChatMessage], params: ChatParams)` is valid.
 
         Returns:
             A :py:class:`ChatCompletionResponse <mlflow.types.llm.ChatCompletionResponse>`
@@ -369,7 +371,7 @@ class ChatModel(PythonModel, metaclass=ABCMeta):
         """
 
     def predict_stream(
-        self, context, messages: list[ChatMessage], params: ChatParams
+        self, context, messages: typing.List[ChatMessage], params: ChatParams
     ) -> Generator[ChatCompletionChunk, None, None]:
         """
         Evaluates a chat input and produces a chat output.
@@ -389,7 +391,7 @@ class ChatModel(PythonModel, metaclass=ABCMeta):
         .. tip::
             Since MLflow 2.20.0, `context` parameter can be removed from `predict_stream` function
             signature if it's not used.
-            `def predict_stream(self, messages: list[ChatMessage], params: ChatParams)` is valid.
+            `def predict_stream(self, messages: typing.List[ChatMessage], params: ChatParams)` is valid.
 
         Returns:
             A generator over :py:class:`ChatCompletionChunk <mlflow.types.llm.ChatCompletionChunk>`
@@ -431,14 +433,14 @@ class ChatAgent(PythonModel, metaclass=ABCMeta):
       indicators
     - Adds a ``context`` attribute with a ``conversation_id`` and ``user_id`` attributes to enable
       modifying the behavior of the agent depending on the user querying the agent
-    - Adds the ``custom_inputs`` attribute, an arbitrary ``dict[str, Any]`` to pass in any
+    - Adds the ``custom_inputs`` attribute, an arbitrary ``typing.Dict[str, Any]`` to pass in any
       additional information to modify the agent's behavior
 
     The :py:class:`ChatAgentResponse <mlflow.types.agent.ChatAgentResponse>` schema diverges from
     :py:class:`ChatCompletionResponse <mlflow.types.llm.ChatCompletionResponse>` schema in the
     following ways:
 
-    - Adds the ``custom_outputs`` key, an arbitrary ``dict[str, Any]`` to return any additional
+    - Adds the ``custom_outputs`` key, an arbitrary ``typing.Dict[str, Any]`` to return any additional
       information
     - Allows multiple messages in the output, to improve the  display and evaluation of internal
       tool calls and inter-agent communication that led to the final answer.
@@ -504,9 +506,9 @@ class ChatAgent(PythonModel, metaclass=ABCMeta):
 
         def predict(
             self,
-            messages: list[ChatAgentMessage],
+            messages: typing.List[ChatAgentMessage],
             context: Optional[ChatContext] = None,
-            custom_inputs: Optional[dict[str, Any]] = None,
+            custom_inputs: Optional[typing.Dict[str, Any]] = None,
         ) -> ChatAgentResponse: ...
 
     In addition to calling predict and predict_stream methods with an input matching their type
@@ -614,7 +616,7 @@ class ChatAgent(PythonModel, metaclass=ABCMeta):
                 self.client = ollama.Client()
 
             def predict(
-                self, context, messages: list[ChatMessage], params: ChatParams = None
+                self, context, messages: typing.List[ChatMessage], params: ChatParams = None
             ) -> ChatCompletionResponse:
                 ollama_messages = [msg.to_dict() for msg in messages]
                 response = self.client.chat(model=self.model_name, messages=ollama_messages)
@@ -633,9 +635,9 @@ class ChatAgent(PythonModel, metaclass=ABCMeta):
 
             def predict(
                 self,
-                messages: list[ChatAgentMessage],
+                messages: typing.List[ChatAgentMessage],
                 context: Optional[ChatContext] = None,
-                custom_inputs: Optional[dict[str, Any]] = None,
+                custom_inputs: Optional[typing.Dict[str, Any]] = None,
             ) -> ChatAgentResponse:
                 ollama_messages = self._convert_messages_to_dict(messages)
                 response = self.client.chat(model=self.model_name, messages=ollama_messages)
@@ -669,7 +671,7 @@ class ChatAgent(PythonModel, metaclass=ABCMeta):
                     ),
                 )
 
-    def _convert_messages_to_dict(self, messages: list[ChatAgentMessage]):
+    def _convert_messages_to_dict(self, messages: typing.List[ChatAgentMessage]):
         return [m.model_dump_compat(exclude_none=True) for m in messages]
 
     # nb: We use `messages` instead of `model_input` so that the trace generated by default is
@@ -678,9 +680,9 @@ class ChatAgent(PythonModel, metaclass=ABCMeta):
     @abstractmethod
     def predict(
         self,
-        messages: list[ChatAgentMessage],
+        messages: typing.List[ChatAgentMessage],
         context: Optional[ChatContext] = None,
-        custom_inputs: Optional[dict[str, Any]] = None,
+        custom_inputs: Optional[typing.Dict[str, Any]] = None,
     ) -> ChatAgentResponse:
         """
         Given a ChatAgent input, returns a ChatAgent output. In addition to calling ``predict``
@@ -720,9 +722,9 @@ class ChatAgent(PythonModel, metaclass=ABCMeta):
     # ease of use.
     def predict_stream(
         self,
-        messages: list[ChatAgentMessage],
+        messages: typing.List[ChatAgentMessage],
         context: Optional[ChatContext] = None,
-        custom_inputs: Optional[dict[str, Any]] = None,
+        custom_inputs: Optional[typing.Dict[str, Any]] = None,
     ) -> Generator[ChatAgentChunk, None, None]:
         """
         Given a ChatAgent input, returns a generator containing streaming ChatAgent output chunks.
@@ -1033,7 +1035,7 @@ def _save_model_with_class_artifacts_params(  # noqa: D417
 
 
 def _load_context_model_and_signature(
-    model_path: str, model_config: Optional[dict[str, Any]] = None
+    model_path: str, model_config: Optional[typing.Dict[str, Any]] = None
 ):
     pyfunc_config = _get_flavor_configuration(
         model_path=model_path, flavor_name=mlflow.pyfunc.FLAVOR_NAME
@@ -1086,7 +1088,7 @@ def _load_context_model_and_signature(
     return context, python_model, signature
 
 
-def _load_pyfunc(model_path: str, model_config: Optional[dict[str, Any]] = None):
+def _load_pyfunc(model_path: str, model_config: Optional[typing.Dict[str, Any]] = None):
     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
     return _PythonModelPyfuncWrapper(
         python_model=python_model,
@@ -1155,7 +1157,7 @@ class _PythonModelPyfuncWrapper:
                 return _hydrate_dataclass(hints.input, model_input.iloc[0])
         return model_input
 
-    def predict(self, model_input, params: Optional[dict[str, Any]] = None):
+    def predict(self, model_input, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             model_input: Model input data as one of dict, str, bool, bytes, float, int, str type.
@@ -1178,7 +1180,7 @@ class _PythonModelPyfuncWrapper:
         else:
             return self.python_model.predict(self._convert_input(model_input), **kwargs)
 
-    def predict_stream(self, model_input, params: Optional[dict[str, Any]] = None):
+    def predict_stream(self, model_input, params: Optional[typing.Dict[str, Any]] = None):
         """
         Args:
             model_input: LLM Model single input.
@@ -1222,7 +1224,7 @@ class ModelFromDeploymentEndpoint(PythonModel):
         self.params = params
 
     def predict(
-        self, context, model_input: Union[pd.DataFrame, dict[str, Any], list[dict[str, Any]]]
+        self, context, model_input: Union[pd.DataFrame, typing.Dict[str, Any], typing.List[typing.Dict[str, Any]]]
     ):
         """
         Run prediction on the input data.
@@ -1268,7 +1270,7 @@ class ModelFromDeploymentEndpoint(PythonModel):
                 error_code=INVALID_PARAMETER_VALUE,
             )
 
-    def _predict_single(self, data: Union[str, dict[str, Any]]) -> dict[str, Any]:
+    def _predict_single(self, data: Union[str, typing.Dict[str, Any]]) -> typing.Dict[str, Any]:
         """
         Send a single prediction request to the MLflow Deployments endpoint.
 

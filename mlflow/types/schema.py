@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import builtins
 import datetime as dt
@@ -322,7 +323,7 @@ class Object(BaseType):
     Specification used to represent a json-convertible object.
     """
 
-    def __init__(self, properties: list[Property]) -> None:
+    def __init__(self, properties: typing.List[Property]) -> None:
         self._check_properties(properties)
         # Sort by name to make sure the order is stable
         self._properties = sorted(properties)
@@ -349,12 +350,12 @@ class Object(BaseType):
             )
 
     @property
-    def properties(self) -> list[Property]:
+    def properties(self) -> typing.List[Property]:
         """The list of object properties"""
         return self._properties
 
     @properties.setter
-    def properties(self, value: list[Property]) -> None:
+    def properties(self, value: typing.List[Property]) -> None:
         self._check_properties(value)
         self._properties = sorted(value)
 
@@ -760,7 +761,7 @@ class ColSpec:
         """Whether this column is required."""
         return self._required
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> typing.Dict[str, Any]:
         d = {"type": self.type.name} if isinstance(self.type, DataType) else self.type.to_dict()
         if self.name is not None:
             d["name"] = self.name
@@ -847,7 +848,7 @@ class TensorInfo:
         """The tensor shape"""
         return self._shape
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> typing.Dict[str, Any]:
         return {"dtype": self._dtype.name, "shape": self._shape}
 
     @classmethod
@@ -906,7 +907,7 @@ class TensorSpec:
         """Whether this tensor is required."""
         return True
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> typing.Dict[str, Any]:
         if self.name is None:
             return {"type": "tensor", "tensor-spec": self._tensorInfo.to_dict()}
         else:
@@ -955,7 +956,7 @@ class Schema:
     Combination of named and unnamed data inputs are not allowed.
     """
 
-    def __init__(self, inputs: list[Union[ColSpec, TensorSpec]]):
+    def __init__(self, inputs: typing.List[Union[ColSpec, TensorSpec]]):
         if not isinstance(inputs, list):
             raise MlflowException.invalid_parameter_value(
                 f"Inputs of Schema must be a list, got type {type(inputs).__name__}"
@@ -1001,7 +1002,7 @@ class Schema:
         return iter(self._inputs)
 
     @property
-    def inputs(self) -> list[Union[ColSpec, TensorSpec]]:
+    def inputs(self) -> typing.List[Union[ColSpec, TensorSpec]]:
         """Representation of a dataset that defines this schema."""
         return self._inputs
 
@@ -1009,16 +1010,16 @@ class Schema:
         """Return true iff this schema is specified using TensorSpec"""
         return self.inputs and isinstance(self.inputs[0], TensorSpec)
 
-    def input_names(self) -> list[Union[str, int]]:
+    def input_names(self) -> typing.List[Union[str, int]]:
         """Get list of data names or range of indices if the schema has no names."""
         return [x.name or i for i, x in enumerate(self.inputs)]
 
-    def required_input_names(self) -> list[Union[str, int]]:
+    def required_input_names(self) -> typing.List[Union[str, int]]:
         """Get list of required data names or range of indices if schema has no names."""
         return [x.name or i for i, x in enumerate(self.inputs) if x.required]
 
     @experimental
-    def optional_input_names(self) -> list[Union[str, int]]:
+    def optional_input_names(self) -> typing.List[Union[str, int]]:
         """Get list of optional data names or range of indices if schema has no names."""
         return [x.name or i for i, x in enumerate(self.inputs) if not x.required]
 
@@ -1026,23 +1027,23 @@ class Schema:
         """Return true iff this schema declares names, false otherwise."""
         return self.inputs and self.inputs[0].name is not None
 
-    def input_types(self) -> list[Union[DataType, np.dtype, Array, Object]]:
+    def input_types(self) -> typing.List[Union[DataType, np.dtype, Array, Object]]:
         """Get types for each column in the schema."""
         return [x.type for x in self.inputs]
 
-    def input_types_dict(self) -> dict[str, Union[DataType, np.dtype, Array, Object]]:
+    def input_types_dict(self) -> typing.Dict[str, Union[DataType, np.dtype, Array, Object]]:
         """Maps column names to types, iff this schema declares names."""
         if not self.has_input_names():
             raise MlflowException("Cannot get input types as a dict for schema without names.")
         return {x.name: x.type for x in self.inputs}
 
-    def input_dict(self) -> dict[str, Union[ColSpec, TensorSpec]]:
+    def input_dict(self) -> typing.Dict[str, Union[ColSpec, TensorSpec]]:
         """Maps column names to inputs, iff this schema declares names."""
         if not self.has_input_names():
             raise MlflowException("Cannot get input dict for schema without names.")
         return {x.name: x for x in self.inputs}
 
-    def numpy_types(self) -> list[np.dtype]:
+    def numpy_types(self) -> typing.List[np.dtype]:
         """Convenience shortcut to get the datatypes as numpy types."""
         if self.is_tensor_spec():
             return [x.type for x in self.inputs]
@@ -1052,7 +1053,7 @@ class Schema:
             "Failed to get numpy types as some of the inputs types are not DataType."
         )
 
-    def pandas_types(self) -> list[np.dtype]:
+    def pandas_types(self) -> typing.List[np.dtype]:
         """Convenience shortcut to get the datatypes as pandas types. Unsupported by TensorSpec."""
         if self.is_tensor_spec():
             raise MlflowException("TensorSpec only supports numpy types, use numpy_types() instead")
@@ -1087,7 +1088,7 @@ class Schema:
         """Serialize into json string."""
         return json.dumps([x.to_dict() for x in self.inputs])
 
-    def to_dict(self) -> list[dict[str, Any]]:
+    def to_dict(self) -> typing.List[typing.Dict[str, Any]]:
         """Serialize into a jsonable dictionary."""
         return [x.to_dict() for x in self.inputs]
 
@@ -1125,7 +1126,7 @@ class ParamSpec:
         name: str,
         dtype: Union[DataType, Object, str],
         default: Any,
-        shape: Optional[tuple[int, ...]] = None,
+        shape: Optional[typing.Tuple[int, ...]] = None,
     ):
         self._name = str(name)
         self._shape = tuple(shape) if shape is not None else None
@@ -1162,7 +1163,7 @@ class ParamSpec:
         spec: str,
         value: Any,
         value_type: Union[DataType, Object],
-        shape: Optional[tuple[int, ...]],
+        shape: Optional[typing.Tuple[int, ...]],
     ):
         """
         Validate that the value has the expected type and shape.
@@ -1229,8 +1230,8 @@ class ParamSpec:
     class ParamSpecTypedDict(TypedDict):
         name: str
         type: str
-        default: Union[DataType, list[DataType], None]
-        shape: Optional[tuple[int, ...]]
+        default: Union[DataType, typing.List[DataType], None]
+        shape: Optional[typing.Tuple[int, ...]]
 
     def to_dict(self) -> ParamSpecTypedDict:
         if self.shape is None:
@@ -1303,7 +1304,7 @@ class ParamSchema:
     ParamSchema is represented as a list of :py:class:`ParamSpec`.
     """
 
-    def __init__(self, params: list[ParamSpec]):
+    def __init__(self, params: typing.List[ParamSpec]):
         if not all(isinstance(x, ParamSpec) for x in params):
             raise MlflowException.invalid_parameter_value(
                 f"ParamSchema inputs only accept {ParamSchema.__class__}"
@@ -1315,7 +1316,7 @@ class ParamSchema:
         self._params = params
 
     @staticmethod
-    def _find_duplicates(params: list[ParamSpec]) -> list[str]:
+    def _find_duplicates(params: typing.List[ParamSpec]) -> typing.List[str]:
         param_names = [param_spec.name for param_spec in params]
         uniq_param = set()
         duplicates = []
@@ -1333,7 +1334,7 @@ class ParamSchema:
         return iter(self._params)
 
     @property
-    def params(self) -> list[ParamSpec]:
+    def params(self) -> typing.List[ParamSpec]:
         """Representation of ParamSchema as a list of ParamSpec."""
         return self._params
 
@@ -1346,7 +1347,7 @@ class ParamSchema:
         """Deserialize from a json string."""
         return cls([ParamSpec.from_json_dict(**x) for x in json.loads(json_str)])
 
-    def to_dict(self) -> list[dict[str, Any]]:
+    def to_dict(self) -> typing.List[typing.Dict[str, Any]]:
         """Serialize into a jsonable dictionary."""
         return [x.to_dict() for x in self.params]
 
@@ -1371,7 +1372,7 @@ def _map_field_type(field):
     return field_type_mapping.get(field)
 
 
-def _get_dataclass_annotations(cls) -> dict[str, Any]:
+def _get_dataclass_annotations(cls) -> typing.Dict[str, Any]:
     """
     Given a dataclass or an instance of one, collect annotations from it and all its parent
     dataclasses.

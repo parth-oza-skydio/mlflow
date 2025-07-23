@@ -1,3 +1,5 @@
+import typing
+
 import asyncio
 import json
 import os
@@ -96,7 +98,7 @@ def save_yaml(path, conf):
 
 
 class MockAsyncResponse:
-    def __init__(self, data: dict[str, Any], status: int = 200):
+    def __init__(self, data: typing.Dict[str, Any], status: int = 200):
         # Extract status and headers from data, if present
         self.status = status
         self.headers = data.pop("headers", {"Content-Type": "application/json"})
@@ -108,7 +110,7 @@ class MockAsyncResponse:
         if 400 <= self.status < 600:
             raise aiohttp.ClientResponseError(None, None, status=self.status)
 
-    async def json(self) -> dict[str, Any]:
+    async def json(self) -> typing.Dict[str, Any]:
         return self._content
 
     async def text(self) -> str:
@@ -123,7 +125,7 @@ class MockAsyncResponse:
 
 class MockAsyncStreamingResponse:
     def __init__(
-        self, data: list[bytes], headers: Optional[dict[str, str]] = None, status: int = 200
+        self, data: typing.List[bytes], headers: Optional[typing.Dict[str, str]] = None, status: int = 200
     ):
         self.status = status
         self.headers = headers

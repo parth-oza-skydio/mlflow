@@ -1,3 +1,5 @@
+import typing
+
 import contextlib
 import importlib
 import inspect
@@ -562,7 +564,7 @@ def disable_autologging():
 
 
 @contextlib.contextmanager
-def disable_discrete_autologging(flavors_to_disable: list[str]) -> None:
+def disable_discrete_autologging(flavors_to_disable: typing.List[str]) -> None:
     """
     Context manager for disabling specific autologging integrations temporarily while another
     flavor's autologging is activated. This context wrapper is useful in the event that, for

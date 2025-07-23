@@ -1,3 +1,5 @@
+import typing
+
 import base64
 import functools
 import inspect
@@ -185,7 +187,7 @@ def get_gateway_uri() -> str:
         )
 
 
-def assemble_uri_path(paths: list[str]) -> str:
+def assemble_uri_path(paths: typing.List[str]) -> str:
     """Assemble a correct URI path from a list of path parts.
 
     Args:
@@ -284,8 +286,8 @@ def _find_boundary(buffer: bytes) -> int:
 
 
 async def handle_incomplete_chunks(
-    stream: AsyncGenerator[bytes, Any],
-) -> AsyncGenerator[bytes, Any]:
+    stream: typing.AsyncGenerator[bytes, Any],
+) -> typing.AsyncGenerator[bytes, Any]:
     """
     Wraps a streaming response and handles incomplete chunks from the server.
     See https://community.openai.com/t/incomplete-stream-chunks-for-completions-api/383520

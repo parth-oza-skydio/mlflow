@@ -1,3 +1,5 @@
+import typing
+
 from typing import Any
 
 from mlflow.exceptions import MlflowException
@@ -24,7 +26,7 @@ class TensorDatasetSchema:
         self.features = features
         self.targets = targets
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> typing.Dict[str, Any]:
         """Serialize into a 'jsonable' dictionary.
 
         Returns:
@@ -40,7 +42,7 @@ class TensorDatasetSchema:
         }
 
     @classmethod
-    def from_dict(cls, schema_dict: dict[str, Any]):
+    def from_dict(cls, schema_dict: typing.Dict[str, Any]):
         """Deserialize from dictionary representation.
 
         Args:

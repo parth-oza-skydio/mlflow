@@ -1,3 +1,5 @@
+import typing
+
 import pandas as pd
 
 from mlflow.evaluation.evaluation import EvaluationEntity as EvaluationEntity
@@ -142,7 +144,7 @@ def _get_evaluation_from_dataframes(
             error_code=RESOURCE_DOES_NOT_EXIST,
         )
 
-    evaluations: list[EvaluationEntity] = _dataframes_to_evaluations(
+    evaluations: typing.List[EvaluationEntity] = _dataframes_to_evaluations(
         evaluations_df=evaluation_row,
         metrics_df=metrics_df,
         assessments_df=assessments_df,
@@ -163,7 +165,7 @@ def _dataframes_to_evaluations(
     metrics_df: pd.DataFrame,
     assessments_df: pd.DataFrame,
     tags_df: pd.DataFrame,
-) -> list[EvaluationEntity]:
+) -> typing.List[EvaluationEntity]:
     """
     Converts four separate DataFrames (main evaluation data, metrics, assessments, and tags) back
     into a list of Evaluation entities.

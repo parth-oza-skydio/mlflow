@@ -1,3 +1,5 @@
+import typing
+
 import contextlib
 import time
 from unittest.mock import patch
@@ -37,7 +39,7 @@ def llm_config(mock_openai):
 
 
 @contextlib.contextmanager
-def mock_user_input(messages: list[str]):
+def mock_user_input(messages: typing.List[str]):
     with patch.object(io.IOStream.get_default(), "input", side_effect=messages):
         yield
 

@@ -1,3 +1,5 @@
+import typing
+
 import json
 import logging
 import os
@@ -85,7 +87,7 @@ class DatabricksModelsArtifactRepository(ArtifactRepository):
             body["page_token"] = page_token
         return body
 
-    def list_artifacts(self, path: Optional[str] = None) -> list[FileInfo]:
+    def list_artifacts(self, path: Optional[str] = None) -> typing.List[FileInfo]:
         infos = []
         page_token = None
         if not path:

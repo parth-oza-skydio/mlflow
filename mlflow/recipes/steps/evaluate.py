@@ -1,3 +1,5 @@
+import typing
+
 import datetime
 import logging
 import operator
@@ -47,7 +49,7 @@ MetricValidationResult = namedtuple(
 
 
 class EvaluateStep(BaseStep):
-    def __init__(self, step_config: dict[str, Any], recipe_root: str) -> None:
+    def __init__(self, step_config: typing.Dict[str, Any], recipe_root: str) -> None:
         super().__init__(step_config, recipe_root)
         self.tracking_config = TrackingConfig.from_dict(self.step_config)
 

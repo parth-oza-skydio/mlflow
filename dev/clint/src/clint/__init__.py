@@ -1,4 +1,5 @@
 from __future__ import annotations
+import typing
 
 import argparse
 import itertools
@@ -17,7 +18,7 @@ from clint.linter import lint_file
 
 @dataclass
 class Args:
-    files: list[str]
+    files: typing.List[str]
     output_format: Literal["text", "json"]
 
     @classmethod

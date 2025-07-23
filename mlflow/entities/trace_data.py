@@ -1,3 +1,5 @@
+import typing
+
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
@@ -17,7 +19,7 @@ class TraceData:
             Stored as a JSON string.
     """
 
-    spans: list[Span] = field(default_factory=list)
+    spans: typing.List[Span] = field(default_factory=list)
     request: Optional[str] = None
     response: Optional[str] = None
 
@@ -31,7 +33,7 @@ class TraceData:
             spans=[Span.from_dict(span) for span in d.get("spans", [])],
         )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> typing.Dict[str, Any]:
         return {
             "spans": [span.to_dict() for span in self.spans],
             "request": self.request,
@@ -39,7 +41,7 @@ class TraceData:
         }
 
     @property
-    def intermediate_outputs(self) -> Optional[dict[str, Any]]:
+    def intermediate_outputs(self) -> Optional[typing.Dict[str, Any]]:
         """
         Returns intermediate outputs produced by the model or agent while handling the request.
         There are mainly two flows to return intermediate outputs:
