@@ -1,7 +1,8 @@
 from __future__ import annotations
 import typing
 
-from typing import Annotated, Any, Literal, Optional, Union
+from typing import Any, Literal, Optional, Union
+from typing_extensions import Annotated
 from uuid import uuid4
 
 from pydantic import BaseModel as _BaseModel
@@ -65,7 +66,8 @@ class AudioContentPart(BaseModel):
 
 ContentPartsList = typing.List[
     Annotated[
-        Union[TextContentPart, ImageContentPart, AudioContentPart], Field(discriminator="type")
+        Union[TextContentPart, ImageContentPart, AudioContentPart],
+        Field(discriminator="type"),
     ]
 ]
 
@@ -119,9 +121,9 @@ class ChatMessage(BaseModel):
 
 
 class ParamType(BaseModel):
-    type: Optional[Literal["string", "number", "integer", "object", "array", "boolean", "null"]] = (
-        None
-    )
+    type: Optional[
+        Literal["string", "number", "integer", "object", "array", "boolean", "null"]
+    ] = None
 
 
 class ParamProperty(ParamType):

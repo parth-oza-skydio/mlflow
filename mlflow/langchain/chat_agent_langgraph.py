@@ -2,7 +2,8 @@ import typing
 
 import importlib.metadata
 import json
-from typing import Annotated, Any, Optional, TypedDict, Union
+from typing import Any, Optional, TypedDict, Union
+from typing_extensions import Annotated
 from uuid import uuid4
 
 from packaging.version import Version
