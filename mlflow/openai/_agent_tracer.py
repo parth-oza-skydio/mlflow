@@ -1,16 +1,14 @@
 from __future__ import annotations
-import typing
 
 import json
 import logging
+import typing
 from typing import Any, Optional
 
 import agents.tracing as oai
 from agents import add_trace_processor
 from agents._run_impl import TraceCtxManager
 from agents.tracing.setup import GLOBAL_TRACE_PROVIDER
-from pydantic import BaseModel
-
 from mlflow import MlflowClient
 from mlflow.entities.span import LiveSpan, SpanType
 from mlflow.entities.span_event import SpanEvent
@@ -27,6 +25,7 @@ from mlflow.types.chat import (
     ToolCall,
 )
 from mlflow.utils.autologging_utils.safety import safe_patch
+from pydantic import BaseModel
 
 _logger = logging.getLogger(__name__)
 
@@ -93,7 +92,9 @@ class MlflowOpenAgentTracingProcessor(oai.TracingProcessor):
                     span.add_event(SpanEvent.from_exception(exc_val))
                     span.set_status(SpanStatusCode.ERROR)
             except Exception:
-                _logger.debug("Failed to handle exception in MLflow trace", exc_info=True)
+                _logger.debug(
+                    "Failed to handle exception in MLflow trace", exc_info=True
+                )
 
             return original(instance, exc_type, exc_val, exc_tb)
 
@@ -119,7 +120,9 @@ class MlflowOpenAgentTracingProcessor(oai.TracingProcessor):
 
             if trace.group_id:
                 # Group ID is used for grouping multiple agent executions together
-                mlflow_span.set_tag("group_id", trace.group_id)
+                self._mlflow_client.set_trace_tag(
+                    mlflow_span.request_id, "group_id", trace.group_id
+                )
 
             original_exit = trace.__exit__
 
@@ -233,7 +236,9 @@ def _get_span_name(span_data: oai.SpanData) -> str:
         return "Unknown"
 
 
-def _parse_span_data(span_data: oai.SpanData) -> typing.Tuple[Any, Any, typing.Dict[str, Any]]:
+def _parse_span_data(
+    span_data: oai.SpanData,
+) -> typing.Tuple[Any, Any, typing.Dict[str, Any]]:
     inputs = None
     outputs = None
     attributes = {}
@@ -278,7 +283,9 @@ def _parse_span_data(span_data: oai.SpanData) -> typing.Tuple[Any, Any, typing.D
     return inputs, outputs, attributes
 
 
-def _parse_response_span_data(span_data: oai.ResponseSpanData) -> typing.Tuple[Any, Any, typing.Dict[str, Any]]:
+def _parse_response_span_data(
+    span_data: oai.ResponseSpanData,
+) -> typing.Tuple[Any, Any, typing.Dict[str, Any]]:
     inputs = span_data.input
     response = span_data.response
     response_dict = response.model_dump() if response else {}
@@ -288,14 +295,18 @@ def _parse_response_span_data(span_data: oai.ResponseSpanData) -> typing.Tuple[A
     # Extract chat messages
     messages = []
     if response and response.instructions:
-        messages.append(ChatMessage(role="system", content=span_data.response.instructions))
+        messages.append(
+            ChatMessage(role="system", content=span_data.response.instructions)
+        )
     if span_data.input:
         parsed = [_parse_message_like(m) for m in span_data.input]
         messages.extend([m for m in parsed if m is not None])
     if response and response.output:
         parsed = [_parse_message_like(m) for m in span_data.response.output]
-        messages.extend(parsed)
-    attributes[SpanAttributeKey.CHAT_MESSAGES] = [m.model_dump_compat() for m in messages]
+        messages.extend([m for m in parsed if m is not None])
+    attributes[SpanAttributeKey.CHAT_MESSAGES] = [
+        m.model_dump_compat() for m in messages
+    ]
 
     # Extract chat tools
     chat_tools = []
@@ -366,6 +377,12 @@ def _parse_message_like(message_like: Any) -> Optional[ChatMessage]:
             content=message_like["output"],
             tool_call_id=message_like["call_id"],
         )
+    elif msg_type == "reasoning":
+        return ChatMessage(
+            role="assistant",
+            content="**Reasoning**\n\n"
+            + "\n".join([s["text"] for s in message_like["summary"]]),
+        )
 
     # Ignore unknown message types.
     # Response API supports the following additional message types, which is not
@@ -375,4 +392,6 @@ def _parse_message_like(message_like: Any) -> Optional[ChatMessage]:
     # - Web search tool call
     # - Computer tool call
     # - Reasoning
+
     _logger.debug(f"Unknown message type: {msg_type}")
+    return None
